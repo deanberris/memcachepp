@@ -1,0 +1,28 @@
+# Copyright 2007, 2008 (c) Friendster, Inc.
+# Copyright 2007, 2008 (c) Dean Michael Berris
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://boost.org/LICENSE_1_0.txt)
+
+project memcache++/doc ;
+
+import boostbook : boostbook ;
+using quickbook ;
+
+xml memcachepp : memcachepp.qbk ;
+
+boostbook standalone
+    :
+        memcachepp
+    :
+        <xsl:param>nav.layout=none
+        <xsl:param>boost.image.src=images/memcachepp.png
+        <xsl:param>boost.image.alt="Memcache++ Client"
+        <xsl:param>html.stylesheet=boostbook.css
+        <xsl:param>generate.section.toc.level=4
+        <xsl:param>chunk.section.depth=2
+        <xsl:param>chunk.first.sections=1
+
+        #<xsl:param>callout.graphics.path=../../images/callouts//
+    ;
+

@@ -1,0 +1,934 @@
+[article Memcache++
+    [quickbook 1.4]
+    [version 0.9]
+    [authors [Berris, Dean Michael] ]
+    [copyright 2007 2008 Friendster, Inc.]
+    [purpose Type safe headery only memcache client for C++]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+         [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ Memcache++ Document version 0.9 ]
+[/ Jan. 23, 2008 ]
+
+[/ Some links]
+[def __note__ [$images/note.png]]
+[def __alert__ [$images/alert.png]]
+[def __tip__ [$images/tip.png]]
+[def __warning__ [$images/warning.png]]
+[def :-) [$images/smiley.png]]
+[def __friendster__ [@http://www.friendster.com/ Friendster]]
+[def __memcached__ [@http://www.danga.com/memcached/ Memcached]]
+[def __boost__ [@http://www.boost.org/ Boost]]
+[def __boost_asio__ [@http://asio.sourceforge.net/ Boost.Asio]]
+[def __boost_date_time__ [@http://boost.org/doc/html/date_time.html Boost.Date_Time]]
+[def __boost_fusion__ Boost.Fusion]
+[def __boost_regex__ [@http://boost.org/libs/regex/doc/index.html Boost.Regex]]
+[def __boost_serialization__ [@http://boost.org/libs/serialization/doc/index.html Boost.Serialization]]
+[def __boost_spirit__ [@http://spirit.sourceforge.net/ Boost.Spirit]]
+[def __boost_system__ Boost.System]
+[def __boost_thread__ [@http://boost.org/doc/html/thread.html Boost.Thread]]
+[def __memcache_handle__ `memcache::handle`]
+
+[section:intro Introduction]
+
+[:[*['["Memcached is a a high-performance, distributed memory object caching 
+system, generic in nature, but intended for use in speeding up 
+dynamic web applications by alleviating database load.]]]]
+
+-- Danga __memcached__
+
+The purpose of the Memcache++ client is simple: at __friendster__ we
+needed a light-weight, type-safe, simple to use yet full-featured
+Memcache client -- so we came up with one!
+
+This project was developed in-house at __friendster__ with the 
+intention of being open sourced and released for the benefit of 
+the community. The library has been in development for close to 
+a year, and is already being used in production. This initial
+beta public release is an almost fresh export of the in-house
+version (January 2008) with the exception that it's distributed
+under the 
+[@http://www.boost.org/LICENSE_1_0.txt] Boost Software License].
+
+[note Dean Michael Berris is a Software Engineer at
+Friendster, Inc. responsible for developing and maintaining C++
+based services in the __friendster__ Infrastructure Services
+team.]
+
+Support for this project is available via the users mailing list
+while technical discussions are reserved for the developers
+mailing list.
+
+The __boost__ C++ libraries are required when building the
+Memcache++ client. This implementation has been tested and developed
+with the GNU Compiler Collection (GCC) as the primary target 
+officially supported compiler on Linux as the primary target
+platform.
+
+[endsect]
+
+[section:quickstart Quick Start]
+
+So let's dive right into how to use the Memcache++ client! The 
+following complete example shows how to define __memcached__
+servers to connect to, get data, delete data, and set data.
+
+  #include <memcachepp.hpp>
+  #include <string>
+  #include <iostream>
+  
+  int main(int argc, char * argv[]) {
+      memcache::handle mc;
+      mc << memcache::server("localhost", 11211)
+          << memcache::connect;
+
+      try {
+          mc << memcache::delete_("hello_world");
+      } catch (...) { }
+
+      std::string hello_world("Hello, World!");
+      std::string cached_message;
+      try {
+          mc << memcache::set("hello_world", hello_world)
+              << memcache::get("hello_world", cached_message)
+              << memcache::delete_("hello_world");
+          std::cout << cached_message
+              << std::endl;
+      } catch (std::runtimer_error & e) {
+          std::cerr << "Unexpected error: "
+              << e.what();
+      }
+
+      return EXIT_SUCCESS;
+  }
+
+Let's discuss this example in detail. First, before we can use
+the Memcache++ client in our code we include the main header file
+"memcachepp.hpp". This file includes all the necessary include
+headers that will be required by the Memcache++ client.
+
+[tip It's required that when you're using the Memcache++
+client that the __boost__ C++ Libraries be accessible from the
+compiler through the 'boost/' subdirectory. For example, the
+lexical cast utility should be available from `#include <boost/lexical_cast.hpp>`.]
+
+The following segment sets up the memcache handle to be used
+throughout the example:
+
+      memcache::handle mc;
+      mc << memcache::server("localhost", 11211)
+          << memcache::connect;
+
+The first line simply instantiates a plain Memcache++ handle. This
+handle exposes some public functions, but we'll go through this
+in more detail in the discussion for the handle type.
+
+If you'll notice, the __memcache_handle__ instance `mc` works like
+a stream to which you can push directives to. These directives
+like `memcache::server` and `memcache::connect` perform some
+very important operations.
+
+You use `memcache::server("server_name", PORT_NUMBER)` to add that
+server to the list of servers the client will maintain persistent
+connections to. It's important that all known servers be defined
+before the Memcache++ client be used in any operations because the
+handle uses a special hashing algorithm to determine where a key
+should be retrieved or set. 
+
+[note A more detailed discussion on this
+topic is covered in the disucssion for the handle type.]
+
+The directive `memcache::connect` simply tells the memcache handle
+to connect to all the servers already defined, and to maintain a
+connection to each one during the lifetime of the memcache handle.
+
+Let's now look at the `memcache::delete_` call:
+
+      try {
+          mc << memcache::delete_("hello_world");
+      } catch (...) { }
+
+Memcache++ directives make extensive use of exceptions to report
+problems that may arise when the directive is executed. This example
+simply ignores any exceptions thrown when trying to delete the
+memcache entry associated with the key `"hello_world"`.
+
+As with standard C++ streams, directives may be chained in a single
+line using the `<<` operator. In the next section of code, the
+example then chains three directives: set, get, and delete_:
+
+      std::string hello_world("Hello, World!");
+      std::string cached_message;
+      try {
+          mc << memcache::set("hello_world", hello_world)
+              << memcache::get("hello_world", cached_message)
+              << memcache::delete_("hello_world");
+          std::cout << cached_message
+              << std::endl;
+      } catch (std::runtimer_error & e) {
+          std::cerr << "Unexpected error: "
+              << e.what();
+      }
+
+In this example `memcache::set("hello_world", hello_world)` simply
+associates the serialized form of `hello_world` to the key
+`"hello_world"` in the memcached instance the handle is connected
+to. Note that the data stored is serialized using __boost_serialization__
+-- so to be able to store your serialized objects using the default
+serialization mechanism used by Memcache++.
+
+The `memcache::get("hello_world", cached_message)` directive also
+deserializes the data retrieved from memcached associated with
+the key `"hello_world"` into `cached_message` using __boost_serialization__.
+
+[note More about the serialization strategies are discussed in the
+policies section of the memcache handle type.]
+
+[endsect]
+
+[section:concepts Concepts]
+
+There are a few fundamental concepts that need to be clarified before we go
+on and discuss the design and implementation of the Memcache++ client. In this
+section we cover all the relevant concepts in play within the design of the
+Memcache++ client.
+
+[section:handle Handle]
+
+In Memcache++, a type models the Handle concept when it fulfills the following
+requirements:
+
+[variablelist Requirements
+    [
+        [NonCopyable] 
+        [It is not possible to construct copies of an instance of the type]
+    ]
+    [
+        [DefaultConstructable]
+        [The default constructor for the type is defined]
+    ]
+]
+
+Further, a type models the Handle concept when the following constructs
+are supported:
+
+[variablelist Legend
+    [[H] [The handle type.]]
+    [[k] [The key -- a `std::string`.]]
+    [[D] [The data type.]]
+    [[d] [Instance of D]]
+    [[mc] [An instance of H.]]
+    [[o] [A `size_t` offset value.]]
+    [[t] [A `time_t` value.]]
+    [[e] [A `time_t` value representing the expiration in seconds or an absolute time.]]
+    [[x] [A `time_t` value representing the failover expiration in seconds of an absolute time.]]
+    [[f] [A `uint16_t` flag value]]
+    [[s] [The server host name -- a `std::string`]]
+    [[i] [Server information -- a `H::server_info`]]
+    [[p] [The pool name -- a `std::string`]]
+    [[l] [Pool information -- a `H::pool_info`]]
+    [[r] [The raw `std::string` data.]]
+    [[c] [A reference to a container `std::string`.]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`mc.add_server(s, i)`] [`void`]
+        [Adds the server identified by `s` with the information
+        contained by `i`.]
+    ]
+    [[`mc.add_pool(p, l)`] [`void`]
+        [Adds a server pool identified by `p` with the information
+        contained by `l`.]
+    ]
+    [[`mc.connect()`] [`void`]
+        [Connects to all defined servers.]
+    ]
+    [[`mc.delete_(o, k, t)`] [`void`]
+        [Deletes data associated to key `k` at server offset `o`
+        optionally scheduled at time `t`.]
+    ]
+    [[`mc.get<D>(o, k, d)`] [`void`]
+        [Retrieves data from the server associated to key `k`
+        deserialized into `d`.]
+    ]
+    [[`mc.get_raw(o, k, c)`] [`void`]
+        [Retrieves data from the server associated to key `k`
+        and stored as an `std::string` into `c`.]
+    ]
+    [[`mc.is_connected(s)`] [`bool`]
+        [Returns true if the memcache handle is still connected
+        to server host `s`.]
+    ]
+    [[`mc.pool_count()`] [`size_t`]
+        [Returns the number of pools defined in the Handle.]
+    ]
+    [[`mc.server_count()`] [`size_t`]
+        [Returns the number of servers defined for the Handle.]
+    ]
+    [[`mc.set<D>(o, k, d, e, x, f)`] [`void`]
+        [Associates the serialized form of `d` to key `k`
+        from the server offset at `o`, optionally setting
+        the expiration to `e` and on failover the expiration
+        to `x` with flag `f`.]
+    ]
+    [[`mc.set_raw(o, k, r, e, x, f)`] [`void`]
+        [Associates the raw data `r` to key `k` from the server
+        offset at `o`, optionally setting the expiration to
+        `e` and on failover the expiration to `x` with flag `f`.
+        ]
+    ]
+]
+
+The implemented __memcache_handle__ in memcachepp.hpp is one
+concrete implementation of the Handle concept.
+
+[endsect] [/ Handle]
+
+[section:directive Directive]
+
+A type models the Directive concept when it is CopyConstructable, 
+Assignable, and is a function object that supports the following 
+constructs:
+
+[variablelist Legend
+    [[H] [Handle type]]
+    [[h] [Handle instance]]
+    [[D] [Directive type]]
+    [[d] [Directive instance]]
+    [[T1..Tn] [Arbitrary types]]
+    [[t1..tn] [Arbitrarily typed data]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`h << d;`] [`H&`] [Push a directive into the Handle.]]
+    [[`D(d); D<T1, ..., Tn>(t1, ..., tn);`] [*N/A*] [Copyable, may have additional constructors.]]
+    [[`d(h)`] [`void`] [Apply a directive on a reference to a Handle `h`]]
+]
+
+[endsect] [/ Directive]
+
+[endsect] [/ Concepts]
+
+[section:overview Overview]
+
+The Memcache++ client is a header-only library, meaning all the
+implementations of the memcache client protocol are compiled into
+the programs that use it. There are no special build instructions
+for installing the memcache client -- but the following Boost
+libraries have to be present when building and linking the
+application that uses the client:
+
+* __boost_asio__
+* __boost_date_time__
+* __boost_fusion__
+* __boost_regex__
+* __boost_serialization__
+* __boost_spirit__
+* __boost_system__
+* __boost_thread__
+
+The implementation has been tested only with GCC 4.1.2 on the
+Linux platform (32-bit and 64-bit).
+
+[warning To use the library in thread-safe mode,
+the `_REENTRANT` macro should be defined. The default threading
+policy when the reentrant macro is defined uses __boost_thread__.]
+
+[endsect] [/ Overview]
+
+[section:design Design]
+
+The bulk of the library design concentrates on the single most
+important object in the library which is the __memcache_handle__.
+All the functionality required in a memcache client is implemented
+inside the __memcache_handle__.
+
+For convenience, directives are encapsulated and packaged in
+individual types that overload the function operator (`operator()`)
+that takes a reference to a type that models the Handle concept.
+This allows extenders of the library to write their own Handle
+and still be able to use the directives provided by the library.
+
+[section:handle The Memcache++ Handle]
+
+The provided __memcache_handle__ in the memcache library is a
+typedef of the `basic_handle` template with some pre-defined
+policies set to default. The exact definition of the
+__memcache_handle__ type is shown below:
+
+    typedef basic_handle<> handle ;
+
+The defaults for the `basic_handle` type are given below:
+
+    template <
+        class threading_policy = policies::default_threading<>,
+        class data_interchange_policy = policies::binary_interchange<>,
+        class hash_policy = policies::default_hash<>
+    >
+    struct basic_handle :
+        threading_policy,
+        data_interchange_policy,
+        hash_policy {
+            ...
+        };
+
+[section:policies Policies]
+
+The __memcache_handle__ has three policies that specify how the
+handle behaves. Let's look at each one in greater detail:
+
+[section:threading Threading Policy]
+
+A Threading Policy defines how the __memcache_handle__ works with
+threads. At the very minimum, this policy defines a nested Scoped 
+Lock type that takes a reference to an instance of the Threading
+Policy type to acquire a lock. More formally, the Threading Policy 
+type should define the following constructs:
+
+[variablelist Legend
+    [[T] [The threading policy type]]
+    [[t] [Instance of T]]
+    [[T::L] [Nested Scoped Lock type]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`T()`] [*N/A*] [Default Constructable]]
+    [[`T::L(t)`] [*N/A*] [Instantiate a scoped lock bound to `t`]]
+]
+
+A Threading Policy should also have a protected destructor to
+ensure that the type cannot be instantiated but can be derived from.
+
+[note The default threading policy does absolutely no
+threading. However, if `_REENTRANT` is defined, the default
+threading policy becomes a policy that relies on __boost_thread__.]
+
+[endsect] [/ Threading Policy]
+
+[section:serialization Data Interchange Policy]
+
+A Data Interchange Policy (better description than serialization
+policy) defines how data to be stored in and retrieved from the
+__memcached__ instance is dealt with. It should define nested
+types for an Input Archive, Output Archive, the Archive Exception
+to be expected. More formally:
+
+[variablelist Legend
+    [[D] [The Data Interchange Policy type]]
+    [[D::O] [The Output Archive type]]
+    [[D::I] [The Input Archive type]]
+    [[D::E] [The Archive Exception thrown on archive related errors]]
+    [[s] [An Input Stream source buffer of bytes (`std::istream`)]]
+    [[d] [An Output Stream destination buffer of bytes (`std::ostream`)]]
+    [[o] [An instance of D::O]]
+    [[i] [An instance of D::I]]
+    [[v] [A Serializable object]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`D()`] [*N/A*] [Default Constructable]]
+    [[`D::O(d)`] [*N/A*] [Nested Output Archive type should take an output stream as the sole parameter of the constructor.]]
+    [[`D::I(s)`] [*N/A*] [Nested Input Archive type should take an input stream as the sole parameter of the constructor.]]
+    [[`o << v;`] [`D::O &`] [Push `v` serialized into the Output Archive.]]
+    [[`i >> v;`] [`D::I &`] [Deserialize the contents of `i` into `v`.]]
+]
+
+A Data Interchange Policy should also have a protected desctructor to
+ensure that the type cannot be instantiated but can be derived from.
+
+[note The default Data Interchange Policy uses the
+__boost_serialization__ Binary Input/Output Archives. Please consult
+the __boost_serialization__ documentation about the issues you may
+face with binary Input/Output Archives.]
+
+There are three defined Data Interchange Policies in Memcache++.
+These are:
+
+* `memcache::policies::binary_interchange` (memcache/policies/binary_interchange.hpp)
+* `memcache::policies::text_interchange` (memcache/policies/text_interchange.hpp)
+* `memcache::policies::string_preserve` (memcache/policies/string_preserve.hpp)
+
+[endsect] [/ Data Interchange Policy]
+
+[section:hash Hash Policy]
+
+A Hash Policy type determines how the __memcache_handle__ chooses the
+server offset given a string key. More formally:
+
+[variablelist Legend
+    [[H] [The Hash Policy type]]
+    [[h] [Instance of H]]
+    [[k] [A `std::string`]]
+    [[s] [A `size_t` indicating the number of servers]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`H()`] [*N/A*] [Default Constructable]]
+    [[`h.hash(k, s)`] [`size_t`] [Returns the hash computed offset given the key and the number of servers.]]
+]
+
+A Hash Policy type should also have a protected desctructor to ensure
+that the type cannot be instantiated but can be derived from.
+
+[endsect] [/ Hash Policy]
+
+[endsect] [/ Policies]
+
+[endsect] [/ The Memcache++ Handle]
+
+[section:directives The Directives]
+
+To make using the memcache client simpler than having to call
+directly into the methods of the __memcache_handle__, directives
+are provided to perform predefined actions through a more flexible
+interface. There are three parts involved with directives, and are
+designed to be easily extendable and decoupled from the actual
+__memcache_handle__ used.
+
+The first part of the directive is the actual directive type.
+Directive types are simply types that when instantiated act like
+packaged tasks that perform a set of operations on the 
+__memcache_handle__ supplied. Directive type instances usually
+hold references to actual data for efficiency instead of copies
+of data used in the operations.
+
+The second part of the Directives system is the generator function. A
+generator function is responsible for returning an instance of
+the Directivey type which can be pushed to the __memcache_handle__
+using the third part of the Directives sytem: the push left operator.
+
+The push left operator (or `operator<<(...)`) applies the supplied
+directive to the __memcache_handle__. This is the primary operation
+that leverages the building of new directives on top of existing
+functionality that the handle already implements.
+
+Let's look at the implementation of the `memcache::get` directive.
+
+    template <typename T>
+    struct get_directive {
+        explicit get_directive(std::string const & key, T & holder) :
+            _key(key), _holder(holder) { };
+
+        template <typename _T>
+        void operator() (_T & handle) const {
+            size_t pools = handle.pool_count();
+            assert(pools != 0);
+            handle.get(
+                    handle.hash(
+                        _key, 
+                        pools
+                        ), 
+                    _key, 
+                    _holder
+                    );
+        };
+        
+        private:
+        
+        mutable std::string _key;
+        mutable T & _holder;
+    };
+
+[note Look in memcache/detail/directives/get.hpp for the latest
+implementation of the get directive.]
+
+The type `get_directive<T>` simply calls the get method provided 
+by the handle whose type it deduces as `_T` in the overload to 
+`operator()`. It also assumes that the provided handle defines
+a `hash(...)` method, as well as a `pool_count()` method.
+
+However, when we use the `memcache::get(...)` directive, we do
+not directly instantiate a `get_directive<>`. We instead make
+a generator function that determines the type of the container of
+the data, and returns the appropriate instace of `get_directive<>`.
+
+    template <typename T, typename _T>
+    inline detail::get_directive<_T> get(T _key, _T & holder) {
+        return detail::get_directive<_T>(std::string(_key), holder);
+    };
+
+We then rely on the push left operator to ensure that the returned
+instance gets applied to the handle correctly:
+
+    template <class threading_policy, class data_interchange_policy , class directive_type>
+    inline basic_handle<threading_policy, data_interchange_policy> & 
+    operator<< (basic_handle<threading_policy, data_interchange_policy> & _handle, directive_type const & directive) {
+        directive(_handle);
+        return _handle;
+    };
+
+Writing your own directives should be as simple as following the
+design of `memcache::get(...)` and 
+`memcache::detail::get_directive<T>`.
+
+[endsect] [/ The Directives]
+
+[endsect] [/ Design]
+
+[section:api API Reference]
+
+[section:classes Classes]
+
+[section:memcache_handle memcache::handle]
+
+The __memcache_handle__ is the center of the Memcache++ Client
+library. All the memcache related functionality is implemented
+in this class. 
+
+The __memcache_handle__ implementation supports the following
+features:
+
+* Server Pools -- define a group of servers to act as redundant
+pools, where set and delete operations are mirrored to all members
+of the pool; get operations happen on only the first member that
+responds, other members only get queried when the first one doesn't
+respond appropriately.
+* Persistent Connections -- instead of making many multiple
+connections, persistent connections are kept to minimize the
+overhead of creating new connections to the servers
+* Thread-Safe Operations -- in multi-threaded (`_REENTRANT`) mode,
+all methods requiring access to persistent connections are atomic.
+
+Below is a detailed API guide to the class:
+
+[table Nested Types
+    [[Name] [Description]]
+    [[`connection_ptr`] [Connection pointer type.]]
+    [[`server_info`] [Server information type.]]
+    [[`pool_info`] [Pool information type.]]
+    [[`server_container`] [Server container type.]]
+    [[`pool_container`] [Pool container type.]]
+]
+
+[table Member methods
+    [[Name] [Result] [Description]]
+    [[`basic_handle()`] [*N/A*] 
+        [Default Constructor]
+    ]
+    [[`add_pool(std::string const & pool_name, pool_info p_info)`] [`void`]
+        [Add pool to the handle.]
+    ]
+    [[`add_server(std::string const & server_name, server_info const & s_info)`] [`void`]
+        [Add server to the handle.]
+    ]
+    [[`connect()`] [`void`] 
+        [Connect to defined memcache servers.]
+    ]
+    [[`delete_(size_t offset, std::string const & key, time_t delay = 0)`] [`void`]
+        [Delete the data associated to `key` from the memcache
+        server identified by `offset`, set delay to `delay`.]
+    ]
+    [[`template <typename T> get(size_t offset, std::string const & key, T & holder)`] [`void`]
+        [Get the data associated to `key` from the memcache server
+        identified by `offset` deserialized into `holder`.]
+    ]
+    [[`get_raw(size_t offset, std::string const & key, std::string & holder)`] [`void`]
+        [Get the data associated to `key` from the memcache server
+        identified by `offset` and stored as a string into `holder`.]
+    ]
+    [[`is_connected(std::string const & server_name)`] [`bool`]
+        [Returns whether a connection to the server identified 
+        with host name `server_name` is active.]
+    ]
+    [[`pool_count()`] [size_t]
+        [Returns the number of pools defined in the handle.]
+    ]
+    [[`server_count()`] [size_t]
+        [Returns the number of servers defined in the handle.]
+    ]
+    [[`template <typename T> set(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`] 
+        [Sets the `key` to `value` in the memcache server identified 
+        by `offset`, on failover set the expiration to 
+        `failover_expiraton`, while when successful set the 
+        expiration to `expiration`.]
+    ]
+    [[`set_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
+        [Sets the `key` to `value` in the memcache server identified
+        by `offset`, on failover set the expiration to
+        `failover_expiration`, while when successful set the
+        expiration to `expiration`. The value set here is set 'as is'
+        without serialization.]
+    ]
+]
+
+[endsect] [/ memcache::handle]
+
+[endsect] [/ Classes]
+
+[section:directives Directives]
+
+[section:get memcache::get]
+
+The `memcache::get` directive instructs the __memcache_hande__ to 
+perform a get operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key.
+
+    template <typename T, typename _T>
+    detail::get_directive<_T>
+    get(T _key, _T & holder);
+
+At compile time, `T` and `_T` don't have to be explicitly stated
+because it can be deduced by the compiler. For example:
+
+    int a;
+    double b;
+    std::string c;
+    mc << memcache::get("key_a", a)
+        << memcache::get("key_b", b)
+        << memcache::get("key_c", c);
+
+The compiler will then be able to determine that `T` is a `char[6]`
+while `a` is an `int`, `b` is a double, and `c` is a `std::string`.
+Each call to `memcache::get` above will return the correct
+specialization of `detail::get_directive` which is then applied
+to the __memcache_handle__ `mc`.
+
+[endsect] [/ memcache::get]
+
+[section:set memcache::set]
+
+The `memcache::set` directive instructs the __memcache_handle__ to
+perform a set operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to set the data in, based on the hash on the provided key.
+
+    template <typename T, typename _T>
+    detail::set_irective<_T>
+    set(_T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::set_directive<_T>
+    set(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::set_directive<_T>
+    set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, uint16_t flags=0);
+
+    template <typename T, typename _T>
+    detail::set_directive<_T>
+    set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, uint16_t flags=0);
+
+There are four overloads to the `memcache::set` directive, which 
+corresponds to different ways of setting the expiration of the key
+being set.
+
+The first version defaults the timeout to 0, which means the key
+set is not set to expire. When timeout is set though, this is used
+to determine when the key is expired. When there is a re-hash of
+the key to a different server -- which happens when the server it's
+intended for, for some reason cannot accomodate the set request --
+the same timeout is used.
+
+    mc << memcache::set("key_a", 100);
+
+The second and third version allows for defining different expirations
+when the set is successful (value denoted by `detail::expire_type`)
+and when the key is re-hashed to a different server (value denoted
+by `detail::failover_expire_type`).
+
+    mc << memcache::set("key_b", double(2.5), expire(300), failover_expire(60))
+        << memcache::set("key_c", std::string("Hello, World!"), failover_expire(100));
+
+The fourth version is equivalent to setting the expiration to 0,
+while setting the failover expiration to what `failover_expiration`
+is set to when a re-hash of a key occurs.
+
+[endsect] [/ memcache::set]
+
+[section:delete_ memcache::delete_]
+
+The `memcache::delete_` directive instructs the __memcache_handle__ 
+to delete data from the appropriate memcache server assosicated to a
+given key. The `memcache::delete_` directive uses the 
+__memcache_handle__'s hashing implementation to determine which 
+memcache server the key can be located from.
+
+    template <typename T>
+    detail::delete_directive<T>
+    delete_(T _key);
+
+They type of `key` is unspecified, but the requirement is that
+it is convertible to an `std::string`. An example usage of the
+`memcache::delete_` directive is shown below, which deletes the
+key and data associated with "key_a" from the appropriate server.
+
+    mc << memcache::delete_("key_a");
+
+[endsect] [/ memcache::delete_]
+
+[section:get_raw memcache::raw_get]
+
+The `memcache::raw_get` directive instructs the __memcache_hande__
+to perform a get operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key. The difference between a `memcache::get` and `memcache::raw_get`
+is that `memcache::raw_get` does not perform a deserialization
+to a holder -- which is required to be an `std::string`.
+
+Whatever the __memcache_handle__ gets in the form of a string
+from the memcache server the `detail::raw_get_directive<>`
+will put in the provided `std::string` holder.
+
+    template <typename T>
+    detail::raw_get_directive<T>
+    raw_get(T _key, std::string & holder);
+
+The following example gets the raw data from the correct memcache
+server, and puts the data into an std::string holder:
+
+    std::string raw_data;
+    mc << memcache::raw_get("key_b", raw_data);
+
+[endsect] [/ memcache::raw_get]
+
+[section:set_raw memcache::raw_set]
+
+The `memcache::raw_set` directive instructs the __memcache_handle__
+to perform a set operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key. The difference between a `memcache::set` and `memcache::raw_set`
+is that `memcache::raw_set` does not perform a serialization of
+a given value, which should be an `std::string` or of a type
+convertible to an `std::string`.
+
+    template <typename T>
+    detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, uint16_t flags=0);
+
+The following examples sets the raw string "hello, world!" for the
+key "hello_world" without using any extra serialization.
+
+    mc << memcache::raw_set("hello_world", "hello, world!");
+
+[endsect] [/ memcache::raw_set]
+
+[section:server memcache::server]
+
+The `memcache::server` directive adds a given server host name and
+port as a defined server available to the __memcache_handle__.
+In the default implementation of the __memcache_handle__, a
+concatenation of the hostname and port are used as the identifier
+for the key for an internal `std::map`.
+
+    template <typename T, typename _T>
+    detail::server_directive<T>
+    server(T _name, _T _port);
+
+The condition for the type of `_port` is that it's of an integral
+type; `_name` should be convertible to an `std::string`.
+
+Given the following example, the two servers 'localhost:11211'
+and 'localhost:11212' are given as two servers to which the
+__memcache_handle__ will have access to.
+
+    mc << memcache::server("localhost", 11211)
+        << memcache::server("localhost", 11212);
+
+Using the lexicographical sorting of the aggregate names,
+given server offset 0 will map to 'localhost:11211',
+while server offset 1 will map to 'localhost:11212'.
+
+[note The consequence of this design is that servers
+can only be defined once. Even if a server is added
+multiple times into the __memcache_handle__, only
+one identifier is held regarding that server.
+This is the default implementation of the 
+__memcache_handle__. 
+
+This may change in the future, though there have not yet
+been plans to implement any different strategies.]
+
+[endsect] [/ memcache::server]
+
+[section:pool memcache::pool]
+
+The `memcache::pool` directive adds a set of servers to act
+as a redundant collection. The implementation of the get, set,
+and delete operations change a bit when you use pools instead
+of just single servers. The pool acts like a single server
+addressable via an offset. 
+
+Here's how the implementations change depending on the use
+of the `memcache::pool`.
+
+For `memcache::get` operations, the first in the set of servers
+is queried for the key and for some reason a problem is
+encountered (connection lost, key not found, etc.) then
+the remaining servers are tried in succession until the key
+is retrieved. If the key cannot be retrieved from any of the
+servers, an error is thrown.
+
+For `memcache::set` operations, the key is set on all the
+servers part of the pool.
+
+For `memcache::delete_` operations, the key is deleted on
+all the servers part of the pool.
+
+    deatil::pool_directive<server_pool>
+    pool(server_pool & pool_);
+
+    template <typename T, typename _T>
+    detail::pool_directive<_T>
+    pool(T _name, _T servers);
+
+The first version supports use of the `server_pool` type:
+
+    server_pool pool1("pool1");
+    pool1.add_server("localhost", 11211);
+    pool1.add_server("localhost", 11212);
+    mc << memcache::pool(pool1);
+
+The second version supports the tuple interface, which can
+be used in the case of statically sized pools:
+
+    mc << memcache::pool(
+            "pool1", 
+            make_tuple("localhost:11211", "localhost:11212")
+            );
+
+[endsect] [/ memcache::pool]
+
+[section:connect memcache::connect]
+
+The `memcache::connect` directive instructs the __memcache_handle__
+to connect to all defined servers which have been marked as
+disconnected.
+
+    mc << memcache::connect;
+
+[endsect] [/ memcache::connect]
+
+[endsect] [/ Directives]
+
+[endsect] [/ API Reference]
+
+[section:references References]
+
+Memcache Client Protocol Specifications: [@http://code.sixapart.com/svn/memcached/trunk/server/doc/protocol.txt]
+
+[endsect] [/ References]
+
+[section:acknowledgements Acknowledgements]
+
+Thanks to the engineering team at [@http://www.friendster.com/ Friendster, Inc.] for providing
+support and feedback during the design, implementation, deployment,
+testing, and eventual open sourcing of this library.
+
+Acknowledgements also go out to the authors and contributors to
+Boost.Spirit, Boost.Asio, Boost.Thread, Boost.Serialization, and
+the whole Boost C++ Library community for providing quality tools
+and libraries.
+
+[endsect] [/ Acknowledgements]

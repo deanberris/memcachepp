@@ -1,0 +1,25 @@
+project memcache++ 
+    : requirements 
+        <source>/boost//unit_test_framework 
+        <source>/boost//serialization 
+        <source>/boost//regex 
+        <source>/boost//system 
+        <source>/boost//thread
+        <include>..
+        <define>_REENTRANT
+        <link>static
+;
+
+unit-test memcache_protocol_test : test/memcache_protocol_test.cpp ;
+
+unit-test memcache_protocol_parser_test : test/memcache_protocol_parser_test.cpp ;
+
+unit-test memcache_hash_test : test/memcache_hash_test.cpp ;
+
+unit-test memcache_pool_test : test/memcache_pool_test.cpp ;
+
+exe query_memcache : util/query_memcache.cpp ;
+
+exe get_version : util/get_version.cpp ; 
+
+exe memcache_admin : util/memcache_admin.cpp : <source>/boost//program_options ;

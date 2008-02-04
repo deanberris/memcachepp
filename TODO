@@ -1,0 +1,19 @@
+* version 1.0
+ - add error handling for "ERROR", "CLIENT_ERROR"
+   and "SERVER_ERROR". See memcached protocol for
+   details.
+ 
+DONE 
+
+* version 0.9
+ - legalese documentation for licensing
+ - document concepts and policies
+ - support for binary data interchange
+ - support for text data interchange
+ - support for multi-threaded operation
+ - basic key validation
+ - allow request grouping
+ - support for rehashing to different memcache
+   in cases where a memcache instance is down
+ - support for reconnecting to "downed" memcache
+   instances. (should be handled by user)
