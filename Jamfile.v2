@@ -1,3 +1,11 @@
+import os ;
+
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+
+use-project /boost : $(BOOST_ROOT) ;
+
+using testing ;
+
 project memcache++ 
     : requirements 
         <source>/boost//unit_test_framework 
@@ -5,9 +13,8 @@ project memcache++
         <source>/boost//regex 
         <source>/boost//system 
         <source>/boost//thread
-        <include>..
         <define>_REENTRANT
-        <link>static
+        <include>.
 ;
 
 unit-test memcache_protocol_test : test/memcache_protocol_test.cpp ;
@@ -18,8 +25,3 @@ unit-test memcache_hash_test : test/memcache_hash_test.cpp ;
 
 unit-test memcache_pool_test : test/memcache_pool_test.cpp ;
 
-exe query_memcache : util/query_memcache.cpp ;
-
-exe get_version : util/get_version.cpp ; 
-
-exe memcache_admin : util/memcache_admin.cpp : <source>/boost//program_options ;
