@@ -2,6 +2,8 @@
  - add error handling for "ERROR", "CLIENT_ERROR"
    and "SERVER_ERROR". See memcached protocol for
    details.
+ - add support for 'increment' and 'decrement'
+   operations.
  
 DONE 
 
