@@ -8,6 +8,8 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_SET_HPP__
 #define __MEMACAHE_DETAIL_DIRECTIVES_SET_HPP__
 
+#include <memcache++/memcache/detail/expiration.hpp>
+
 namespace memcache { namespace detail {
 
     template <typename T>
@@ -39,6 +41,26 @@ namespace memcache { namespace detail {
     };
 
 }; // namespace detail
+
+    template <typename T, typename _T>
+    inline detail::set_directive<_T> set(T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0) {
+        return detail::set_directive<_T>(std::string(_key), value, flags, timeout, timeout);
+    };
+
+    template <typename T, typename _T>
+    inline detail::set_directive<_T> set(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0) {
+        return detail::set_directive<_T>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
+    };
+
+    template <typename T, typename _T>
+    inline detail::set_directive<_T> set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0) {
+        return detail::set_directive<_T>(std::string(_key), value, flags, 0, failover_expiration.timeout);
+    };
+
+    template <typename T, typename _T>
+    inline detail::set_directive<_T> set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, uint16_t flags = 0) {
+        return detail::set_directive<_T>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
+    };
 
 }; // namespace memcache
 

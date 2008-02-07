@@ -50,18 +50,6 @@
 
 namespace memcache {
     
-    namespace detail {
-
-        struct expire_type {
-            time_t timeout;
-        };
-
-        struct failover_expire_type {
-            time_t timeout;
-        };
-
-    };
-
     typedef detail::key_not_found_impl<tags::exception> 
         key_not_found ;
     
@@ -823,66 +811,6 @@ namespace memcache {
         return _request;
     };
 
-    template <typename T, typename _T>
-    inline detail::server_directive<T> server(T _name, _T _port) {
-        BOOST_STATIC_ASSERT((boost::is_integral<_T>::value));
-        return detail::server_directive<T>(std::string(_name), boost::lexical_cast<std::string>(_port));
-    };
-
-    template <typename T, typename _T>
-    inline detail::pool_directive<_T> pool(T _name, int status, _T servers) {
-        return detail::pool_directive<_T>(std::string(_name), status, servers);
-    };
-
-    inline detail::pool_directive<server_pool> pool(server_pool & pool_) {
-        return detail::pool_directive<server_pool>(pool_);
-    };
-
-    template <typename T, typename _T>
-    inline detail::pool_directive<_T> pool(T _name, _T servers) {
-        return detail::pool_directive<_T>(std::string(_name), 3, servers);
-    };
-
-    template <typename T, typename _T>
-    inline detail::get_directive<_T> get(T _key, _T & holder) {
-        return detail::get_directive<_T>(std::string(_key), holder);
-    };
-
-    template <typename T>
-    inline detail::raw_get_directive<> raw_get(T _key, std::string & holder) {
-        return detail::raw_get_directive<>(std::string(_key), holder);
-    };
-
-    template <typename T, typename _T>
-    inline detail::set_directive<_T> set(T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0) {
-        return detail::set_directive<_T>(std::string(_key), value, flags, timeout, timeout);
-    };
-
-    template <typename T, typename _T>
-    inline detail::set_directive<_T> set(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0) {
-        return detail::set_directive<_T>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
-    };
-
-    template <typename T, typename _T>
-    inline detail::set_directive<_T> set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0) {
-        return detail::set_directive<_T>(std::string(_key), value, flags, 0, failover_expiration.timeout);
-    };
-
-    template <typename T, typename _T>
-    inline detail::set_directive<_T> set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, uint16_t flags = 0) {
-        return detail::set_directive<_T>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
-    };
-
-    template <typename T>
-    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, uint16_t flags = 0) {
-        return detail::raw_set_directive<>(std::string(_key), std::string(value), flags, timeout, timeout);
-    };
-
-    template <typename T>
-    inline detail::delete_directive<T> delete_(T _key) {
-        return detail::delete_directive<T>(std::string(_key));
-    };
-
 #ifndef _REENTRANT
     typedef basic_handle<> handle ;
     typedef basic_request<> request ;
@@ -894,20 +822,6 @@ namespace memcache {
     extern tags::connect connect ;
 
     extern tags::commit commit ;
-
-    template <typename T>
-    inline detail::expire_type expire(T const & timeout) {
-        BOOST_STATIC_ASSERT((boost::is_integral<T>::value));
-        detail::expire_type result = { boost::numeric_cast<time_t>(timeout) };
-        return result;
-    };
-
-    template <typename T>
-    inline detail::failover_expire_type failover_expire(T const & timeout) {
-        BOOST_STATIC_ASSERT((boost::is_integral<T>::value));
-        detail::failover_expire_type result = { boost::numeric_cast<time_t>(timeout) };
-        return result;
-    };
 
 };
 

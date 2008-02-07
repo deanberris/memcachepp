@@ -97,6 +97,20 @@ namespace memcache { namespace detail {
     
 }; // namespace detail
 
+    template <typename T, typename _T>
+    inline detail::pool_directive<_T> pool(T _name, int status, _T servers) {
+        return detail::pool_directive<_T>(std::string(_name), status, servers);
+    };
+
+    inline detail::pool_directive<server_pool> pool(server_pool & pool_) {
+        return detail::pool_directive<server_pool>(pool_);
+    };
+
+    template <typename T, typename _T>
+    inline detail::pool_directive<_T> pool(T _name, _T servers) {
+        return detail::pool_directive<_T>(std::string(_name), 3, servers);
+    };
+
 }; // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__

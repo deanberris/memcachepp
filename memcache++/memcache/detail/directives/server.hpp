@@ -34,6 +34,12 @@ namespace memcache { namespace detail {
 
 }; // namespace detail
 
+    template <typename T, typename _T>
+    inline detail::server_directive<T> server(T _name, _T _port) {
+        BOOST_STATIC_ASSERT((boost::is_integral<_T>::value));
+        return detail::server_directive<T>(std::string(_name), boost::lexical_cast<std::string>(_port));
+    };
+
 }; // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__

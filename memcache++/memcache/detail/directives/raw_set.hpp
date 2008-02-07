@@ -43,6 +43,11 @@ namespace memcache { namespace detail {
 
 }; // namespace detail
 
+    template <typename T>
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, uint16_t flags = 0) {
+        return detail::raw_set_directive<>(std::string(_key), std::string(value), flags, timeout, timeout);
+    };
+
 }; // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_RAW_SET_HPP__
