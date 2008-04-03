@@ -25,3 +25,4 @@ unit-test memcache_hash_test : test/memcache_hash_test.cpp ;
 
 unit-test memcache_pool_test : test/memcache_pool_test.cpp ;
 
+unit-test memcache_fluent_test : test/memcache_fluent_interface.cpp ;

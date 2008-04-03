@@ -41,12 +41,18 @@ namespace memcache { namespace policies {
 }; // namespace policies
 
     inline  policies::string_preserve::oarchive & operator<< ( policies::string_preserve::oarchive & archive, std::string const & str) {
-        archive._os << str;
+        archive._os.str(str);
         return archive;
     };
 
     inline  policies::string_preserve::iarchive & operator>> ( policies::string_preserve::iarchive & archive, std::string & str) {
-        archive._is >> str;
+        std::stringbuf buffer;
+        while (!archive._is.eof()) {
+            archive._is.get(buffer);
+            if (archive._is.peek() == '\n')
+                buffer.sputc(archive._is.get());
+        };
+        str = buffer.str();
         return archive;
     };
 

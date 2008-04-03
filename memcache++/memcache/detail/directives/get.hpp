@@ -37,9 +37,9 @@ namespace memcache { namespace detail {
 
 }; // namespace detail
 
-    template <typename T, typename _T>
-    inline detail::get_directive<_T> get(T _key, _T & holder) {
-        return detail::get_directive<_T>(std::string(_key), holder);
+    template <typename _T>
+    inline detail::get_directive<_T> get(std::string const & _key, _T & holder) {
+        return detail::get_directive<_T>(_key, holder);
     };
 
 }; // namespace detail

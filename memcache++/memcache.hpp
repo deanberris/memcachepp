@@ -277,6 +277,8 @@ namespace memcache {
         
         ~basic_handle() { 
             typename threading_policy::lock scoped_lock(*this);
+            pool_container().swap(pools);
+            server_container().swap(servers);
             _service.stop();
         };
 

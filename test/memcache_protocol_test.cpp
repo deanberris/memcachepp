@@ -1,3 +1,17 @@
+
+// Copyright 2007, 2008 (c) Friendster, Inc.
+// Copyright 2007, 2008 (c) Dean Michael Berris <dmberris@friendster.com>
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+/**
+  * Memcache Protocol Test implementation.
+  *
+  * @author Dean Michael Berris <dmberris@friendster.com>
+  *
+  */
+
 #define BOOST_TEST_MODULE Memcache Protocol Test
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -148,11 +162,24 @@ BOOST_AUTO_TEST_CASE ( raw_set_get_test ) {
 
     try { mc << memcache::delete_("key") ; } catch (...) { };
 
-    mc << memcache::raw_set("key", std::string("value")) ;
-
-    mc << memcache::raw_get("key", value) ;
-
+    BOOST_CHECK_NO_THROW (mc << memcache::raw_set("key", std::string("value"))) ;
+    BOOST_CHECK_NO_THROW (mc << memcache::raw_get("key", value)) ;
     BOOST_CHECK_EQUAL (value, "value");
+};
+
+BOOST_AUTO_TEST_CASE ( raw_set_get_with_null_test ) {
+    memcache::handle mc;
+    mc << memcache::server("localhost", 11211) << memcache::connect;
+
+    static char test_data[] = "this\0has\nspecial\tcharacters\r\nembedded";
+    std::string test(test_data, test_data + sizeof(test_data));
+    std::string value;
+
+    try { mc << memcache::delete_("key") ; } catch (...) { };
+
+    BOOST_CHECK_NO_THROW (mc << memcache::raw_set("key", test)) ;
+    BOOST_CHECK_NO_THROW (mc << memcache::raw_get("key", value)) ;
+    BOOST_CHECK_EQUAL (value, test);
 };
 
 void do_call() {
