@@ -789,8 +789,8 @@ namespace memcache {
         };
     };
 
-    template <class threading_policy, class data_interchange_policy , class directive_type>
-    inline basic_handle<threading_policy, data_interchange_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy> & _handle, directive_type const & directive) {
+    template <class threading_policy, class data_interchange_policy, class hash_policy, class directive_type>
+    inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, directive_type const & directive) {
         directive(_handle);
         return _handle;
     };
@@ -801,8 +801,8 @@ namespace memcache {
         return _request;
     };
 
-    template <typename threading_policy, class data_interchange_policy>
-    inline basic_handle<threading_policy, data_interchange_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy> & _handle, tags::connect) {
+    template <typename threading_policy, class data_interchange_policy, class hash_policy>
+    inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, tags::connect) {
         _handle.connect();
         return _handle;
     };
