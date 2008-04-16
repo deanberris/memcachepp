@@ -14,7 +14,7 @@ namespace memcache { namespace detail {
 
         template <class tag = tags::default_tag >
         struct raw_set_directive {
-            explicit raw_set_directive(std::string const & key, std::string const & value, int16_t flags, time_t timeout, time_t failover_timeout) :
+            explicit raw_set_directive(std::string const & key, std::string const & value, boost::uint16_t flags, time_t timeout, time_t failover_timeout) :
                 _key(key), _value(value), _flags(flags), _timeout(timeout), _failover_timeout(failover_timeout) { };
 
             template <typename _T>
@@ -36,7 +36,7 @@ namespace memcache { namespace detail {
 
             mutable std::string _key;
             mutable std::string _value;
-            mutable uint16_t _flags;
+            mutable boost::uint16_t _flags;
             mutable time_t _timeout;
             mutable time_t _failover_timeout;
         };
@@ -44,7 +44,7 @@ namespace memcache { namespace detail {
 }; // namespace detail
 
     template <typename T>
-    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, uint16_t flags = 0) {
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, boost::uint16_t flags = 0) {
         return detail::raw_set_directive<>(std::string(_key), std::string(value), flags, timeout, timeout);
     };
 

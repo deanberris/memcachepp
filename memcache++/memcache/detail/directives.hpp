@@ -17,6 +17,7 @@
 #include "directives/raw_set.hpp"
 #include "directives/delete.hpp"
 #include "directives/connect.hpp"
+#include "directives/commit.hpp"
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_HPP__
 

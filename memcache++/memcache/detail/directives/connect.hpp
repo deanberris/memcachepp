@@ -8,17 +8,28 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_CONNECT_HPP__
 #define __MEMCACHE_DETAIL_DIRECTIVES_CONNECT_HPP__
 
-namespace memcache { namespace detail {
-    
-    template <typename tag>
-    struct connect_directive {
-        template <typename T>
-        void operator() (T & handle) const {
-            handle.connect();
-        };
-    };
+namespace memcache { 
 
-}; // namespace detail
+	namespace helper {
+		struct connect_directive;
+	};
+
+	helper::connect_directive connect(helper::connect_directive);
+
+	namespace helper {
+		struct connect_directive {
+		private:
+			connect_directive() { };
+			connect_directive(const connect_directive &) { };
+			friend connect_directive memcache::connect(connect_directive);
+		};
+	};
+
+	typedef helper::connect_directive (*connect_directive_t)(helper::connect_directive);
+
+	inline helper::connect_directive connect(helper::connect_directive) {
+		return helper::connect_directive();
+	};
 
 }; // namespace memcache
 

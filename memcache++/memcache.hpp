@@ -33,6 +33,7 @@
 #include <boost/bind.hpp>
 #include <boost/cast.hpp>
 #include <boost/foreach.hpp>
+#include <boost/cstdint.hpp>
 #include <numeric>
 #include <istream>
 #include <sstream>
@@ -130,7 +131,7 @@ namespace memcache {
         };
 
         template <typename T> // T must be serializable
-        void set(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, uint16_t flags = 0) {
+        void set(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -160,7 +161,7 @@ namespace memcache {
                 throw key_not_stored(key);
         };
 
-        void set_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags = 0) {
+        void set_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -282,7 +283,7 @@ namespace memcache {
             _service.stop();
         };
 
-        friend class basic_request<threading_policy, data_interchange_policy, hash_policy>;
+        friend struct basic_request<threading_policy, data_interchange_policy, hash_policy>;
 
         typename server_container::size_type server_count() {
             return servers.size();
@@ -370,7 +371,7 @@ namespace memcache {
             struct set_impl {
                 std::string command;
                 
-                explicit set_impl(std::string const & key, T const & value, time_t expiration, time_t failover_expiration, uint16_t flags, bool rehash) 
+                explicit set_impl(std::string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) 
                     { 
                         std::ostringstream output_bytes_stream;
                         typename set_interchange_policy::oarchive archive(output_bytes_stream);
@@ -802,13 +803,13 @@ namespace memcache {
     };
 
     template <typename threading_policy, class data_interchange_policy, class hash_policy>
-    inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, tags::connect) {
+    inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, connect_directive_t) {
         _handle.connect();
         return _handle;
     };
 
     template <typename threading_policy, class data_interchange_policy, class hash_policy>
-    inline basic_request<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_request<threading_policy, data_interchange_policy, hash_policy> & _request, tags::commit) {
+    inline basic_request<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_request<threading_policy, data_interchange_policy, hash_policy> & _request, commit_directive_t) {
         _request.perform();
         return _request;
     };
@@ -820,10 +821,6 @@ namespace memcache {
     typedef basic_handle<policies::boost_threading<> > handle ;
     typedef basic_request<policies::boost_threading<> > request ;
 #endif
-
-    extern tags::connect connect ;
-
-    extern tags::commit commit ;
 
 };
 
