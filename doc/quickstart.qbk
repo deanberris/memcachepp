@@ -115,5 +115,32 @@ the key `"hello_world"` into `cached_message` using __boost_serialization__.
 [note More about the serialization strategies are discussed in the
 policies section of the memcache handle type.]
 
+*Fluent Interface*
+
+As of version 0.10, there is an alternative interface to using the
+memcache++ library called the fluent interface. Instead of using the
+more verbose version of the interface (as presented above) you can use
+a less verbose version much closer to C++ semantics. An example of the
+same above functionality is presented below:
+
+      std::string hello_world("Hello, World!");
+      std::string cached_message;
+      try {
+          using namespace memcache::fluent;
+          key(mc, "hello_world") = hello_world; // memcache::set
+          wrap(cached_message) = get(mc, "hello_world"); // memcache::get
+          remove(mc, "hello_world"); // memcache::delete_
+
+          std::cout << cached_message
+              << std::endl;
+      } catch (std::runtimer_error & e) {
+          std::cerr << "Unexpected error: "
+              << e.what();
+      }
+
+There is basically no difference between using the fluent interface and
+the verbose interface. Using either one is supported, although for better
+readability the fluent interface may be preferred.
+
 [endsect]
 

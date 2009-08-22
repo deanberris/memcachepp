@@ -111,13 +111,13 @@ namespace memcache {
                     mutable detail::failover_expire_type _failover_expiration;
             };
 
-        template <typename Handle>
-            inline key_impl<Handle>
-            key(Handle & handle, std::string const & key) {
-                return key_impl<Handle>(handle, key);
-            };
-
     }; // namespace fluent
+
+    template <typename Handle>
+        inline fluent::key_impl<Handle>
+        key(Handle & handle, std::string const & key) {
+            return fluent::key_impl<Handle>(handle, key);
+        };
 
 }; // namespace memcache
 

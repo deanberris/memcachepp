@@ -168,6 +168,36 @@
         of the memcache handle type.
       </p></td></tr>
 </table></div>
+<div class="itemizedlist"><ul type="disc"><li>
+        Fluent Interface*
+      </li></ul></div>
+<p>
+      As of version 0.10, there is an alternative interface to using the memcache++
+      library called the fluent interface. Instead of using the more verbose version
+      of the interface (as presented above) you can use a less verbose version much
+      closer to C++ semantics. An example of the same above functionality is presented
+      below:
+    </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hello_world</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cached_message</span><span class="special">;</span>
+<span class="keyword">try</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">fluent</span><span class="special">;</span>
+    <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"hello_world"</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">hello_world</span><span class="special">;</span> <span class="comment">// memcache::set
+</span>    <span class="identifier">wrap</span><span class="special">(</span><span class="identifier">cached_message</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"hello_world"</span><span class="special">);</span> <span class="comment">// memcache::get
+</span>    <span class="identifier">remove</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"hello_world"</span><span class="special">);</span> <span class="comment">// memcache::delete_
+</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">cached_message</span>
+        <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtimer_error</span> <span class="special">&amp;</span> <span class="identifier">e</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Unexpected error: "</span>
+        <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">what</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+      There is basically no difference between using the fluent interface and the
+      verbose interface. Using either one is supported, although for better readability
+      the fluent interface may be preferred.
+    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

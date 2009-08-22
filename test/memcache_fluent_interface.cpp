@@ -1,6 +1,7 @@
 
 // Copyright 2008 (c) Friendster, Inc.
 // Copyright 2008 (c) Dean Michael Berris <dmberris@friendster.com>
+// Copyright 2009 (c) Dean Michael Berris <mikhailberis@gmail.com>
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -11,9 +12,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <memcachepp/memcache.hpp>
-#include <memcachepp/fluent/wrap.hpp>
-#include <memcachepp/fluent/get.hpp>
-#include <memcachepp/fluent/key.hpp>
 
 BOOST_AUTO_TEST_CASE ( assignment_test ) {
     memcache::handle mc;
@@ -36,7 +34,7 @@ BOOST_AUTO_TEST_CASE ( assignment_test ) {
 
     BOOST_CHECK_EQUAL ( "Hello, World!", container );
 
-    try { mc << memcache::delete_("hello"); } catch (...) { };
+    try { remove(mc, "hello"); } catch (...) { }
 };
 
 BOOST_AUTO_TEST_CASE ( key_set_test ) {
@@ -62,6 +60,6 @@ BOOST_AUTO_TEST_CASE ( key_set_test ) {
         BOOST_FAIL("Unknown non-standard exception caught.");
     };
 
-    try { mc << memcache::delete_("hello"); } catch (...) { };
+    try { remove(mc, "hello"); } catch (...) { };
 };
 
