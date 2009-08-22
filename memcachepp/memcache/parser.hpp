@@ -16,14 +16,14 @@
 #ifndef __MEMCACHEPP_PARSER_HPP__
 #define __MEMCACHEPP_PARSER_HPP__
 
-#include <boost/spirit/core.hpp>
-#include <boost/spirit/attribute.hpp>
-#include <boost/spirit/utility/loops.hpp>
-#include <boost/spirit/phoenix/statements.hpp>
+#include <boost/spirit/include/classic_core.hpp>
+#include <boost/spirit/include/classic_attribute.hpp>
+#include <boost/spirit/include/classic_loops.hpp>
+#include <boost/spirit/include/phoenix1_statements.hpp>
 
 namespace memcache { namespace detail {
 
-    using namespace boost::spirit;
+    using namespace boost::spirit::classic;
     using namespace phoenix;
     
     template <class callback_container>

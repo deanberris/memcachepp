@@ -38,39 +38,18 @@
 #include <istream>
 #include <sstream>
 
-#include <memcachepp/memcache/policies.hpp>
 #include <memcachepp/memcache/detail/directives.hpp>
-#include <memcachepp/memcache/parser.hpp>
-#include <memcachepp/memcache/detail/deserializer.hpp>
-#include <memcachepp/memcache/detail/exceptions.hpp>
-#include <memcachepp/memcache/tags.hpp>
 #include <memcachepp/memcache/detail/read_handler.hpp>
+#include <memcachepp/memcache/detail/deserializer.hpp>
+#include <memcachepp/memcache/exceptions.hpp>
+#include <memcachepp/memcache/tags.hpp>
 #include <memcachepp/memcache/server_pool.hpp>
+#include <memcachepp/memcache/parser.hpp>
+#include <memcachepp/memcache/policies.hpp>
 
 #include <boost/fusion/tuple.hpp>
 
 namespace memcache {
-    
-    typedef detail::key_not_found_impl<tags::exception> 
-        key_not_found ;
-    
-    typedef detail::key_not_stored_impl<tags::exception> 
-        key_not_stored ;
-    
-    typedef detail::offset_out_of_bounds_impl<tags::exception> 
-        offset_out_of_bounds ;
-
-    typedef detail::invalid_key_impl<tags::exception> 
-        invalid_key ;
-
-    typedef detail::no_available_servers_impl<tags::exception> 
-        no_available_servers ;
-
-    typedef detail::invalid_response_found_impl<tags::exception> 
-        invalid_response_found ;
-
-    typedef detail::malformed_data_impl<tags::exception> 
-        malformed_data ;
     
     typedef boost::function<void(std::string const &)> 
         callback_type;
@@ -316,7 +295,7 @@ namespace memcache {
             typename pool_container::iterator pool_iterator;
             size_t counter = 0;
             for (pool_iterator = pools.begin();
-                    pool_iterator != pools.end(), counter < offset;
+                    pool_iterator != pools.end() && counter < offset;
                     ++counter, ++pool_iterator);
 
             bool past_end = false;
