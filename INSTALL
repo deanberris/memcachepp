@@ -1,7 +1,10 @@
-To install, copy memcache++/ into a directory convenient for
+To install, copy memcachepp/ into a directory convenient for
 the compiler to locate by default, or into a directory that can
 be configured to be searchable by the compiler.
 
 Memcache++ Client is header only and does not require any
-special build instructions.
+special build instructions. It does however require that you have
+Boost.Date_time, Boost.Serialization, and Boost.Spirit installed
+and available when building programs that use the 
+Memcache++ Client.
 
