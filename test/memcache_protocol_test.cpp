@@ -20,6 +20,8 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
+#include <boost/serialization/vector.hpp>
+
 BOOST_AUTO_TEST_CASE ( initializer_test ) {
     memcache::handle mc;
     mc << memcache::server("localhost", 11211) << memcache::connect ;
