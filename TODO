@@ -4,8 +4,15 @@
    details.
  - add support for 'increment' and 'decrement'
    operations.
+ - add support for 'append' operation
  
 DONE 
+
+* version 0.10
+ - fluent interface merged
+ - update documentation to reflect author status
+ - change include directory from memcache++ to memcachepp
+ - address warnings on Boost.Spirit include
 
 * version 0.9
  - legalese documentation for licensing
