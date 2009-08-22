@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_POLICIES_BOOST_THREADING_HPP__
 #define __MEMCACHE_POLICIES_BOOST_THREADING_HPP__
 
-#include "tags.hpp"
+#include <memcachepp/memcache/policies/tags.hpp>
 
 #ifdef _REENTRANT
 #include <boost/thread/mutex.hpp>

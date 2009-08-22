@@ -10,10 +10,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <memcache++/memcache.hpp>
-#include <memcache++/fluent/wrap.hpp>
-#include <memcache++/fluent/get.hpp>
-#include <memcache++/fluent/key.hpp>
+#include <memcachepp/memcache.hpp>
+#include <memcachepp/fluent/wrap.hpp>
+#include <memcachepp/fluent/get.hpp>
+#include <memcachepp/fluent/key.hpp>
 
 BOOST_AUTO_TEST_CASE ( assignment_test ) {
     memcache::handle mc;

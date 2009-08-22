@@ -11,11 +11,11 @@
 namespace memcache {
 
     namespace tags {
-        struct connect { };
-        struct exception { };
-        struct commit { };
-        struct request { };
-        struct container { };
+        struct connect;
+        struct exception;
+        struct commit;
+        struct request;
+        struct container;
     };
 
 }; // namespace memcache

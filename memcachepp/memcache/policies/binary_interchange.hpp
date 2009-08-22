@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_POLICIES_BINARY_INTERCHANGE_HPP__
 #define __MEMCACHE_POLICIES_BINARY_INTERCHANGE_HPP__
 
-#include "tags.hpp"
+#include <memcachepp/memcache/policies/tags.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/archive_exception.hpp>

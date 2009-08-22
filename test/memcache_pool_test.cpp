@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE Memcache Pool Test
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <memcache++/memcache.hpp>
+#include <memcachepp/memcache.hpp>
 #include <boost/fusion/tuple.hpp>
 
 BOOST_AUTO_TEST_CASE ( initializer_test ) {

@@ -8,14 +8,14 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
 #define __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
 
-#include <boost/fusion/algorithm/iteration/for_each.hpp>
-
-#include "server.hpp"
-#include "../../tags.hpp"
-#include "../../server_pool.hpp"
 #include <list>
 #include <boost/cast.hpp>
 #include <algorithm>
+#include <boost/fusion/algorithm/iteration/for_each.hpp>
+
+#include <memcachepp/memcache/tags.hpp>
+#include <memcachepp/memcache/server_pool.hpp>
+#include <memcachepp/memcache/detail/directives/server.hpp>
 
 namespace memcache { namespace detail {
 

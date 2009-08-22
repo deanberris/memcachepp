@@ -1,6 +1,6 @@
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <memcache++/memcache.hpp>
+#include <memcachepp/memcache.hpp>
 
 struct hash_test : memcache::policies::default_hash<> {
     size_t operator() (std::string const & key) const {

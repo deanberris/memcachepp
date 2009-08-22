@@ -38,14 +38,14 @@
 #include <istream>
 #include <sstream>
 
-#include "memcache/policies.hpp"
-#include "memcache/detail/directives.hpp"
-#include "memcache/parser.hpp"
-#include "memcache/detail/deserializer.hpp"
-#include "memcache/detail/exceptions.hpp"
-#include "memcache/tags.hpp"
-#include "memcache/detail/read_handler.hpp"
-#include "memcache/server_pool.hpp"
+#include <memcachepp/memcache/policies.hpp>
+#include <memcachepp/memcache/detail/directives.hpp>
+#include <memcachepp/memcache/parser.hpp>
+#include <memcachepp/memcache/detail/deserializer.hpp>
+#include <memcachepp/memcache/detail/exceptions.hpp>
+#include <memcachepp/memcache/tags.hpp>
+#include <memcachepp/memcache/detail/read_handler.hpp>
+#include <memcachepp/memcache/server_pool.hpp>
 
 #include <boost/fusion/tuple.hpp>
 

@@ -16,7 +16,7 @@
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include <memcache++/memcache.hpp>
+#include <memcachepp/memcache.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 

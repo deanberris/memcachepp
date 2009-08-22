@@ -1,6 +1,6 @@
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <memcache++/memcache/parser.hpp>
+#include <memcachepp/memcache/parser.hpp>
 #include <boost/function.hpp>
 #include <iostream>
 #include <map>

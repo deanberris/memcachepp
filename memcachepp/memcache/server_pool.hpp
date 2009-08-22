@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_SERVER_POOL_HPP__
 #define __MEMCACHE_SERVER_POOL_HPP__
 
-#include "tags.hpp"
+#include <memcachepp/memcache/tags.hpp>
 #include <list>
 
 namespace memcache {

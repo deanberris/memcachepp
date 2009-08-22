@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_SET_HPP__
 #define __MEMACAHE_DETAIL_DIRECTIVES_SET_HPP__
 
-#include <memcache++/memcache/detail/expiration.hpp>
+#include <memcachepp/memcache/detail/expiration.hpp>
 
 namespace memcache { namespace detail {
 

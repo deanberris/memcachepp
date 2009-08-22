@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_RAW_SET_HPP__
 #define __MEMCACHE_DETAIL_DIRECTIVES_RAW_SET_HPP__
 
-#include "../tags.hpp"
+#include <memcachepp/memcache/detail/tags.hpp>
 
 namespace memcache { namespace detail {
 

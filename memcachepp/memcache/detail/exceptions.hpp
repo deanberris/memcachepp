@@ -11,7 +11,7 @@
 #include <exception>
 #include <string>
 
-#include "tags.hpp"
+#include <memcachepp/memcache/tags.hpp>
 
 namespace memcache { namespace detail {
 

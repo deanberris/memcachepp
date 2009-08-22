@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
 #define __MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
 
-#include "../tags.hpp"
+#include <memcachepp/memcache/detail/tags.hpp>
 #include <string>
 
 namespace memcache { namespace detail {

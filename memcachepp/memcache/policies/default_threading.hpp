@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_POLICIES_DEFAULT_THREADING_HPP__
 #define __MEMCACHE_POLICIES_DEFAULT_THREADING_HPP__
 
-#include "tags.hpp"
+#include <memcachepp/memcache/policies/tags.hpp>
 
 namespace memcache { namespace policies {
 

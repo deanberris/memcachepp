@@ -8,7 +8,7 @@
 #ifndef __MEMCACHE_POLICIES_STRING_PRESERVE__
 #define __MEMCACHE_POLICIES_STRING_PRESERVE__
 
-#include "tags.hpp"
+#include <memcachepp/memcache/policies/tags.hpp>
 #include <boost/ref.hpp>
 #include <sstream>
 #include <string>
