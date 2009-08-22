@@ -1,0 +1,340 @@
+[section:api API Reference]
+
+[section:classes Classes]
+
+[section:memcache_handle memcache::handle]
+
+The __memcache_handle__ is the center of the Memcache++ Client
+library. All the memcache related functionality is implemented
+in this class. 
+
+The __memcache_handle__ implementation supports the following
+features:
+
+* Server Pools -- define a group of servers to act as redundant
+pools, where set and delete operations are mirrored to all members
+of the pool; get operations happen on only the first member that
+responds, other members only get queried when the first one doesn't
+respond appropriately.
+* Persistent Connections -- instead of making many multiple
+connections, persistent connections are kept to minimize the
+overhead of creating new connections to the servers
+* Thread-Safe Operations -- in multi-threaded (`_REENTRANT`) mode,
+all methods requiring access to persistent connections are atomic.
+
+Below is a detailed API guide to the class:
+
+[table Nested Types
+    [[Name] [Description]]
+    [[`connection_ptr`] [Connection pointer type.]]
+    [[`server_info`] [Server information type.]]
+    [[`pool_info`] [Pool information type.]]
+    [[`server_container`] [Server container type.]]
+    [[`pool_container`] [Pool container type.]]
+]
+
+[table Member methods
+    [[Name] [Result] [Description]]
+    [[`basic_handle()`] [*N/A*] 
+        [Default Constructor]
+    ]
+    [[`add_pool(std::string const & pool_name, pool_info p_info)`] [`void`]
+        [Add pool to the handle.]
+    ]
+    [[`add_server(std::string const & server_name, server_info const & s_info)`] [`void`]
+        [Add server to the handle.]
+    ]
+    [[`connect()`] [`void`] 
+        [Connect to defined memcache servers.]
+    ]
+    [[`delete_(size_t offset, std::string const & key, time_t delay = 0)`] [`void`]
+        [Delete the data associated to `key` from the memcache
+        server identified by `offset`, set delay to `delay`.]
+    ]
+    [[`template <typename T> get(size_t offset, std::string const & key, T & holder)`] [`void`]
+        [Get the data associated to `key` from the memcache server
+        identified by `offset` deserialized into `holder`.]
+    ]
+    [[`get_raw(size_t offset, std::string const & key, std::string & holder)`] [`void`]
+        [Get the data associated to `key` from the memcache server
+        identified by `offset` and stored as a string into `holder`.]
+    ]
+    [[`is_connected(std::string const & server_name)`] [`bool`]
+        [Returns whether a connection to the server identified 
+        with host name `server_name` is active.]
+    ]
+    [[`pool_count()`] [size_t]
+        [Returns the number of pools defined in the handle.]
+    ]
+    [[`server_count()`] [size_t]
+        [Returns the number of servers defined in the handle.]
+    ]
+    [[`template <typename T> set(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`] 
+        [Sets the `key` to `value` in the memcache server identified 
+        by `offset`, on failover set the expiration to 
+        `failover_expiraton`, while when successful set the 
+        expiration to `expiration`.]
+    ]
+    [[`set_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
+        [Sets the `key` to `value` in the memcache server identified
+        by `offset`, on failover set the expiration to
+        `failover_expiration`, while when successful set the
+        expiration to `expiration`. The value set here is set 'as is'
+        without serialization.]
+    ]
+]
+
+[endsect] [/ memcache::handle]
+
+[endsect] [/ Classes]
+
+[section:directives Directives]
+
+[section:get memcache::get]
+
+The `memcache::get` directive instructs the __memcache_hande__ to 
+perform a get operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key.
+
+    template <typename T, typename _T>
+    detail::get_directive<_T>
+    get(T _key, _T & holder);
+
+At compile time, `T` and `_T` don't have to be explicitly stated
+because it can be deduced by the compiler. For example:
+
+    int a;
+    double b;
+    std::string c;
+    mc << memcache::get("key_a", a)
+        << memcache::get("key_b", b)
+        << memcache::get("key_c", c);
+
+The compiler will then be able to determine that `T` is a `char[6]`
+while `a` is an `int`, `b` is a double, and `c` is a `std::string`.
+Each call to `memcache::get` above will return the correct
+specialization of `detail::get_directive` which is then applied
+to the __memcache_handle__ `mc`.
+
+[endsect] [/ memcache::get]
+
+[section:set memcache::set]
+
+The `memcache::set` directive instructs the __memcache_handle__ to
+perform a set operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to set the data in, based on the hash on the provided key.
+
+    template <typename T, typename _T>
+    detail::set_irective<_T>
+    set(_T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::set_directive<_T>
+    set(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::set_directive<_T>
+    set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, uint16_t flags=0);
+
+    template <typename T, typename _T>
+    detail::set_directive<_T>
+    set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, uint16_t flags=0);
+
+There are four overloads to the `memcache::set` directive, which 
+corresponds to different ways of setting the expiration of the key
+being set.
+
+The first version defaults the timeout to 0, which means the key
+set is not set to expire. When timeout is set though, this is used
+to determine when the key is expired. When there is a re-hash of
+the key to a different server -- which happens when the server it's
+intended for, for some reason cannot accomodate the set request --
+the same timeout is used.
+
+    mc << memcache::set("key_a", 100);
+
+The second and third version allows for defining different expirations
+when the set is successful (value denoted by `detail::expire_type`)
+and when the key is re-hashed to a different server (value denoted
+by `detail::failover_expire_type`).
+
+    mc << memcache::set("key_b", double(2.5), expire(300), failover_expire(60))
+        << memcache::set("key_c", std::string("Hello, World!"), failover_expire(100));
+
+The fourth version is equivalent to setting the expiration to 0,
+while setting the failover expiration to what `failover_expiration`
+is set to when a re-hash of a key occurs.
+
+[endsect] [/ memcache::set]
+
+[section:delete_ memcache::delete_]
+
+The `memcache::delete_` directive instructs the __memcache_handle__ 
+to delete data from the appropriate memcache server assosicated to a
+given key. The `memcache::delete_` directive uses the 
+__memcache_handle__'s hashing implementation to determine which 
+memcache server the key can be located from.
+
+    template <typename T>
+    detail::delete_directive<T>
+    delete_(T _key);
+
+They type of `key` is unspecified, but the requirement is that
+it is convertible to an `std::string`. An example usage of the
+`memcache::delete_` directive is shown below, which deletes the
+key and data associated with "key_a" from the appropriate server.
+
+    mc << memcache::delete_("key_a");
+
+[endsect] [/ memcache::delete_]
+
+[section:get_raw memcache::raw_get]
+
+The `memcache::raw_get` directive instructs the __memcache_hande__
+to perform a get operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key. The difference between a `memcache::get` and `memcache::raw_get`
+is that `memcache::raw_get` does not perform a deserialization
+to a holder -- which is required to be an `std::string`.
+
+Whatever the __memcache_handle__ gets in the form of a string
+from the memcache server the `detail::raw_get_directive<>`
+will put in the provided `std::string` holder.
+
+    template <typename T>
+    detail::raw_get_directive<T>
+    raw_get(T _key, std::string & holder);
+
+The following example gets the raw data from the correct memcache
+server, and puts the data into an std::string holder:
+
+    std::string raw_data;
+    mc << memcache::raw_get("key_b", raw_data);
+
+[endsect] [/ memcache::raw_get]
+
+[section:set_raw memcache::raw_set]
+
+The `memcache::raw_set` directive instructs the __memcache_handle__
+to perform a set operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key. The difference between a `memcache::set` and `memcache::raw_set`
+is that `memcache::raw_set` does not perform a serialization of
+a given value, which should be an `std::string` or of a type
+convertible to an `std::string`.
+
+    template <typename T>
+    detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, uint16_t flags=0);
+
+The following examples sets the raw string "hello, world!" for the
+key "hello_world" without using any extra serialization.
+
+    mc << memcache::raw_set("hello_world", "hello, world!");
+
+[endsect] [/ memcache::raw_set]
+
+[section:server memcache::server]
+
+The `memcache::server` directive adds a given server host name and
+port as a defined server available to the __memcache_handle__.
+In the default implementation of the __memcache_handle__, a
+concatenation of the hostname and port are used as the identifier
+for the key for an internal `std::map`.
+
+    template <typename T, typename _T>
+    detail::server_directive<T>
+    server(T _name, _T _port);
+
+The condition for the type of `_port` is that it's of an integral
+type; `_name` should be convertible to an `std::string`.
+
+Given the following example, the two servers 'localhost:11211'
+and 'localhost:11212' are given as two servers to which the
+__memcache_handle__ will have access to.
+
+    mc << memcache::server("localhost", 11211)
+        << memcache::server("localhost", 11212);
+
+Using the lexicographical sorting of the aggregate names,
+given server offset 0 will map to 'localhost:11211',
+while server offset 1 will map to 'localhost:11212'.
+
+[note The consequence of this design is that servers
+can only be defined once. Even if a server is added
+multiple times into the __memcache_handle__, only
+one identifier is held regarding that server.
+This is the default implementation of the 
+__memcache_handle__. 
+
+This may change in the future, though there have not yet
+been plans to implement any different strategies.]
+
+[endsect] [/ memcache::server]
+
+[section:pool memcache::pool]
+
+The `memcache::pool` directive adds a set of servers to act
+as a redundant collection. The implementation of the get, set,
+and delete operations change a bit when you use pools instead
+of just single servers. The pool acts like a single server
+addressable via an offset. 
+
+Here's how the implementations change depending on the use
+of the `memcache::pool`.
+
+For `memcache::get` operations, the first in the set of servers
+is queried for the key and for some reason a problem is
+encountered (connection lost, key not found, etc.) then
+the remaining servers are tried in succession until the key
+is retrieved. If the key cannot be retrieved from any of the
+servers, an error is thrown.
+
+For `memcache::set` operations, the key is set on all the
+servers part of the pool.
+
+For `memcache::delete_` operations, the key is deleted on
+all the servers part of the pool.
+
+    deatil::pool_directive<server_pool>
+    pool(server_pool & pool_);
+
+    template <typename T, typename _T>
+    detail::pool_directive<_T>
+    pool(T _name, _T servers);
+
+The first version supports use of the `server_pool` type:
+
+    server_pool pool1("pool1");
+    pool1.add_server("localhost", 11211);
+    pool1.add_server("localhost", 11212);
+    mc << memcache::pool(pool1);
+
+The second version supports the tuple interface, which can
+be used in the case of statically sized pools:
+
+    mc << memcache::pool(
+            "pool1", 
+            make_tuple("localhost:11211", "localhost:11212")
+            );
+
+[endsect] [/ memcache::pool]
+
+[section:connect memcache::connect]
+
+The `memcache::connect` directive instructs the __memcache_handle__
+to connect to all defined servers which have been marked as
+disconnected.
+
+    mc << memcache::connect;
+
+[endsect] [/ memcache::connect]
+
+[endsect] [/ Directives]
+
+[endsect] [/ API Reference]
+

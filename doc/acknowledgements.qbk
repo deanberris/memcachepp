@@ -1,0 +1,13 @@
+[section:acknowledgements Acknowledgements]
+
+Thanks to the engineering team at [@http://www.friendster.com/ Friendster, Inc.] for providing
+support and feedback during the design, implementation, deployment,
+testing, and eventual open sourcing of this library.
+
+Acknowledgements also go out to the authors and contributors to
+Boost.Spirit, Boost.Asio, Boost.Thread, Boost.Serialization, and
+the whole Boost C++ Library community for providing quality tools
+and libraries.
+
+[endsect] [/ Acknowledgements]
+

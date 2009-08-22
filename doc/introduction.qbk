@@ -1,0 +1,39 @@
+[section:intro Introduction]
+
+[:[*['["Memcached is a a high-performance, distributed memory object caching 
+system, generic in nature, but intended for use in speeding up 
+dynamic web applications by alleviating database load.]]]]
+
+-- Danga __memcached__
+
+The purpose of the Memcache++ client is simple: at __friendster__ we
+needed a light-weight, type-safe, simple to use yet full-featured
+Memcache client -- so we came up with one!
+
+This project was developed in-house at __friendster__ with the 
+intention of being open sourced and released for the benefit of 
+the community. The library has been in development for close to 
+a year, and is already being used in production. This initial
+beta public release is an almost fresh export of the in-house
+version (January 2008) with the exception that it's distributed
+under the 
+[@http://www.boost.org/LICENSE_1_0.txt] Boost Software License].
+
+[note Dean Michael Berris was a Software Engineer at
+Friendster, Inc. responsible for developing and maintaining C++
+based services in the __friendster__ Infrastructure Services
+team from February 2007 to June 2009. He is at the time of this writing
+a consulting systems architect for a telecom subsidiary in the Philippines.]
+
+Support for this project is available via the users mailing list
+while technical discussions are reserved for the developers
+mailing list.
+
+The __boost__ C++ libraries are required when building the
+Memcache++ client. This implementation has been tested and developed
+with the GNU Compiler Collection (GCC) as the primary target 
+officially supported compiler on Linux as the primary target
+platform.
+
+[endsect]
+

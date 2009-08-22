@@ -1,0 +1,119 @@
+[section:quickstart Quick Start]
+
+So let's dive right into how to use the Memcache++ client! The 
+following complete example shows how to define __memcached__
+servers to connect to, get data, delete data, and set data.
+
+  #include <memcachepp/memcache.hpp>
+  #include <string>
+  #include <iostream>
+  
+  int main(int argc, char * argv[]) {
+      memcache::handle mc;
+      mc << memcache::server("localhost", 11211)
+          << memcache::connect;
+
+      try {
+          mc << memcache::delete_("hello_world");
+      } catch (...) { }
+
+      std::string hello_world("Hello, World!");
+      std::string cached_message;
+      try {
+          mc << memcache::set("hello_world", hello_world)
+              << memcache::get("hello_world", cached_message)
+              << memcache::delete_("hello_world");
+          std::cout << cached_message
+              << std::endl;
+      } catch (std::runtimer_error & e) {
+          std::cerr << "Unexpected error: "
+              << e.what();
+      }
+
+      return EXIT_SUCCESS;
+  }
+
+Let's discuss this example in detail. First, before we can use
+the Memcache++ client in our code we include the main header file
+"memcachepp.hpp". This file includes all the necessary include
+headers that will be required by the Memcache++ client.
+
+[tip It's required that when you're using the Memcache++
+client that the __boost__ C++ Libraries be accessible from the
+compiler through the 'boost/' subdirectory. For example, the
+lexical cast utility should be available from `#include <boost/lexical_cast.hpp>`.]
+
+The following segment sets up the memcache handle to be used
+throughout the example:
+
+      memcache::handle mc;
+      mc << memcache::server("localhost", 11211)
+          << memcache::connect;
+
+The first line simply instantiates a plain Memcache++ handle. This
+handle exposes some public functions, but we'll go through this
+in more detail in the discussion for the handle type.
+
+If you'll notice, the __memcache_handle__ instance `mc` works like
+a stream to which you can push directives to. These directives
+like `memcache::server` and `memcache::connect` perform some
+very important operations.
+
+You use `memcache::server("server_name", PORT_NUMBER)` to add that
+server to the list of servers the client will maintain persistent
+connections to. It's important that all known servers be defined
+before the Memcache++ client be used in any operations because the
+handle uses a special hashing algorithm to determine where a key
+should be retrieved or set. 
+
+[note A more detailed discussion on this
+topic is covered in the disucssion for the handle type.]
+
+The directive `memcache::connect` simply tells the memcache handle
+to connect to all the servers already defined, and to maintain a
+connection to each one during the lifetime of the memcache handle.
+
+Let's now look at the `memcache::delete_` call:
+
+      try {
+          mc << memcache::delete_("hello_world");
+      } catch (...) { }
+
+Memcache++ directives make extensive use of exceptions to report
+problems that may arise when the directive is executed. This example
+simply ignores any exceptions thrown when trying to delete the
+memcache entry associated with the key `"hello_world"`.
+
+As with standard C++ streams, directives may be chained in a single
+line using the `<<` operator. In the next section of code, the
+example then chains three directives: set, get, and delete_:
+
+      std::string hello_world("Hello, World!");
+      std::string cached_message;
+      try {
+          mc << memcache::set("hello_world", hello_world)
+              << memcache::get("hello_world", cached_message)
+              << memcache::delete_("hello_world");
+          std::cout << cached_message
+              << std::endl;
+      } catch (std::runtimer_error & e) {
+          std::cerr << "Unexpected error: "
+              << e.what();
+      }
+
+In this example `memcache::set("hello_world", hello_world)` simply
+associates the serialized form of `hello_world` to the key
+`"hello_world"` in the memcached instance the handle is connected
+to. Note that the data stored is serialized using __boost_serialization__
+-- so to be able to store your serialized objects using the default
+serialization mechanism used by Memcache++.
+
+The `memcache::get("hello_world", cached_message)` directive also
+deserializes the data retrieved from memcached associated with
+the key `"hello_world"` into `cached_message` using __boost_serialization__.
+
+[note More about the serialization strategies are discussed in the
+policies section of the memcache handle type.]
+
+[endsect]
+

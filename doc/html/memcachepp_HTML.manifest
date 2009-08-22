@@ -1,10 +1,10 @@
 index.html
 memcache__/intro.html
+memcache__/overview.html
 memcache__/quickstart.html
 memcache__/concepts.html
 memcache__/concepts/handle.html
 memcache__/concepts/directive.html
-memcache__/overview.html
 memcache__/design.html
 memcache__/design/handle.html
 memcache__/design/directives.html

@@ -1,0 +1,232 @@
+[section:design Design]
+
+The bulk of the library design concentrates on the single most
+important object in the library which is the __memcache_handle__.
+All the functionality required in a memcache client is implemented
+inside the __memcache_handle__.
+
+For convenience, directives are encapsulated and packaged in
+individual types that overload the function operator (`operator()`)
+that takes a reference to a type that models the Handle concept.
+This allows extenders of the library to write their own Handle
+and still be able to use the directives provided by the library.
+
+[section:handle The Memcache++ Handle]
+
+The provided __memcache_handle__ in the memcache library is a
+typedef of the `basic_handle` template with some pre-defined
+policies set to default. The exact definition of the
+__memcache_handle__ type is shown below:
+
+    typedef basic_handle<> handle ;
+
+The defaults for the `basic_handle` type are given below:
+
+    template <
+        class threading_policy = policies::default_threading<>,
+        class data_interchange_policy = policies::binary_interchange<>,
+        class hash_policy = policies::default_hash<>
+    >
+    struct basic_handle :
+        threading_policy,
+        data_interchange_policy,
+        hash_policy {
+            ...
+        };
+
+[section:policies Policies]
+
+The __memcache_handle__ has three policies that specify how the
+handle behaves. Let's look at each one in greater detail:
+
+[section:threading Threading Policy]
+
+A Threading Policy defines how the __memcache_handle__ works with
+threads. At the very minimum, this policy defines a nested Scoped 
+Lock type that takes a reference to an instance of the Threading
+Policy type to acquire a lock. More formally, the Threading Policy 
+type should define the following constructs:
+
+[variablelist Legend
+    [[T] [The threading policy type]]
+    [[t] [Instance of T]]
+    [[T::L] [Nested Scoped Lock type]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`T()`] [*N/A*] [Default Constructable]]
+    [[`T::L(t)`] [*N/A*] [Instantiate a scoped lock bound to `t`]]
+]
+
+A Threading Policy should also have a protected destructor to
+ensure that the type cannot be instantiated but can be derived from.
+
+[note The default threading policy does absolutely no
+threading. However, if `_REENTRANT` is defined, the default
+threading policy becomes a policy that relies on __boost_thread__.]
+
+[endsect] [/ Threading Policy]
+
+[section:serialization Data Interchange Policy]
+
+A Data Interchange Policy (better description than serialization
+policy) defines how data to be stored in and retrieved from the
+__memcached__ instance is dealt with. It should define nested
+types for an Input Archive, Output Archive, the Archive Exception
+to be expected. More formally:
+
+[variablelist Legend
+    [[D] [The Data Interchange Policy type]]
+    [[D::O] [The Output Archive type]]
+    [[D::I] [The Input Archive type]]
+    [[D::E] [The Archive Exception thrown on archive related errors]]
+    [[s] [An Input Stream source buffer of bytes (`std::istream`)]]
+    [[d] [An Output Stream destination buffer of bytes (`std::ostream`)]]
+    [[o] [An instance of D::O]]
+    [[i] [An instance of D::I]]
+    [[v] [A Serializable object]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`D()`] [*N/A*] [Default Constructable]]
+    [[`D::O(d)`] [*N/A*] [Nested Output Archive type should take an output stream as the sole parameter of the constructor.]]
+    [[`D::I(s)`] [*N/A*] [Nested Input Archive type should take an input stream as the sole parameter of the constructor.]]
+    [[`o << v;`] [`D::O &`] [Push `v` serialized into the Output Archive.]]
+    [[`i >> v;`] [`D::I &`] [Deserialize the contents of `i` into `v`.]]
+]
+
+A Data Interchange Policy should also have a protected desctructor to
+ensure that the type cannot be instantiated but can be derived from.
+
+[note The default Data Interchange Policy uses the
+__boost_serialization__ Binary Input/Output Archives. Please consult
+the __boost_serialization__ documentation about the issues you may
+face with binary Input/Output Archives.]
+
+There are three defined Data Interchange Policies in Memcache++.
+These are:
+
+* `memcache::policies::binary_interchange` (memcache/policies/binary_interchange.hpp)
+* `memcache::policies::text_interchange` (memcache/policies/text_interchange.hpp)
+* `memcache::policies::string_preserve` (memcache/policies/string_preserve.hpp)
+
+[endsect] [/ Data Interchange Policy]
+
+[section:hash Hash Policy]
+
+A Hash Policy type determines how the __memcache_handle__ chooses the
+server offset given a string key. More formally:
+
+[variablelist Legend
+    [[H] [The Hash Policy type]]
+    [[h] [Instance of H]]
+    [[k] [A `std::string`]]
+    [[s] [A `size_t` indicating the number of servers]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`H()`] [*N/A*] [Default Constructable]]
+    [[`h.hash(k, s)`] [`size_t`] [Returns the hash computed offset given the key and the number of servers.]]
+]
+
+A Hash Policy type should also have a protected desctructor to ensure
+that the type cannot be instantiated but can be derived from.
+
+[endsect] [/ Hash Policy]
+
+[endsect] [/ Policies]
+
+[endsect] [/ The Memcache++ Handle]
+
+[section:directives The Directives]
+
+To make using the memcache client simpler than having to call
+directly into the methods of the __memcache_handle__, directives
+are provided to perform predefined actions through a more flexible
+interface. There are three parts involved with directives, and are
+designed to be easily extendable and decoupled from the actual
+__memcache_handle__ used.
+
+The first part of the directive is the actual directive type.
+Directive types are simply types that when instantiated act like
+packaged tasks that perform a set of operations on the 
+__memcache_handle__ supplied. Directive type instances usually
+hold references to actual data for efficiency instead of copies
+of data used in the operations.
+
+The second part of the Directives system is the generator function. A
+generator function is responsible for returning an instance of
+the Directivey type which can be pushed to the __memcache_handle__
+using the third part of the Directives sytem: the push left operator.
+
+The push left operator (or `operator<<(...)`) applies the supplied
+directive to the __memcache_handle__. This is the primary operation
+that leverages the building of new directives on top of existing
+functionality that the handle already implements.
+
+Let's look at the implementation of the `memcache::get` directive.
+
+    template <typename T>
+    struct get_directive {
+        explicit get_directive(std::string const & key, T & holder) :
+            _key(key), _holder(holder) { };
+
+        template <typename _T>
+        void operator() (_T & handle) const {
+            size_t pools = handle.pool_count();
+            assert(pools != 0);
+            handle.get(
+                    handle.hash(
+                        _key, 
+                        pools
+                        ), 
+                    _key, 
+                    _holder
+                    );
+        };
+        
+        private:
+        
+        mutable std::string _key;
+        mutable T & _holder;
+    };
+
+[note Look in memcache/detail/directives/get.hpp for the latest
+implementation of the get directive.]
+
+The type `get_directive<T>` simply calls the get method provided 
+by the handle whose type it deduces as `_T` in the overload to 
+`operator()`. It also assumes that the provided handle defines
+a `hash(...)` method, as well as a `pool_count()` method.
+
+However, when we use the `memcache::get(...)` directive, we do
+not directly instantiate a `get_directive<>`. We instead make
+a generator function that determines the type of the container of
+the data, and returns the appropriate instace of `get_directive<>`.
+
+    template <typename T, typename _T>
+    inline detail::get_directive<_T> get(T _key, _T & holder) {
+        return detail::get_directive<_T>(std::string(_key), holder);
+    };
+
+We then rely on the push left operator to ensure that the returned
+instance gets applied to the handle correctly:
+
+    template <class threading_policy, class data_interchange_policy , class directive_type>
+    inline basic_handle<threading_policy, data_interchange_policy> & 
+    operator<< (basic_handle<threading_policy, data_interchange_policy> & _handle, directive_type const & directive) {
+        directive(_handle);
+        return _handle;
+    };
+
+Writing your own directives should be as simple as following the
+design of `memcache::get(...)` and 
+`memcache::detail::get_directive<T>`.
+
+[endsect] [/ The Directives]
+
+[endsect] [/ Design]
+

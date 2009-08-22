@@ -1,0 +1,125 @@
+[section:concepts Concepts]
+
+There are a few fundamental concepts that need to be clarified before we go
+on and discuss the design and implementation of the Memcache++ client. In this
+section we cover all the relevant concepts in play within the design of the
+Memcache++ client.
+
+[section:handle Handle]
+
+In Memcache++, a type models the Handle concept when it fulfills the following
+requirements:
+
+[variablelist Requirements
+    [
+        [NonCopyable] 
+        [It is not possible to construct copies of an instance of the type]
+    ]
+    [
+        [DefaultConstructable]
+        [The default constructor for the type is defined]
+    ]
+]
+
+Further, a type models the Handle concept when the following constructs
+are supported:
+
+[variablelist Legend
+    [[H] [The handle type.]]
+    [[k] [The key -- a `std::string`.]]
+    [[D] [The data type.]]
+    [[d] [Instance of D]]
+    [[mc] [An instance of H.]]
+    [[o] [A `size_t` offset value.]]
+    [[t] [A `time_t` value.]]
+    [[e] [A `time_t` value representing the expiration in seconds or an absolute time.]]
+    [[x] [A `time_t` value representing the failover expiration in seconds of an absolute time.]]
+    [[f] [A `uint16_t` flag value]]
+    [[s] [The server host name -- a `std::string`]]
+    [[i] [Server information -- a `H::server_info`]]
+    [[p] [The pool name -- a `std::string`]]
+    [[l] [Pool information -- a `H::pool_info`]]
+    [[r] [The raw `std::string` data.]]
+    [[c] [A reference to a container `std::string`.]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`mc.add_server(s, i)`] [`void`]
+        [Adds the server identified by `s` with the information
+        contained by `i`.]
+    ]
+    [[`mc.add_pool(p, l)`] [`void`]
+        [Adds a server pool identified by `p` with the information
+        contained by `l`.]
+    ]
+    [[`mc.connect()`] [`void`]
+        [Connects to all defined servers.]
+    ]
+    [[`mc.delete_(o, k, t)`] [`void`]
+        [Deletes data associated to key `k` at server offset `o`
+        optionally scheduled at time `t`.]
+    ]
+    [[`mc.get<D>(o, k, d)`] [`void`]
+        [Retrieves data from the server associated to key `k`
+        deserialized into `d`.]
+    ]
+    [[`mc.get_raw(o, k, c)`] [`void`]
+        [Retrieves data from the server associated to key `k`
+        and stored as an `std::string` into `c`.]
+    ]
+    [[`mc.is_connected(s)`] [`bool`]
+        [Returns true if the memcache handle is still connected
+        to server host `s`.]
+    ]
+    [[`mc.pool_count()`] [`size_t`]
+        [Returns the number of pools defined in the Handle.]
+    ]
+    [[`mc.server_count()`] [`size_t`]
+        [Returns the number of servers defined for the Handle.]
+    ]
+    [[`mc.set<D>(o, k, d, e, x, f)`] [`void`]
+        [Associates the serialized form of `d` to key `k`
+        from the server offset at `o`, optionally setting
+        the expiration to `e` and on failover the expiration
+        to `x` with flag `f`.]
+    ]
+    [[`mc.set_raw(o, k, r, e, x, f)`] [`void`]
+        [Associates the raw data `r` to key `k` from the server
+        offset at `o`, optionally setting the expiration to
+        `e` and on failover the expiration to `x` with flag `f`.
+        ]
+    ]
+]
+
+The implemented __memcache_handle__ in memcachepp/memcache.hpp is one
+concrete implementation of the Handle concept.
+
+[endsect] [/ Handle]
+
+[section:directive Directive]
+
+A type models the Directive concept when it is CopyConstructable, 
+Assignable, and is a function object that supports the following 
+constructs:
+
+[variablelist Legend
+    [[H] [Handle type]]
+    [[h] [Handle instance]]
+    [[D] [Directive type]]
+    [[d] [Directive instance]]
+    [[T1..Tn] [Arbitrary types]]
+    [[t1..tn] [Arbitrarily typed data]]
+]
+
+[table Valid Constructs
+    [[Expression] [Result] [Description]]
+    [[`h << d;`] [`H&`] [Push a directive into the Handle.]]
+    [[`D(d); D<T1, ..., Tn>(t1, ..., tn);`] [*N/A*] [Copyable, may have additional constructors.]]
+    [[`d(h)`] [`void`] [Apply a directive on a reference to a Handle `h`]]
+]
+
+[endsect] [/ Directive]
+
+[endsect] [/ Concepts]
+
