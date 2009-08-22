@@ -1,0 +1,17 @@
+Release 0.10:
+    * Documenting fluent interface; added remove function.
+    * Making exceptions derive from memcache::exception to ease catching of memcache-specific exceptions; Turning exception types non-templates; Making memcache++ use Spirit.Classic includes.
+    * Updating documentation to reflect status of author WRT Friendster, Inc. and supported compilers/platforms.
+    * Updating library documentation to reflect additional copyright and new build configuration.
+    * Updating INSTALL to reflect changes and requirements.
+    * Renaming memcache++ directory to memcachepp.
+    * Adding include for vector serialization support.
+    * Attempt to fixing link issues with MSVC, using the ODR violation avoiding trick with inline functions for placeholders.
+    * Adding additional template parameters for matching on the overload to operator<< for use with the basic_handle.
+    * Merging changes from fluent_interface into trunk.
+    * Refactoring to move directive function generators into directive type definitions from the main memcache.hpp include.
+    * Adding additional TODO for version 1.0.
+    * Adding installation instructions.
+    * Adding empty Jamroot file.
+    * Changes:
+    * Initial import of Mecache++ Client code.
