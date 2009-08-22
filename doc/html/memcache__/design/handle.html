@@ -4,7 +4,7 @@
 <title>The Memcache++ Handle</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Memcache++ 0.9">
+<link rel="start" href="../../index.html" title="Memcache++ 0.10">
 <link rel="up" href="../design.html" title="Design">
 <link rel="prev" href="../design.html" title="Design">
 <link rel="next" href="directives.html" title="The Directives">
@@ -26,15 +26,13 @@
         with some pre-defined policies set to default. The exact definition of the
         <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> type is shown below:
       </p>
-<pre class="programlisting">
-<span class="keyword">typedef</span> <span class="identifier">basic_handle</span><span class="special">&lt;&gt;</span> <span class="identifier">handle</span> <span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_handle</span><span class="special">&lt;&gt;</span> <span class="identifier">handle</span> <span class="special">;</span>
 </pre>
 <p>
         The defaults for the <code class="computeroutput"><span class="identifier">basic_handle</span></code>
         type are given below:
       </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
     <span class="keyword">class</span> <span class="identifier">threading_policy</span> <span class="special">=</span> <span class="identifier">policies</span><span class="special">::</span><span class="identifier">default_threading</span><span class="special">&lt;&gt;,</span>
     <span class="keyword">class</span> <span class="identifier">data_interchange_policy</span> <span class="special">=</span> <span class="identifier">policies</span><span class="special">::</span><span class="identifier">binary_interchange</span><span class="special">&lt;&gt;,</span>
     <span class="keyword">class</span> <span class="identifier">hash_policy</span> <span class="special">=</span> <span class="identifier">policies</span><span class="special">::</span><span class="identifier">default_hash</span><span class="special">&lt;&gt;</span>
@@ -91,7 +89,7 @@
 </dl>
 </div>
 <div class="table">
-<a name="id2636027"></a><p class="title"><b>Table 3. Valid Constructs</b></p>
+<a name="id2751511"></a><p class="title"><b>Table 3. Valid Constructs</b></p>
 <div class="table-contents"><table class="table" summary="Valid Constructs">
 <colgroup>
 <col>
@@ -222,7 +220,7 @@
 </dl>
 </div>
 <div class="table">
-<a name="id2636411"></a><p class="title"><b>Table 4. Valid Constructs</b></p>
+<a name="id2751877"></a><p class="title"><b>Table 4. Valid Constructs</b></p>
 <div class="table-contents"><table class="table" summary="Valid Constructs">
 <colgroup>
 <col>
@@ -404,7 +402,7 @@
 </dl>
 </div>
 <div class="table">
-<a name="id2637062"></a><p class="title"><b>Table 5. Valid Constructs</b></p>
+<a name="id2752484"></a><p class="title"><b>Table 5. Valid Constructs</b></p>
 <div class="table-contents"><table class="table" summary="Valid Constructs">
 <colgroup>
 <col>
@@ -477,7 +475,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<br>Copyright © 2009 Dean Michael Berris <p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

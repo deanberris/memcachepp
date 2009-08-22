@@ -4,8 +4,8 @@
 <title>Quick Start</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../index.html" title="Memcache++ 0.9">
-<link rel="up" href="../index.html" title="Memcache++ 0.9">
+<link rel="start" href="../index.html" title="Memcache++ 0.10">
+<link rel="up" href="../index.html" title="Memcache++ 0.10">
 <link rel="prev" href="intro.html" title="Introduction">
 <link rel="next" href="concepts.html" title="Concepts">
 </head>
@@ -24,8 +24,7 @@
       example shows how to define <a href="http://www.danga.com/memcached/" target="_top">Memcached</a>
       servers to connect to, get data, delete data, and set data.
     </p>
-<pre class="programlisting">
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">memcachepp</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">memcachepp</span><span class="special">/</span><span class="identifier">memcache</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
@@ -76,8 +75,7 @@
       The following segment sets up the memcache handle to be used throughout the
       example:
     </p>
-<pre class="programlisting">
-<span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span> <span class="identifier">mc</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span> <span class="identifier">mc</span><span class="special">;</span>
 <span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11211</span><span class="special">)</span>
     <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">connect</span><span class="special">;</span>
 </pre>
@@ -118,8 +116,7 @@
       Let's now look at the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span></code>
       call:
     </p>
-<pre class="programlisting">
-<span class="keyword">try</span> <span class="special">{</span>
+<pre class="programlisting"><span class="keyword">try</span> <span class="special">{</span>
     <span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">);</span>
 <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(...)</span> <span class="special">{</span> <span class="special">}</span>
 </pre>
@@ -134,8 +131,7 @@
       next section of code, the example then chains three directives: set, get, and
       delete_:
     </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hello_world</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">hello_world</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">);</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cached_message</span><span class="special">;</span>
 <span class="keyword">try</span> <span class="special">{</span>
     <span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">,</span> <span class="identifier">hello_world</span><span class="special">)</span>
@@ -175,7 +171,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<br>Copyright © 2009 Dean Michael Berris <p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

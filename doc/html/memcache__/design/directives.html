@@ -4,7 +4,7 @@
 <title>The Directives</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Memcache++ 0.9">
+<link rel="start" href="../../index.html" title="Memcache++ 0.10">
 <link rel="up" href="../design.html" title="Design">
 <link rel="prev" href="handle.html" title="The Memcache++ Handle">
 <link rel="next" href="../api.html" title="API Reference">
@@ -49,8 +49,7 @@
 <p>
         Let's look at the implementation of the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> directive.
       </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">get_directive</span> <span class="special">{</span>
     <span class="keyword">explicit</span> <span class="identifier">get_directive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">)</span> <span class="special">:</span>
         <span class="identifier">_key</span><span class="special">(</span><span class="identifier">key</span><span class="special">),</span> <span class="identifier">_holder</span><span class="special">(</span><span class="identifier">holder</span><span class="special">)</span> <span class="special">{</span> <span class="special">};</span>
@@ -97,8 +96,7 @@
         that determines the type of the container of the data, and returns the appropriate
         instace of <code class="computeroutput"><span class="identifier">get_directive</span><span class="special">&lt;&gt;</span></code>.
       </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">_key</span><span class="special">),</span> <span class="identifier">holder</span><span class="special">);</span>
 <span class="special">};</span>
@@ -107,8 +105,7 @@
         We then rely on the push left operator to ensure that the returned instance
         gets applied to the handle correctly:
       </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">threading_policy</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">data_interchange_policy</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">directive_type</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">threading_policy</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">data_interchange_policy</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">directive_type</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">basic_handle</span><span class="special">&lt;</span><span class="identifier">threading_policy</span><span class="special">,</span> <span class="identifier">data_interchange_policy</span><span class="special">&gt;</span> <span class="special">&amp;</span> 
 <span class="keyword">operator</span><span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">basic_handle</span><span class="special">&lt;</span><span class="identifier">threading_policy</span><span class="special">,</span> <span class="identifier">data_interchange_policy</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">_handle</span><span class="special">,</span> <span class="identifier">directive_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">directive</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">directive</span><span class="special">(</span><span class="identifier">_handle</span><span class="special">);</span>
@@ -123,7 +120,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<br>Copyright © 2009 Dean Michael Berris <p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

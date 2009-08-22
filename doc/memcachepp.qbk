@@ -1,8 +1,9 @@
 [article Memcache++
     [quickbook 1.4]
-    [version 0.9]
+    [version 0.10]
     [authors [Berris, Dean Michael] ]
     [copyright 2007 2008 Friendster, Inc.]
+    [copyright 2009 Dean Michael Berris ]
     [purpose Type safe headery only memcache client for C++]
     [license
         Distributed under the Boost Software License, Version 1.0.
@@ -77,7 +78,7 @@ So let's dive right into how to use the Memcache++ client! The
 following complete example shows how to define __memcached__
 servers to connect to, get data, delete data, and set data.
 
-  #include <memcachepp.hpp>
+  #include <memcachepp/memcache.hpp>
   #include <string>
   #include <iostream>
   
@@ -284,7 +285,7 @@ are supported:
     ]
 ]
 
-The implemented __memcache_handle__ in memcachepp.hpp is one
+The implemented __memcache_handle__ in memcachepp/memcache.hpp is one
 concrete implementation of the Handle concept.
 
 [endsect] [/ Handle]

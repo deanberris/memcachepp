@@ -6,14 +6,12 @@
 
 project memcache++/doc ;
 
-import boostbook : boostbook ;
-using quickbook ;
+import boostbook ;
+import quickbook ;
 
-xml memcachepp : memcachepp.qbk ;
-
-boostbook standalone
+boostbook memcachepp
     :
-        memcachepp
+        memcachepp.qbk
     :
         <xsl:param>nav.layout=none
         <xsl:param>boost.image.src=images/memcachepp.png

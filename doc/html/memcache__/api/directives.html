@@ -4,7 +4,7 @@
 <title>Directives</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Memcache++ 0.9">
+<link rel="start" href="../../index.html" title="Memcache++ 0.10">
 <link rel="up" href="../api.html" title="API Reference">
 <link rel="prev" href="classes.html" title="Classes">
 <link rel="next" href="../references.html" title="References">
@@ -39,8 +39,7 @@
           which server in the defined collection of servers to get the data from,
           based on the hash on the provided key.
         </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
 <span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
 <span class="identifier">get</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">);</span>
 </pre>
@@ -49,8 +48,7 @@
           <code class="computeroutput"><span class="identifier">_T</span></code> don't have to be explicitly
           stated because it can be deduced by the compiler. For example:
         </p>
-<pre class="programlisting">
-<span class="keyword">int</span> <span class="identifier">a</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">a</span><span class="special">;</span>
 <span class="keyword">double</span> <span class="identifier">b</span><span class="special">;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">c</span><span class="special">;</span>
 <span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="identifier">a</span><span class="special">)</span>
@@ -77,8 +75,7 @@
           which server in the defined collection of servers to set the data in, based
           on the hash on the provided key.
         </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
 <span class="identifier">detail</span><span class="special">::</span><span class="identifier">set_irective</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
 <span class="identifier">set</span><span class="special">(</span><span class="identifier">_T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
 
@@ -106,8 +103,7 @@
           server -- which happens when the server it's intended for, for some reason
           cannot accomodate the set request -- the same timeout is used.
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="number">100</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="number">100</span><span class="special">);</span>
 </pre>
 <p>
           The second and third version allows for defining different expirations
@@ -115,8 +111,7 @@
           and when the key is re-hashed to a different server (value denoted by
           <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span></code>).
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="keyword">double</span><span class="special">(</span><span class="number">2.5</span><span class="special">),</span> <span class="identifier">expire</span><span class="special">(</span><span class="number">300</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">60</span><span class="special">))</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="keyword">double</span><span class="special">(</span><span class="number">2.5</span><span class="special">),</span> <span class="identifier">expire</span><span class="special">(</span><span class="number">300</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">60</span><span class="special">))</span>
     <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">100</span><span class="special">));</span>
 </pre>
 <p>
@@ -136,8 +131,7 @@
           hashing implementation to determine which memcache server the key can be
           located from.
         </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">detail</span><span class="special">::</span><span class="identifier">delete_directive</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">delete_</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">);</span>
 </pre>
@@ -148,8 +142,7 @@
           directive is shown below, which deletes the key and data associated with
           "key_a" from the appropriate server.
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">);</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -168,8 +161,7 @@
           Whatever the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> gets in the form of a string from
           the memcache server the <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_get_directive</span><span class="special">&lt;&gt;</span></code> will put in the provided <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> holder.
         </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_get_directive</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">raw_get</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">);</span>
 </pre>
@@ -177,8 +169,7 @@
           The following example gets the raw data from the correct memcache server,
           and puts the data into an std::string holder:
         </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">raw_data</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">raw_data</span><span class="special">;</span>
 <span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_get</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="identifier">raw_data</span><span class="special">);</span>
 </pre>
 </div>
@@ -195,16 +186,14 @@
           of a given value, which should be an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
           or of a type convertible to an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
         </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_set_directive</span><span class="special">&lt;&gt;</span> <span class="identifier">raw_set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span><span class="special">=</span><span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre>
 <p>
           The following examples sets the raw string "hello, world!" for
           the key "hello_world" without using any extra serialization.
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">,</span> <span class="string">"hello, world!"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">,</span> <span class="string">"hello, world!"</span><span class="special">);</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -218,8 +207,7 @@
           a concatenation of the hostname and port are used as the identifier for
           the key for an internal <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code>.
         </p>
-<pre class="programlisting">
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
 <span class="identifier">detail</span><span class="special">::</span><span class="identifier">server_directive</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">server</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_name</span><span class="special">,</span> <span class="identifier">_T</span> <span class="identifier">_port</span><span class="special">);</span>
 </pre>
@@ -233,8 +221,7 @@
           are given as two servers to which the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>
           will have access to.
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11211</span><span class="special">)</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11211</span><span class="special">)</span>
     <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11212</span><span class="special">);</span>
 </pre>
 <p>
@@ -289,8 +276,7 @@
           For <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span></code> operations, the key is deleted
           on all the servers part of the pool.
         </p>
-<pre class="programlisting">
-<span class="identifier">deatil</span><span class="special">::</span><span class="identifier">pool_directive</span><span class="special">&lt;</span><span class="identifier">server_pool</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="identifier">deatil</span><span class="special">::</span><span class="identifier">pool_directive</span><span class="special">&lt;</span><span class="identifier">server_pool</span><span class="special">&gt;</span>
 <span class="identifier">pool</span><span class="special">(</span><span class="identifier">server_pool</span> <span class="special">&amp;</span> <span class="identifier">pool_</span><span class="special">);</span>
 
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
@@ -301,8 +287,7 @@
           The first version supports use of the <code class="computeroutput"><span class="identifier">server_pool</span></code>
           type:
         </p>
-<pre class="programlisting">
-<span class="identifier">server_pool</span> <span class="identifier">pool1</span><span class="special">(</span><span class="string">"pool1"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">server_pool</span> <span class="identifier">pool1</span><span class="special">(</span><span class="string">"pool1"</span><span class="special">);</span>
 <span class="identifier">pool1</span><span class="special">.</span><span class="identifier">add_server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11211</span><span class="special">);</span>
 <span class="identifier">pool1</span><span class="special">.</span><span class="identifier">add_server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11212</span><span class="special">);</span>
 <span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span><span class="special">(</span><span class="identifier">pool1</span><span class="special">);</span>
@@ -311,8 +296,7 @@
           The second version supports the tuple interface, which can be used in the
           case of statically sized pools:
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span><span class="special">(</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span><span class="special">(</span>
         <span class="string">"pool1"</span><span class="special">,</span> 
         <span class="identifier">make_tuple</span><span class="special">(</span><span class="string">"localhost:11211"</span><span class="special">,</span> <span class="string">"localhost:11212"</span><span class="special">)</span>
         <span class="special">);</span>
@@ -326,14 +310,13 @@
           The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">connect</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to connect to all defined servers
           which have been marked as disconnected.
         </p>
-<pre class="programlisting">
-<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">connect</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">connect</span><span class="special">;</span>
 </pre>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007, 2008 Friendster, Inc.<br>Copyright © 2009 Dean Michael Berris <p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
