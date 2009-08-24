@@ -9,6 +9,7 @@
 #define __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
 
 #include <list>
+#include <set>
 #include <boost/cast.hpp>
 #include <algorithm>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>

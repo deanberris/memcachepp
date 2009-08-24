@@ -10,6 +10,7 @@
 
 #include <memcachepp/memcache/detail/tags.hpp>
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 namespace memcache { namespace detail {
 

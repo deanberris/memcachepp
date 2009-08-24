@@ -9,6 +9,7 @@
 #define __MEMCACHE_DETAIL_READ_HANDLER_HPP__
 
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
 #include <memcachepp/memcache/tags.hpp>
 
 namespace memcache { namespace detail {

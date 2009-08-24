@@ -10,6 +10,8 @@
 
 #include <memcachepp/memcache/detail/expiration.hpp>
 
+#include <boost/cstdint.hpp>
+
 namespace memcache { namespace detail {
 
     template <typename T>
