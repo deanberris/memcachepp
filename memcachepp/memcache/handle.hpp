@@ -41,7 +41,8 @@ namespace memcache {
     struct basic_handle : 
         threading_policy, 
         data_interchange_policy, 
-        hash_policy {
+        hash_policy
+    {
 
         typedef boost::shared_ptr<boost::asio::ip::tcp::socket> connection_ptr;
         
@@ -103,7 +104,14 @@ namespace memcache {
                     );
 
             if (connections_size ==
-                    static_cast<size_t>(std::accumulate(errors.begin(), errors.end(), 0))) 
+                    static_cast<size_t>(
+                        std::accumulate(
+                            errors.begin(), 
+                            errors.end(), 
+                            0
+                        )
+                    )
+                )
                 throw key_not_stored(key);
         };
 
@@ -159,7 +167,11 @@ namespace memcache {
 
             if (connections_size ==
                     static_cast<size_t>(
-                        std::accumulate(errors.begin(), errors.end(), 0)
+                        std::accumulate(
+                            errors.begin(), 
+                            errors.end(), 
+                            0
+                            )
                         )
                )
                 throw key_not_found(key);
@@ -176,18 +188,21 @@ namespace memcache {
             bool rehash;
             fusion::tie(connections, rehash) = get_connections(offset);
 
-            typename connection_container::iterator connection_iterator = connections.begin();
+            typename connection_container::iterator 
+                connection_iterator = 
+                    connections.begin(),
+                connections_end =
+                    connections.end();
 
             get_impl<T, data_interchange_policy>
                 getter(key, holder);
-            
-            while (connection_iterator != connections.end()) {
-                if (getter(*(connection_iterator++)))
-                    return;
-            };
 
+            connection_iterator =
+                find_if(connection_iterator, connections_end, getter);
+            
             // when you get here, it means you didn't find the key
-            throw key_not_found(key);
+            if (connection_iterator == connections_end)
+                throw key_not_found(key);
         };
 
         void get_raw(size_t offset, std::string const & key, std::string & holder) {
@@ -200,18 +215,21 @@ namespace memcache {
             bool rehash;
             fusion::tie(connections, rehash) = get_connections(offset);
 
-            typename connection_container::iterator connection_iterator = connections.begin();
+            typename connection_container::iterator 
+                connection_iterator = 
+                    connections.begin(),
+                connections_end =
+                    connections.end();
 
             get_impl<std::string, policies::string_preserve>
                 getter(key, holder);
-            
-            while (connection_iterator != connections.end()) {
-                if (getter(*(connection_iterator++)))
-                    return;
-            };
 
+            connection_iterator =
+                find_if(connection_iterator, connections_end, getter);
+            
             // when you get here, it means you didn't find the key
-            throw key_not_found(key);
+            if (connection_iterator == connections_end)
+                throw key_not_found(key);
         };
         
         bool is_connected(std::string const & server_name) { 
@@ -289,7 +307,7 @@ namespace memcache {
                 };
                 connections.push_back(server_iterator);
             } else {
-                BOOST_FOREACH (std::string server_name, pool_iterator->second.members) {
+                BOOST_FOREACH (std::string const & server_name, pool_iterator->second.members) {
                     typename server_container::iterator server_iterator
                         = servers.find(server_name);
                     if (server_iterator->second.connected)
@@ -339,6 +357,7 @@ namespace memcache {
                 
                 template <typename value_type>
                     int operator() (value_type & server_iterator) {
+                        static boost::regex eol_regex("\r\n");
                         boost::asio::streambuf buffer;
                         connection_ptr connection = server_iterator->second.connection;
                         try {
@@ -348,12 +367,12 @@ namespace memcache {
                                 );
 #ifdef _REENTRANT
                             detail::read_handler handler_instance(*connection, buffer,
-                                boost::regex("\r\n"), MEMCACHE_TIMEOUT);
+                                eol_regex, MEMCACHE_TIMEOUT);
                             handler_instance();
 #else
                             boost::asio::read_until(*connection,
                                 buffer,
-                                boost::regex("\r\n"));
+                                eol_regex);
 #endif
                         } catch (boost::system::system_error & e) {
                             server_iterator->second.error = e.code();
@@ -396,6 +415,7 @@ namespace memcache {
                 
                 template <typename T>
                     bool operator() (T & server_iterator) {
+                        static boost::regex end_indicator("(END\r\n)|(SERVER_ERROR\\S)|(CLIENT_ERROR\\S)|(ERROR\r\n)");
                         boost::asio::streambuf buffer;
                         connection_ptr connection = server_iterator->second.connection;
                         try {
@@ -404,14 +424,18 @@ namespace memcache {
                                     sizeof(char) * command.size())
                                 );
 #ifdef _REENTRANT
-                            detail::read_handler handler_instance(*connection, buffer, 
-                                boost::regex("(END\r\n)|(SERVER_ERROR\\S)|(CLIENT_ERROR\\S)|(ERROR\r\n)"),
-                                MEMCACHE_TIMEOUT);
+                            detail::read_handler handler_instance(
+                                    *connection, 
+                                    buffer, 
+                                    end_indicator,
+                                    MEMCACHE_TIMEOUT
+                                    );
                             handler_instance();
 #else
                             boost::asio::read_until(*connection,
                                 buffer,
-                            boost::regex("(END\r\n)|(SERVER_ERROR\\S)|(CLIENT_ERROR\\S)|(ERROR\r\n)"));
+                                end_indicator
+                            );
 #endif
                         } catch (boost::system::system_error & e) {
                             server_iterator->second.error = e.code();
@@ -468,6 +492,7 @@ namespace memcache {
 
             template <typename value_type>
                 int operator() (value_type & server_iterator) {
+                    static boost::regex eol_regex("\r\n");
                     boost::asio::streambuf buffer;
                     connection_ptr connection = server_iterator->second.connection;
                     try {
@@ -477,11 +502,11 @@ namespace memcache {
                             );
 #ifdef _REENTRANT
                             detail::read_handler handler_instance(*connection,
-                                buffer, boost::regex("\r\n"), MEMCACHE_TIMEOUT);
+                                buffer, eol_regex, MEMCACHE_TIMEOUT);
                             handler_instance();
 #else
                             boost::asio::read_until(*connection,
-                                buffer, boost::regex("\r\n"));
+                                buffer, eol_regex);
 #endif
                     } catch (boost::system::system_error & e) {
                         server_iterator->second.error = e.code();
