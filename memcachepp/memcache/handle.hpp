@@ -9,6 +9,8 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <utility>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/shared_ptr.hpp>
@@ -21,6 +23,7 @@
 #include <boost/foreach.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/fusion/tuple.hpp>
+#include <boost/fusion/adapted/std_pair.hpp>
 
 namespace memcache {
 
@@ -31,7 +34,19 @@ namespace memcache {
     >
     struct basic_request ; // forward declaration
 
-    namespace fusion = boost::fusion ;
+    using std::map;
+    using std::vector;
+    using std::string;
+    using std::pair;
+    using std::ostringstream;
+    using std::istringstream;
+    using std::istream;
+    using std::make_pair;
+    using boost::system::error_code;
+    using boost::system::system_error;
+    using boost::fusion::tuple;
+    using boost::fusion::tie;
+    using boost::fusion::make_tuple;
     
     template <
         class threading_policy = policies::default_threading<>, 
@@ -48,8 +63,8 @@ namespace memcache {
         
         struct server_info {
             bool connected;
-            std::string host, port;
-            boost::system::error_code error;
+            string host, port;
+            error_code error;
             connection_ptr connection;
         };
 
@@ -57,14 +72,14 @@ namespace memcache {
             enum { standalone = 0,
                 replicating = 1,
                 failover = 2 };
-            typedef std::set<std::string> member_container;
+            typedef std::set<string> member_container;
 
             int status;
             member_container members;
         };
 
-        typedef std::map<std::string, server_info> server_container;
-        typedef std::map<std::string, pool_info> pool_container;
+        typedef map<string, server_info> server_container;
+        typedef map<string, pool_info> pool_container;
         
         basic_handle() : 
             threading_policy(), 
@@ -78,7 +93,7 @@ namespace memcache {
         };
 
         template <typename T> // T must be serializable
-        void set(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+        void set(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -86,12 +101,12 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            fusion::tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = get_connections(offset);
             size_t connections_size = connections.size();
 
-            std::list<int> errors;
+            vector<int> errors(distance(connections.begin(), connections.end()), 0);
 
-            std::transform(connections.begin(), connections.end(),
+            transform(connections.begin(), connections.end(),
                     back_inserter(errors),
                     set_impl<T, data_interchange_policy>(
                         key, 
@@ -105,7 +120,7 @@ namespace memcache {
 
             if (connections_size ==
                     static_cast<size_t>(
-                        std::accumulate(
+                        accumulate(
                             errors.begin(), 
                             errors.end(), 
                             0
@@ -115,7 +130,7 @@ namespace memcache {
                 throw key_not_stored(key);
         };
 
-        void set_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+        void set_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -123,14 +138,14 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            fusion::tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = get_connections(offset);
             size_t connections_size = connections.size();
 
-            std::list<int> errors;
+            vector<int> errors(distance(connections.begin(), connections.end()), 0);
 
-            std::transform(connections.begin(), connections.end(),
-                    back_inserter(errors),
-                    set_impl<std::string, policies::string_preserve>(
+            transform(connections.begin(), connections.end(),
+                    errors.begin(),
+                    set_impl<string, policies::string_preserve>(
                         key, 
                         value, 
                         expiration, 
@@ -141,11 +156,11 @@ namespace memcache {
                     );
 
             if (connections_size == 
-                    static_cast<size_t>(std::accumulate(errors.begin(), errors.end(), 0)))
+                    static_cast<size_t>(accumulate(errors.begin(), errors.end(), 0)))
                 throw key_not_stored(key);
         };
 
-        void delete_(size_t offset, std::string const & key, time_t delay = 0) {
+        void delete_(size_t offset, string const & key, time_t delay = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -153,12 +168,12 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            fusion::tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = get_connections(offset);
             size_t connections_size = connections.size();
 
-            std::list<int> errors;
+            vector<int> errors(distance(connections.begin(), connections.end()), 0);
             transform(connections.begin(), connections.end(),
-                    std::back_inserter(errors),
+                    back_inserter(errors),
                     delete_impl(
                         key, 
                         delay
@@ -167,7 +182,7 @@ namespace memcache {
 
             if (connections_size ==
                     static_cast<size_t>(
-                        std::accumulate(
+                        accumulate(
                             errors.begin(), 
                             errors.end(), 
                             0
@@ -178,7 +193,7 @@ namespace memcache {
         };
 
         template <typename T> // T must be serializable
-        void get(size_t offset, std::string const & key, T & holder) {
+        void get(size_t offset, string const & key, T & holder) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -186,7 +201,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            fusion::tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = get_connections(offset);
 
             typename connection_container::iterator 
                 connection_iterator = 
@@ -205,7 +220,7 @@ namespace memcache {
                 throw key_not_found(key);
         };
 
-        void get_raw(size_t offset, std::string const & key, std::string & holder) {
+        void get_raw(size_t offset, string const & key, string & holder) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
             if (offset > pools.size())
@@ -213,7 +228,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            fusion::tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = get_connections(offset);
 
             typename connection_container::iterator 
                 connection_iterator = 
@@ -221,7 +236,7 @@ namespace memcache {
                 connections_end =
                     connections.end();
 
-            get_impl<std::string, policies::string_preserve>
+            get_impl<string, policies::string_preserve>
                 getter(key, holder);
 
             connection_iterator =
@@ -232,7 +247,7 @@ namespace memcache {
                 throw key_not_found(key);
         };
         
-        bool is_connected(std::string const & server_name) { 
+        bool is_connected(string const & server_name) { 
             typename threading_policy::lock scoped_lock(*this);
             typename server_container::const_iterator iterator = servers.find(server_name);
             if (iterator == servers.end())
@@ -257,15 +272,15 @@ namespace memcache {
             return pools.size();
         };
 
-        void add_server(std::string const & server_name, server_info const & s_info) {
+        void add_server(string const & server_name, server_info const & s_info) {
             servers.insert(
-                    std::make_pair(server_name, s_info)
+                    make_pair(server_name, s_info)
                     );
         };
 
-        void add_pool(std::string const & pool_name, pool_info p_info) {
+        void add_pool(string const & pool_name, pool_info p_info) {
             pools.insert(
-                    std::make_pair(pool_name, p_info)
+                    make_pair(pool_name, p_info)
                     );
         };
 
@@ -274,15 +289,15 @@ namespace memcache {
         server_container servers;
         pool_container pools;
 
-        typedef boost::function<void(std::string const &)> 
+        typedef boost::function<void(string const &)> 
             callback_type;
         
-        typedef std::map<std::string, callback_type> 
+        typedef map<string, callback_type> 
             callback_map;
 
-        typedef std::vector<typename server_container::iterator> connection_container;
+        typedef vector<typename server_container::iterator> connection_container;
 
-        inline fusion::tuple <connection_container, bool> get_connections(size_t offset) {
+        inline tuple <connection_container, bool> get_connections(size_t offset) {
             typename pool_container::iterator pool_iterator;
             size_t counter = 0;
             for (pool_iterator = pools.begin();
@@ -307,7 +322,7 @@ namespace memcache {
                 };
                 connections.push_back(server_iterator);
             } else {
-                BOOST_FOREACH (std::string const & server_name, pool_iterator->second.members) {
+                BOOST_FOREACH (string const & server_name, pool_iterator->second.members) {
                     typename server_container::iterator server_iterator
                         = servers.find(server_name);
                     if (server_iterator->second.connected)
@@ -323,7 +338,7 @@ namespace memcache {
                         pool_iterator = pools.begin();
                         past_end = true;
                     };
-                    BOOST_FOREACH (std::string server_name, pool_iterator->second.members) {
+                    BOOST_FOREACH (string server_name, pool_iterator->second.members) {
                         typename server_container::iterator server_iterator
                             = servers.find(server_name);
                         if (server_iterator->second.connected)
@@ -332,22 +347,22 @@ namespace memcache {
                 };
             };
             
-            return fusion::make_tuple(connections, rehash);
+            return make_tuple(connections, rehash);
         };
 
         boost::asio::io_service _service;
 
         template <typename T, typename set_interchange_policy>
             struct set_impl {
-                std::string command;
+                string command;
                 
-                explicit set_impl(std::string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) 
+                explicit set_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) 
                     { 
-                        std::ostringstream output_bytes_stream;
+                        ostringstream output_bytes_stream;
                         typename set_interchange_policy::oarchive archive(output_bytes_stream);
                         archive << value;
 
-                        std::ostringstream command_stream;
+                        ostringstream command_stream;
                         command_stream << "set " << key << " " << flags
                             << " " << (rehash ? failover_expiration : expiration)
                             << " " << output_bytes_stream.str().size() << "\r\n"
@@ -374,22 +389,22 @@ namespace memcache {
                                 buffer,
                                 eol_regex);
 #endif
-                        } catch (boost::system::system_error & e) {
+                        } catch (system_error & e) {
                             server_iterator->second.error = e.code();
                             server_iterator->second.connected = false;
                             server_iterator->second.connection.reset();
                             return 1; // indicate error
                         };
 
-                        std::istream response(&buffer);
-                        std::string line;
+                        istream response(&buffer);
+                        string line;
                         getline(response, line);
 
                         if (line == "STORED\r")
                             return 0; // indicate NO error
 
-                        std::istringstream tokenizer(line);
-                        std::string first_token;
+                        istringstream tokenizer(line);
+                        string first_token;
                         tokenizer >> first_token;    
                         if ((first_token == "ERROR") || 
                             (first_token == "CLIENT_ERROR") ||
@@ -402,13 +417,13 @@ namespace memcache {
         
         template <typename holder_type, class get_interchange_policy>
             struct get_impl {
-                std::string _key;
+                string _key;
                 holder_type & _holder;
-                std::string command;
-                explicit get_impl(std::string const & key, holder_type & holder)
+                string command;
+                explicit get_impl(string const & key, holder_type & holder)
                     : _key(key), _holder(holder) 
                     {
-                        std::ostringstream command_stream;
+                        ostringstream command_stream;
                         command_stream << "get " << key << "\r\n";
                         command = command_stream.str();
                     };
@@ -437,31 +452,31 @@ namespace memcache {
                                 end_indicator
                             );
 #endif
-                        } catch (boost::system::system_error & e) {
+                        } catch (system_error & e) {
                             server_iterator->second.error = e.code();
                             server_iterator->second.connected = false;
                             server_iterator->second.connection.reset();
                             return false; // wasn't able to get it
                         };
 
-                        std::istream response(&buffer);
+                        istream response(&buffer);
                         
                         callback_map callbacks;
                         callbacks[_key] = detail::deserializer<holder_type, get_interchange_policy>(_holder);
                         
-                        std::ostringstream data;
-                        std::string line;
+                        ostringstream data;
+                        string line;
                         while (getline(response, line)) {
                             if (response.eof()) break;
                             data << line << '\n';
                         };
 
-                        std::string data_string(data.str());
+                        string data_string(data.str());
 
                         try {
                             if (!detail::parse_response(data_string, callbacks)) {
-                                std::istringstream tokenizer(data_string);
-                                std::string first_token;
+                                istringstream tokenizer(data_string);
+                                string first_token;
                                 tokenizer >> first_token;
                                 if (first_token == "END")
                                     return false; // wasn't able to get it
@@ -471,7 +486,7 @@ namespace memcache {
                                     throw invalid_response_found(data_string);
                             };
                         } catch (typename data_interchange_policy::archive_exception & e) {
-                            std::ostringstream malformed_data_stream;
+                            ostringstream malformed_data_stream;
                             malformed_data_stream << command
                                 << data_string;
                             throw malformed_data(malformed_data_stream.str());
@@ -482,10 +497,10 @@ namespace memcache {
                 };
         
         struct delete_impl {
-            std::string command;
-            explicit delete_impl(std::string const & key, time_t delay)
+            string command;
+            explicit delete_impl(string const & key, time_t delay)
                 {
-                    std::ostringstream command_stream;
+                    ostringstream command_stream;
                     command_stream << "delete " << key << ' ' << delay << "\r\n";
                     command = command_stream.str();
                 };
@@ -508,21 +523,21 @@ namespace memcache {
                             boost::asio::read_until(*connection,
                                 buffer, eol_regex);
 #endif
-                    } catch (boost::system::system_error & e) {
+                    } catch (system_error & e) {
                         server_iterator->second.error = e.code();
                         server_iterator->second.connected = false;
                         server_iterator->second.connection.reset();
                         return 1;
                     };
-                    std::istream response(&buffer);
-                    std::string line;
+                    istream response(&buffer);
+                    string line;
                     getline(response, line);
                     boost::trim_right(line);
 
                     if (line == "DELETED")
                         return 0; // indicate success
-                    std::istringstream tokenizer(line);
-                    std::string first_token;
+                    istringstream tokenizer(line);
+                    string first_token;
                     tokenizer >> first_token;    
                     if ((first_token == "ERROR") || 
                         (first_token == "CLIENT_ERROR") ||
@@ -533,7 +548,7 @@ namespace memcache {
                 };
         };
 
-        void send_command(std::string const & command, boost::asio::ip::tcp::socket & socket) const {
+        void send_command(string const & command, boost::asio::ip::tcp::socket & socket) const {
             boost::asio::write(socket,
                 boost::asio::buffer(const_cast<char*>(command.c_str()),
                     sizeof(char) * command.size())
@@ -546,37 +561,48 @@ namespace memcache {
             
             boost::asio::io_service & _service;
 
-            void operator() (typename server_container::value_type & element) {
-                if (element.second.connected) return; // skip connected servers
-                
-                try {
-                    connection_ptr new_connection(new boost::asio::ip::tcp::socket(_service));
-                    boost::asio::ip::tcp::resolver resolver(_service);
-                    boost::asio::ip::tcp::resolver::query query(element.second.host, element.second.port, boost::asio::ip::tcp::resolver::query::numeric_service);
-                    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-                    boost::asio::ip::tcp::resolver::iterator end;
-                    boost::system::error_code error = boost::asio::error::host_not_found;
+            template <class IoService, class Element>
+                pair<connection_ptr,error_code> 
+                connect(IoService & service_, Element const & element) const {
+                    using boost::asio::ip::tcp;
+                    using boost::optional;
+                    using boost::asio::deadline_timer;
+                    using boost::bind;
+                    using boost::posix_time::milliseconds;
+                    using boost::asio::error::timed_out;
+                    using boost::asio::error::host_not_found;
+
+                    connection_ptr new_connection(
+                            new tcp::socket(_service)
+                            );
+                    tcp::resolver resolver(_service);
+                    tcp::resolver::query query(element.second.host, element.second.port, tcp::resolver::query::numeric_service);
+                    tcp::resolver::iterator 
+                        endpoint_iterator = resolver.resolve(query),
+                        end;
+                    error_code error = host_not_found;
                     while (endpoint_iterator != end && error) {
-                        boost::optional<boost::system::error_code> timer_result;
-                        boost::optional<boost::system::error_code> connect_result;
-                        boost::asio::deadline_timer _timer(
+                        optional<error_code> timer_result;
+                        optional<error_code> connect_result;
+                        deadline_timer _timer(
                             new_connection->io_service()
                         );
                         
                         new_connection->close();
                         new_connection->async_connect(
                                 *endpoint_iterator++,
-                                boost::bind(
-                                    &boost::optional<boost::system::error_code>::reset,
-                                    &connect_result, 
+                                bind(
+                                    &optional<error_code>::reset,
+                                    &connect_result,
                                     _1
                                     )
                                 );
-                        
-                        _timer.expires_from_now(boost::posix_time::milliseconds(MEMCACHE_TIMEOUT));
+                        _timer.expires_from_now(
+                                milliseconds(MEMCACHE_TIMEOUT)
+                                );
                         _timer.async_wait(
-                                boost::bind(
-                                    &boost::optional<boost::system::error_code>::reset,
+                                bind(
+                                    &optional<error_code>::reset,
                                     &timer_result, 
                                     _1)
                                 );
@@ -594,16 +620,28 @@ namespace memcache {
                             };
                         };
                     };
+
+                    return make_pair(new_connection, error);
+                }
+
+            void operator() (typename server_container::value_type & element) {
+                if (element.second.connected) return; // skip connected servers
+                
+                try {
+                    connection_ptr new_connection;
+                    error_code error;
+                    
+                    tie(new_connection, error) = connect(_service, element);
                     
                     if (error) {
                         element.second.connected = false;
                         element.second.error = error;
                         element.second.connection.reset();
-                        return;
-                    };
-                    element.second.connected = true;
-                    element.second.connection = new_connection;
-                } catch (boost::system::system_error & e) {
+                    } else {
+                        element.second.connected = true;
+                        element.second.connection = new_connection;
+                    }
+                } catch (system_error & e) {
                     element.second.connected = false;
                     element.second.error = e.code();
                     element.second.connection.reset();
@@ -611,11 +649,11 @@ namespace memcache {
             };
         };
 
-        void validate(std::string const & key) const {
-            if (key.find('\r') != std::string::npos) throw invalid_key(key);
-            if (key.find('\n') != std::string::npos) throw invalid_key(key);
-            if (key.find('\t') != std::string::npos) throw invalid_key(key);
-            if (key.find(' ') != std::string::npos) throw invalid_key(key);
+        void validate(string const & key) const {
+            if (key.find('\r') != string::npos) throw invalid_key(key);
+            if (key.find('\n') != string::npos) throw invalid_key(key);
+            if (key.find('\t') != string::npos) throw invalid_key(key);
+            if (key.find(' ') != string::npos) throw invalid_key(key);
         };
     };
 

@@ -6,7 +6,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// TODO: implement the get protocol parser; use Spirit 2x.
+namespace memcache { namespace impl {
+
+
+} // namespace impl
+
+} // namespace memcache
 
 #endif
 
