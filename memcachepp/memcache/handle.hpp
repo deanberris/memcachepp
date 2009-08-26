@@ -96,38 +96,24 @@ namespace memcache {
         void set(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
-            if (offset > pools.size())
-                throw offset_out_of_bounds(offset);
-
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = get_connections(offset);
-            size_t connections_size = connections.size();
+            tie(connections, rehash) = command_setup(offset);
 
-            vector<int> errors(distance(connections.begin(), connections.end()), 0);
-
-            transform(connections.begin(), connections.end(),
-                    back_inserter(errors),
-                    set_impl<T, data_interchange_policy>(
-                        key, 
-                        value, 
-                        expiration, 
-                        failover_expiration, 
-                        flags, 
-                        rehash
+            if (!perform_action(
+                        offset, key, value, expiration, failover_expiration,
+                        set_impl<T, data_interchange_policy>(
+                            key, 
+                            value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags,
+                            rehash
+                            ),
+                        connections,
+                        flags
                         )
-                    );
-
-            if (connections_size ==
-                    static_cast<size_t>(
-                        accumulate(
-                            errors.begin(), 
-                            errors.end(), 
-                            0
-                        )
-                    )
-                )
-                throw key_not_stored(key);
+               ) throw key_not_stored(key);
         };
 
         void set_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
@@ -296,6 +282,40 @@ namespace memcache {
             callback_map;
 
         typedef vector<typename server_container::iterator> connection_container;
+
+        tuple<connection_container, bool> command_setup(size_t offset) {
+            if (offset > pools.size())
+                throw offset_out_of_bounds(offset);
+
+            connection_container connections;
+            bool rehash;
+            tie(connections, rehash) = get_connections(offset);
+
+            return make_tuple(connections, rehash);
+        }
+
+        template <class T, class Action>
+            bool perform_action(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, Action action, connection_container & connections, boost::uint16_t flags = 0) {
+                vector<int> errors(distance(connections.begin(), connections.end()), 0);
+
+                transform(connections.begin(), connections.end(),
+                        back_inserter(errors),
+                        action
+                        );
+
+                if (connections.size() ==
+                        static_cast<size_t>(
+                            accumulate(
+                                errors.begin(), 
+                                errors.end(), 
+                                0
+                            )
+                        )
+                    )
+                    return false;
+
+                return true;
+            }
 
         inline tuple <connection_container, bool> get_connections(size_t offset) {
             typename pool_container::iterator pool_iterator;
