@@ -14,6 +14,7 @@
 #include <memcachepp/memcache/detail/directives/get.hpp>
 #include <memcachepp/memcache/detail/directives/set.hpp>
 #include <memcachepp/memcache/detail/directives/add.hpp>
+#include <memcachepp/memcache/detail/directives/replace.hpp>
 #include <memcachepp/memcache/detail/directives/raw_get.hpp>
 #include <memcachepp/memcache/detail/directives/raw_set.hpp>
 #include <memcachepp/memcache/detail/directives/raw_add.hpp>
