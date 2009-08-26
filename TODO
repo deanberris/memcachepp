@@ -8,6 +8,12 @@
  
 DONE 
 
+* verision 0.11
+ - refactoring implementation for cleaner code
+ - performance enhancements in protocol implementation
+ - performance enhancements in key validation
+ - adding concept checking
+
 * version 0.10
  - fluent interface merged
  - update documentation to reflect author status
