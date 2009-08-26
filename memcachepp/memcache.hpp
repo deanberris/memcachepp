@@ -43,12 +43,6 @@
 
 namespace memcache {
     
-    typedef boost::function<void(std::string const &)> 
-        callback_type;
-    
-    typedef std::map<std::string, callback_type> 
-        callback_map;
-
     template <class threading_policy = policies::default_threading<>,
         class data_interchange_policy = policies::binary_interchange<>,
         class hash_policy = policies::default_hash<>
@@ -85,6 +79,13 @@ namespace memcache {
         private:
 
         handle_type & _handle;
+
+        typedef boost::function<void(std::string const &)> 
+            callback_type;
+        
+        typedef std::map<std::string, callback_type> 
+            callback_map;
+
         mutable key_hash_map key_hash;
         mutable callback_map callbacks;
 
