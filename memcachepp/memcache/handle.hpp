@@ -101,7 +101,6 @@ namespace memcache {
             tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
-                        offset, key, value, expiration, failover_expiration,
                         set_impl<T, data_interchange_policy>(
                             key, 
                             value, 
@@ -110,8 +109,7 @@ namespace memcache {
                             flags,
                             rehash
                             ),
-                        connections,
-                        flags
+                        connections
                         )
                ) throw key_not_stored(key);
         };
@@ -119,75 +117,51 @@ namespace memcache {
         void set_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
-            if (offset > pools.size())
-                throw offset_out_of_bounds(offset);
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = get_connections(offset);
-            size_t connections_size = connections.size();
+            tie(connections, rehash) = command_setup(offset);
 
-            vector<int> errors(distance(connections.begin(), connections.end()), 0);
-
-            transform(connections.begin(), connections.end(),
-                    errors.begin(),
-                    set_impl<string, policies::string_preserve>(
-                        key, 
-                        value, 
-                        expiration, 
-                        failover_expiration, 
-                        flags, 
-                        rehash
-                        )
-                    );
-
-            if (connections_size == 
-                    static_cast<size_t>(accumulate(errors.begin(), errors.end(), 0)))
-                throw key_not_stored(key);
+            if (!perform_action(
+                        set_impl<string, policies::string_preserve>(
+                            key, 
+                            value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags, 
+                            rehash
+                            ),
+                        connections
+                    )
+               ) throw key_not_stored(key);
         };
 
         void delete_(size_t offset, string const & key, time_t delay = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
-            if (offset > pools.size())
-                throw offset_out_of_bounds(offset);
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = get_connections(offset);
-            size_t connections_size = connections.size();
+            tie(connections, rehash) = command_setup(offset);
 
-            vector<int> errors(distance(connections.begin(), connections.end()), 0);
-            transform(connections.begin(), connections.end(),
-                    back_inserter(errors),
+            if (!perform_action(
                     delete_impl(
                         key, 
                         delay
-                        )
-                    );
-
-            if (connections_size ==
-                    static_cast<size_t>(
-                        accumulate(
-                            errors.begin(), 
-                            errors.end(), 
-                            0
-                            )
-                        )
-               )
-                throw key_not_found(key);
+                        ),
+                    connections
+                    )
+               ) throw key_not_found(key);
         };
 
         template <typename T> // T must be serializable
         void get(size_t offset, string const & key, T & holder) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
-            if (offset > pools.size())
-                throw offset_out_of_bounds(offset);
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = command_setup(offset);
 
             typename connection_container::iterator 
                 connection_iterator = 
@@ -209,12 +183,9 @@ namespace memcache {
         void get_raw(size_t offset, string const & key, string & holder) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
-            if (offset > pools.size())
-                throw offset_out_of_bounds(offset);
-
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = get_connections(offset);
+            tie(connections, rehash) = command_setup(offset);
 
             typename connection_container::iterator 
                 connection_iterator = 
@@ -294,8 +265,8 @@ namespace memcache {
             return make_tuple(connections, rehash);
         }
 
-        template <class T, class Action>
-            bool perform_action(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, Action action, connection_container & connections, boost::uint16_t flags = 0) {
+        template <class Action>
+            bool perform_action(Action action, connection_container & connections) {
                 vector<int> errors(distance(connections.begin(), connections.end()), 0);
 
                 transform(connections.begin(), connections.end(),
