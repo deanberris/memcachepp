@@ -636,6 +636,18 @@ namespace memcache {
         };
     };
 
+    template <class threading_policy, class data_interchange_policy, class hash_policy, class directive_type>
+    inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, directive_type const & directive) {
+        directive(_handle);
+        return _handle;
+    };
+
+    template <typename threading_policy, class data_interchange_policy, class hash_policy>
+    inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, connect_directive_t) {
+        _handle.connect();
+        return _handle;
+    };
+
 } // namespace memcache
 
 #endif
