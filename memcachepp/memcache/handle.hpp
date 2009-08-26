@@ -47,6 +47,7 @@ namespace memcache {
     using boost::fusion::tuple;
     using boost::fusion::tie;
     using boost::fusion::make_tuple;
+    using boost::fusion::ignore;
     
     template <
         class threading_policy = policies::default_threading<>, 
@@ -160,47 +161,20 @@ namespace memcache {
             validate(key);
 
             connection_container connections;
-            bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            tie(connections, ignore) = command_setup(offset);
 
-            typename connection_container::iterator 
-                connection_iterator = 
-                    connections.begin(),
-                connections_end =
-                    connections.end();
-
-            get_impl<T, data_interchange_policy>
-                getter(key, holder);
-
-            connection_iterator =
-                find_if(connection_iterator, connections_end, getter);
-            
-            // when you get here, it means you didn't find the key
-            if (connection_iterator == connections_end)
+            if (retrieve(get_impl<T, data_interchange_policy>(key, holder), connections))
                 throw key_not_found(key);
         };
 
         void get_raw(size_t offset, string const & key, string & holder) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
+
             connection_container connections;
-            bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            tie(connections, ignore) = command_setup(offset);
 
-            typename connection_container::iterator 
-                connection_iterator = 
-                    connections.begin(),
-                connections_end =
-                    connections.end();
-
-            get_impl<string, policies::string_preserve>
-                getter(key, holder);
-
-            connection_iterator =
-                find_if(connection_iterator, connections_end, getter);
-            
-            // when you get here, it means you didn't find the key
-            if (connection_iterator == connections_end)
+            if (retrieve(get_impl<string, policies::string_preserve>(key, holder), connections))
                 throw key_not_found(key);
         };
         
@@ -286,6 +260,20 @@ namespace memcache {
                     return false;
 
                 return true;
+            }
+
+        template <class Predicate>
+            bool retrieve(Predicate getter, connection_container & connections) {
+                typename connection_container::iterator 
+                    connection_iterator = 
+                        connections.begin(),
+                    connections_end =
+                        connections.end();
+
+                connection_iterator =
+                    find_if(connection_iterator, connections_end, getter);
+                
+                return connection_iterator == connections_end;
             }
 
         inline tuple <connection_container, bool> get_connections(size_t offset) {
