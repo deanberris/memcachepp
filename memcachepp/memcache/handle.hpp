@@ -13,6 +13,7 @@
 #include <utility>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/classification.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 #include <boost/static_assert.hpp>
@@ -239,8 +240,8 @@ namespace memcache {
             return make_tuple(connections, rehash);
         }
 
-        template <class Action>
-            bool perform_action(Action action, connection_container & connections) {
+        template <class Action, class ConnectionContainer>
+            bool perform_action(Action action, ConnectionContainer & connections) {
                 vector<int> errors(distance(connections.begin(), connections.end()), 0);
 
                 transform(connections.begin(), connections.end(),
@@ -262,8 +263,8 @@ namespace memcache {
                 return true;
             }
 
-        template <class Predicate>
-            bool retrieve(Predicate getter, connection_container & connections) {
+        template <class Predicate, class ConnectionContainer>
+            bool retrieve(Predicate getter, ConnectionContainer & connections) {
                 typename connection_container::iterator 
                     connection_iterator = 
                         connections.begin(),
@@ -277,11 +278,9 @@ namespace memcache {
             }
 
         inline tuple <connection_container, bool> get_connections(size_t offset) {
-            typename pool_container::iterator pool_iterator;
-            size_t counter = 0;
-            for (pool_iterator = pools.begin();
-                    pool_iterator != pools.end() && counter < offset;
-                    ++counter, ++pool_iterator);
+            typename pool_container::iterator pool_iterator = pools.begin();
+            assert((offset < pools.size()) && "Offset out of bounds");
+            advance(pool_iterator, offset);
 
             bool past_end = false;
             bool rehash = false;
@@ -629,10 +628,11 @@ namespace memcache {
         };
 
         void validate(string const & key) const {
-            if (key.find('\r') != string::npos) throw invalid_key(key);
-            if (key.find('\n') != string::npos) throw invalid_key(key);
-            if (key.find('\t') != string::npos) throw invalid_key(key);
-            if (key.find(' ') != string::npos) throw invalid_key(key);
+            using boost::is_space;
+            using boost::is_cntrl;
+            using boost::is_graph;
+            if (find_if(key.begin(), key.end(), is_space() || is_cntrl()) != key.end())
+                throw invalid_key(key);
         };
     };
 
