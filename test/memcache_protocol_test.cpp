@@ -69,19 +69,19 @@ BOOST_AUTO_TEST_CASE ( add_test ) {
     try { mc << memcache::delete_("99"); } catch (...) {}
 }
 
-BOOST_AUTO_TEST_CASE ( add_raw_test ) {
+BOOST_AUTO_TEST_CASE ( raw_add_test ) {
     memcache::handle mc;
     mc << memcache::server("localhost", 11211)
         << memcache::connect;
 
-    int some_key = 0;
+    std::string some_string = "";
     try { mc << memcache::delete_("99"); } catch (...) {}
 
-    BOOST_CHECK_THROW ( mc << memcache::get("99", some_key); , memcache::key_not_found );
-    BOOST_CHECK_NO_THROW ( mc << memcache::add_raw("99", std::string("99")); );
-    BOOST_CHECK_NO_THROW ( mc << memcache::get("99", some_key); );
-    BOOST_CHECK_THROW ( mc << memcache::add_raw("99", std::string("98")); , memcache::key_not_stored );
-    BOOST_CHECK_EQUAL ( 99, some_key );
+    BOOST_CHECK_THROW ( mc << memcache::raw_get("99", some_string); , memcache::key_not_found );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_add("99", std::string("99")); );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_get("99", some_string); );
+    BOOST_CHECK_THROW ( mc << memcache::raw_add("99", std::string("98")); , memcache::key_not_stored );
+    BOOST_CHECK_EQUAL ( std::string("99"), some_string );
 
     try { mc << memcache::delete_("99"); } catch (...) {}
 }

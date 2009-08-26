@@ -16,6 +16,7 @@
 #include <memcachepp/memcache/detail/directives/add.hpp>
 #include <memcachepp/memcache/detail/directives/raw_get.hpp>
 #include <memcachepp/memcache/detail/directives/raw_set.hpp>
+#include <memcachepp/memcache/detail/directives/raw_add.hpp>
 #include <memcachepp/memcache/detail/directives/delete.hpp>
 #include <memcachepp/memcache/detail/directives/connect.hpp>
 #include <memcachepp/memcache/detail/directives/commit.hpp>
