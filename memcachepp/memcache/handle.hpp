@@ -95,6 +95,28 @@ namespace memcache {
         };
 
         template <typename T> // T must be serializable
+        void add(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+            connection_container connections;
+            bool rehash;
+            tie(connections, rehash) = command_setup(offset);
+
+            if (!perform_action(
+                        add_impl<T, data_interchange_policy>(
+                            key, 
+                            value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags,
+                            rehash
+                            ),
+                        connections
+                        )
+               ) throw key_not_stored(key);
+        };
+
+        template <typename T> // T must be serializable
         void set(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
@@ -330,23 +352,9 @@ namespace memcache {
 
         boost::asio::io_service _service;
 
-        template <typename T, typename set_interchange_policy>
-            struct set_impl {
+        template <class T>
+            struct storage_base {
                 string command;
-                
-                explicit set_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) 
-                    { 
-                        ostringstream output_bytes_stream;
-                        typename set_interchange_policy::oarchive archive(output_bytes_stream);
-                        archive << value;
-
-                        ostringstream command_stream;
-                        command_stream << "set " << key << " " << flags
-                            << " " << (rehash ? failover_expiration : expiration)
-                            << " " << output_bytes_stream.str().size() << "\r\n"
-                            << output_bytes_stream.str() << "\r\n";
-                        command = command_stream.str();
-                    };
                 
                 template <typename value_type>
                     int operator() (value_type & server_iterator) {
@@ -381,16 +389,43 @@ namespace memcache {
                         if (line == "STORED\r")
                             return 0; // indicate NO error
 
-                        istringstream tokenizer(line);
-                        string first_token;
-                        tokenizer >> first_token;    
-                        if ((first_token == "ERROR") || 
-                            (first_token == "CLIENT_ERROR") ||
-                            (first_token == "SERVER_ERROR"))
-                            return 1; // indicate error
-
-                        return 1; // indicate error
+                        return 1;
                     };
+            };
+
+        template <typename T, typename set_interchange_policy>
+            struct set_impl : storage_base<T> {
+                explicit set_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) 
+                    { 
+                        ostringstream output_bytes_stream;
+                        typename set_interchange_policy::oarchive archive(output_bytes_stream);
+                        archive << value;
+
+                        ostringstream command_stream;
+                        command_stream << "set " << key << " " << flags
+                            << " " << (rehash ? failover_expiration : expiration)
+                            << " " << output_bytes_stream.str().size() << "\r\n"
+                            << output_bytes_stream.str() << "\r\n";
+                        storage_base<T>::command = command_stream.str();
+                    };
+                
+            };
+
+        template <class T, class set_interchange_policy>
+            struct add_impl : storage_base<T> {
+                explicit add_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash)
+                {
+                        ostringstream output_bytes_stream;
+                        typename set_interchange_policy::oarchive archive(output_bytes_stream);
+                        archive << value;
+
+                        ostringstream command_stream;
+                        command_stream << "add " << key << " " << flags
+                            << " " << (rehash ? failover_expiration : expiration)
+                            << " " << output_bytes_stream.str().size() << "\r\n"
+                            << output_bytes_stream.str() << "\r\n";
+                        storage_base<T>::command = command_stream.str();
+                }
             };
         
         template <typename holder_type, class get_interchange_policy>

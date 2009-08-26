@@ -52,6 +52,22 @@ BOOST_AUTO_TEST_CASE ( set_test ) {
     BOOST_CHECK_EQUAL ( 100, some_key );
 };
 
+BOOST_AUTO_TEST_CASE ( add_test ) {
+    memcache::handle mc;
+    mc << memcache::server("localhost", 11211)
+        << memcache::connect;
+
+    int some_key = 0;
+    try { mc << memcache::delete_("99"); } catch (...) {}
+
+    BOOST_CHECK_THROW ( mc << memcache::get("99", some_key); , memcache::key_not_found );
+    BOOST_CHECK_NO_THROW ( mc << memcache::add("99", 99); );
+    BOOST_CHECK_NO_THROW ( mc << memcache::get("99", some_key); );
+    BOOST_CHECK_EQUAL ( 99, some_key );
+
+    try { mc << memcache::delete_("99"); } catch (...) {}
+}
+
 BOOST_AUTO_TEST_CASE ( failover_expiration_test ) {
     memcache::handle mc;
     mc << memcache::server("aodjfgbie", 11111)

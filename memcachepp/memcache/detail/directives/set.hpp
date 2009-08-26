@@ -35,11 +35,11 @@ namespace memcache { namespace detail {
 
         private:
 
-        mutable std::string _key;
-        mutable T const & _value;
-		mutable boost::uint16_t _flags;
-        mutable time_t _timeout;
-        mutable time_t _failover_timeout;
+        std::string _key;
+        T const & _value;
+        boost::uint16_t _flags;
+        time_t _timeout;
+        time_t _failover_timeout;
     };
 
 }; // namespace detail
