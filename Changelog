@@ -1,3 +1,22 @@
+Release 0.11:
+    * Adding support for raw_append, raw_prepend, and checking for server version.
+    * Adding support for raw_replace.
+    * Adding replace support.
+    * Implementing memcache  raw_add and fixing broken test.
+    * Check for negative case in memcache add test.
+    * Check for negative case in memcache add test.
+    * Adding support for the add command in the memcache protocol.
+    * Moving basic_request implementation out of memcache.hpp into memcache/request.hpp.
+    * Making callback_type and callback_map internal typedefs to basic_request<>.
+    * Changes to TODO and README.
+    * Making retrieve and perform_action more generic; making validate more efficient.
+    * Refactoring implementation of get and get_raw, both now using the retrieve private member function.
+    * Cleaning up implementation of set_raw, delete_, get, and get_raw to use refactored functions perform_action and command_setup.
+    * Initial refactoring of perform_action to reduce code in public-facing set member function.
+    * Code cleanup for eventual refactoring.
+    * Small performance enhancing changes; making regex objects function-local static, using STL find_if for some hand-written loops.
+    * Adding concept checks to memcache++ implementation; moving handler implementation to its own header file.
+
 Release 0.10:
     * Documenting fluent interface; added remove function.
     * Making exceptions derive from memcache::exception to ease catching of memcache-specific exceptions; Turning exception types non-templates; Making memcache++ use Spirit.Classic includes.
