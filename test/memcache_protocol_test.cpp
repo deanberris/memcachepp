@@ -63,6 +63,7 @@ BOOST_AUTO_TEST_CASE ( add_test ) {
     BOOST_CHECK_THROW ( mc << memcache::get("99", some_key); , memcache::key_not_found );
     BOOST_CHECK_NO_THROW ( mc << memcache::add("99", 99); );
     BOOST_CHECK_NO_THROW ( mc << memcache::get("99", some_key); );
+    BOOST_CHECK_THROW ( mc << memcache::add("99", 98); , memcache::key_not_stored );
     BOOST_CHECK_EQUAL ( 99, some_key );
 
     try { mc << memcache::delete_("99"); } catch (...) {}
