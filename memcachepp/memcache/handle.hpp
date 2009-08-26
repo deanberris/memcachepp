@@ -226,6 +226,50 @@ namespace memcache {
                ) throw key_not_stored(key);
         };
 
+        void append_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+
+            connection_container connections;
+            bool rehash;
+            tie(connections, rehash) = command_setup(offset);
+
+            if (!perform_action(
+                        append_impl<string, policies::string_preserve>(
+                            key, 
+                            value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags, 
+                            rehash
+                            ),
+                        connections
+                    )
+               ) throw key_not_stored(key);
+        };
+
+        void prepend_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+
+            connection_container connections;
+            bool rehash;
+            tie(connections, rehash) = command_setup(offset);
+
+            if (!perform_action(
+                        prepend_impl<string, policies::string_preserve>(
+                            key, 
+                            value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags, 
+                            rehash
+                            ),
+                        connections
+                    )
+               ) throw key_not_stored(key);
+        };
+
         void delete_(size_t offset, string const & key, time_t delay = 0) {
             typename threading_policy::lock scoped_lock(*this);
             validate(key);
@@ -243,6 +287,25 @@ namespace memcache {
                     )
                ) throw key_not_found(key);
         };
+
+        string version(size_t offset = 0) {
+            if (pools.empty())
+                throw no_available_servers();
+
+            connection_container connections;
+            tie(connections, ignore) = command_setup(offset);
+
+            string version_string;
+            if (!perform_action(
+                        version_impl(
+                            version_string
+                            ),
+                        connections
+                        )
+               ) throw version_not_found(offset);
+
+            return version_string;
+        }
 
         template <typename T> // T must be serializable
         void get(size_t offset, string const & key, T & holder) {
@@ -494,6 +557,38 @@ namespace memcache {
             };
 
         template <class T, class set_interchange_policy>
+            struct append_impl : storage_base<T> {
+                explicit append_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) {
+                        ostringstream output_bytes_stream;
+                        typename set_interchange_policy::oarchive archive(output_bytes_stream);
+                        archive << value;
+
+                        ostringstream command_stream;
+                        command_stream << "append " << key << " " << flags
+                            << " " << (rehash ? failover_expiration : expiration)
+                            << " " << output_bytes_stream.str().size() << "\r\n"
+                            << output_bytes_stream.str() << "\r\n";
+                        storage_base<T>::command = command_stream.str();
+                }
+            };
+
+        template <class T, class set_interchange_policy>
+            struct prepend_impl : storage_base<T> {
+                explicit prepend_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) {
+                        ostringstream output_bytes_stream;
+                        typename set_interchange_policy::oarchive archive(output_bytes_stream);
+                        archive << value;
+
+                        ostringstream command_stream;
+                        command_stream << "prepend " << key << " " << flags
+                            << " " << (rehash ? failover_expiration : expiration)
+                            << " " << output_bytes_stream.str().size() << "\r\n"
+                            << output_bytes_stream.str() << "\r\n";
+                        storage_base<T>::command = command_stream.str();
+                }
+            };
+
+        template <class T, class set_interchange_policy>
             struct add_impl : storage_base<T> {
                 explicit add_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash)
                 {
@@ -590,6 +685,52 @@ namespace memcache {
                         return true;
                     };
                 };
+
+        struct version_impl {
+            string command;
+            string & version;
+            explicit version_impl(string & version)
+                : command("version\r\n"), version(version)
+            { }
+
+            template <class Iterator>
+                int operator() (Iterator & server_iterator) {
+                    static boost::regex eol_regex("\r\n");
+                    boost::asio::streambuf buffer;
+                    connection_ptr connection = server_iterator->second.connection;
+                    try {
+                        boost::asio::write(*connection,
+                            boost::asio::buffer(const_cast<char*>(command.c_str()),
+                                sizeof(char) * command.size())
+                            );
+#ifdef _REENTRANT
+                            detail::read_handler handler_instance(*connection,
+                                buffer, eol_regex, MEMCACHE_TIMEOUT);
+                            handler_instance();
+#else
+                            boost::asio::read_until(*connection,
+                                buffer, eol_regex);
+#endif
+                    } catch (system_error & e) {
+                        server_iterator->second.error = e.code();
+                        server_iterator->second.connected = false;
+                        server_iterator->second.connection.reset();
+                        return 1;
+                    };
+                    istream response(&buffer);
+                    string line;
+                    getline(response, line);
+                    boost::trim_right(line);
+                    istringstream tokens(line);
+                    string next_token;
+                    tokens >> next_token;
+                    if (next_token == "VERSION") {
+                        tokens >> version;
+                        return 0;
+                    }
+                    return 1;
+                }
+        };
         
         struct delete_impl {
             string command;

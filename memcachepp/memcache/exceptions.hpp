@@ -12,11 +12,13 @@
 #include <string>
 
 #include <memcachepp/memcache/tags.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace memcache { 
 
     using std::runtime_error;
     using std::string;
+    using boost::lexical_cast;
 
     struct exception : runtime_error {
         exception(string const & str_)
@@ -55,9 +57,17 @@ namespace memcache {
     struct offset_out_of_bounds : exception {
         explicit offset_out_of_bounds (size_t offset) :
             exception((string("Offset out of bounds: ") + 
-                boost::lexical_cast<string>(offset)).c_str()) { };
+                lexical_cast<string>(offset)).c_str()) { };
 
         ~offset_out_of_bounds() throw () { }
+    };
+
+    struct version_not_found : exception {
+        explicit version_not_found (size_t offset) :
+            exception((string("Version not found for server at offset")
+                        + lexical_cast<string>(offset)).c_str()) {};
+
+        ~version_not_found() throw () { }
     };
 
     struct key_not_stored : exception {

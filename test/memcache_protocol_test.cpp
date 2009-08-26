@@ -105,6 +105,46 @@ BOOST_AUTO_TEST_CASE ( raw_replace_test ) {
     try { mc << memcache::delete_("99"); } catch (...) {}
 }
 
+BOOST_AUTO_TEST_CASE ( raw_append_test ) {
+    memcache::handle mc;
+    mc << memcache::server("localhost", 11211)
+        << memcache::connect;
+
+    if (mc.version() != "1.2.5")
+        return;
+
+    std::string some_string = "";
+    try { mc << memcache::delete_("99"); } catch (...) {}
+
+    BOOST_CHECK_THROW ( mc << memcache::raw_get("99", some_string); , memcache::key_not_found );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_set("99", "9"); );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_append("99", "11"); );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_get("99", some_string); );
+    BOOST_CHECK_EQUAL ( std::string("911"), some_string );
+
+    try { mc << memcache::delete_("99"); } catch (...) {}
+}
+
+BOOST_AUTO_TEST_CASE ( raw_prepend_test ) {
+    memcache::handle mc;
+    mc << memcache::server("localhost", 11211)
+        << memcache::connect;
+
+    if (mc.version() != "1.2.5")
+        return;
+
+    std::string some_string = "";
+    try { mc << memcache::delete_("99"); } catch (...) {}
+
+    BOOST_CHECK_THROW ( mc << memcache::raw_get("99", some_string); , memcache::key_not_found );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_set("99", "9"); );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_prepend("99", "11"); );
+    BOOST_CHECK_NO_THROW ( mc << memcache::raw_get("99", some_string); );
+    BOOST_CHECK_EQUAL ( std::string("119"), some_string );
+
+    try { mc << memcache::delete_("99"); } catch (...) {}
+}
+
 BOOST_AUTO_TEST_CASE ( raw_add_test ) {
     memcache::handle mc;
     mc << memcache::server("localhost", 11211)
