@@ -160,6 +160,28 @@ namespace memcache {
                ) throw key_not_stored(key);
         };
 
+        void replace_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+
+            connection_container connections;
+            bool rehash;
+            tie(connections, rehash) = command_setup(offset);
+
+            if (!perform_action(
+                        replace_impl<string, policies::string_preserve>(
+                            key, 
+                            value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags, 
+                            rehash
+                            ),
+                        connections
+                    )
+               ) throw key_not_stored(key);
+        };
+
         template <typename T> // T must be serializable
         void set(size_t offset, string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
