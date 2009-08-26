@@ -47,6 +47,9 @@ Below is a detailed API guide to the class:
     [[`connect()`] [`void`] 
         [Connect to defined memcache servers.]
     ]
+    [[`version(size_t offset)`] [`std::string`]
+        [Returns the version string of the memcache server identified by `offset`.]
+    ]
     [[`delete_(size_t offset, std::string const & key, time_t delay = 0)`] [`void`]
         [Delete the data associated to `key` from the memcache
         server identified by `offset`, set delay to `delay`.]
@@ -81,6 +84,60 @@ Below is a detailed API guide to the class:
         `failover_expiration`, while when successful set the
         expiration to `expiration`. The value set here is set 'as is'
         without serialization.]
+    ]
+    [[`template <typename T> add(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`] 
+        [Adds the `key` associated to `value` in the memcache server
+        identified by `offset`, on failover set the expiration to
+        `failover_expiration`, while when successful set the
+        expiration to `expiration`.
+
+        Will throw `key_not_stored` if `key` is already present
+        in the memcache server.
+        ]
+    ]
+    [[`add_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
+        [Adds the `key` to `value` in the memcache server identified
+        by `offset`, on failover set the expiration to
+        `failover_expiration`, while when successful set the
+        expiration to `expiration`. The value set here is set 'as is'
+        without serialization.
+
+        Will throw `key_not_stored` if `key` is already present
+        in the memcache server.
+        ]
+    ]
+    [[`template <typename T> replace(size_t offset, std::string const & key, T const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`] 
+        [Replaces the `key` associated to `value` in the memcache server
+        identified by `offset`, on failover set the expiration to
+        `failover_expiration`, while when successful set the
+        expiration to `expiration`.
+
+        Will throw `key_not_stored` if `key` is not present
+        in the memcache server.
+        ]
+    ]
+    [[`replace_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
+        [Replaces the `key` to `value` in the memcache server identified
+        by `offset`, on failover set the expiration to
+        `failover_expiration`, while when successful set the
+        expiration to `expiration`. The value set here is set 'as is'
+        without serialization.
+
+        Will throw `key_not_stored` if `key` is not present
+        in the memcache server.
+        ]
+    ]
+    [[`append_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
+        [Appends `value` to the data associated to `key` in the memcache 
+        server identified by `offset`. `value` is appended 'as is' without 
+        serialization.
+        ]
+    ]
+    [[`prepend_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
+        [Prepends `value` to the data associated to `key` in the memcache 
+        server identified by `offset`. `value` is prepended 'as is' without 
+        serialization.
+        ]
     ]
 ]
 
@@ -128,7 +185,7 @@ policy to determine which server in the defined collection of
 servers to set the data in, based on the hash on the provided key.
 
     template <typename T, typename _T>
-    detail::set_irective<_T>
+    detail::set_directive<_T>
     set(_T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0);
 
     template <typename T, typename _T>
@@ -169,6 +226,112 @@ while setting the failover expiration to what `failover_expiration`
 is set to when a re-hash of a key occurs.
 
 [endsect] [/ memcache::set]
+
+[section:add memcache::add]
+
+The `memcache::add` directive instructs the __memcache_handle__ to
+perform an add operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to set the data in, based on the hash on the provided key.
+
+    template <typename T, typename _T>
+    detail::add_directive<_T>
+    add(_T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::add_directive<_T>
+    add(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::add_directive<_T>
+    add(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, uint16_t flags=0);
+
+    template <typename T, typename _T>
+    detail::add_directive<_T>
+    add(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, uint16_t flags=0);
+
+There are four overloads to the `memcache::add` directive, which 
+corresponds to different ways of setting the expiration of the key
+being added.
+
+The first version defaults the timeout to 0, which means the key
+set is not set to expire. When timeout is set though, this is used
+to determine when the key is expired. When there is a re-hash of
+the key to a different server -- which happens when the server it's
+intended for, for some reason cannot accomodate the set request --
+the same timeout is used.
+
+    mc << memcache::add("key_a", 100);
+
+The second and third version allows for defining different expirations
+when the set is successful (value denoted by `detail::expire_type`)
+and when the key is re-hashed to a different server (value denoted
+by `detail::failover_expire_type`).
+
+    mc << memcache::add("key_b", double(2.5), expire(300), failover_expire(60))
+        << memcache::add("key_c", std::string("Hello, World!"), failover_expire(100));
+
+The fourth version is equivalent to setting the expiration to 0,
+while setting the failover expiration to what `failover_expiration`
+is set to when a re-hash of a key occurs.
+
+The `memcache::add` directive will throw a `key_not_stored` exception when
+the key provided already exists in the memcache server.
+
+[endsect] [/ memcache::add]
+
+[section:replace memcache::replace]
+
+The `memcache::replace` directive instructs the __memcache_handle__ to
+perform a replace operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to set the data in, based on the hash on the provided key.
+
+    template <typename T, typename _T>
+    detail::replace_directive<_T>
+    replace(_T _key, _T const & value, time_t timeout = 0, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::replace_directive<_T>
+    replace(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, uint16_t flags = 0);
+
+    template <typename T, typename _T>
+    detail::replace_directive<_T>
+    replace(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, uint16_t flags=0);
+
+    template <typename T, typename _T>
+    detail::replace_directive<_T>
+    replace(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, uint16_t flags=0);
+
+There are four overloads to the `memcache::replace` directive, which 
+corresponds to different ways of setting the expiration of the key
+being added.
+
+The first version defaults the timeout to 0, which means the key
+set is not set to expire. When timeout is set though, this is used
+to determine when the key is expired. When there is a re-hash of
+the key to a different server -- which happens when the server it's
+intended for, for some reason cannot accomodate the set request --
+the same timeout is used.
+
+    mc << memcache::replace("key_a", 100);
+
+The second and third version allows for defining different expirations
+when the set is successful (value denoted by `detail::expire_type`)
+and when the key is re-hashed to a different server (value denoted
+by `detail::failover_expire_type`).
+
+    mc << memcache::replace("key_b", double(2.5), expire(300), failover_expire(60))
+        << memcache::replace("key_c", std::string("Hello, World!"), failover_expire(100));
+
+The fourth version is equivalent to setting the expiration to 0,
+while setting the failover expiration to what `failover_expiration`
+is set to when a re-hash of a key occurs.
+
+The `memcache::replace` directive will throw a `key_not_stored` exception when
+the key provided doesn't exist in the memcache server.
+
+[endsect] [/ memcache::replace]
 
 [section:delete_ memcache::delete_]
 
@@ -237,6 +400,68 @@ key "hello_world" without using any extra serialization.
     mc << memcache::raw_set("hello_world", "hello, world!");
 
 [endsect] [/ memcache::raw_set]
+
+[section:raw_append memcache::raw_append]
+
+The `memcache::raw_append` directive instructs the __memcache_handle__
+to perform an append operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key. `memcache::raw_append` does not perform a serialization of
+a given value, which should be an `std::string` or of a type
+convertible to an `std::string`.
+
+    template <typename T>
+    detail::raw_append_directive<> raw_append(T _key, std::string const & value, time_t timeout=0, uint16_t flags=0);
+
+The following examples appends the raw string "hello, world!" for the
+key "hello_world" without using any extra serialization.
+
+    mc << memcache::raw_append("hello_world", "hello, world!");
+
+[warning Only use `memcache::raw_append` on data already set as
+raw in the memcache server. This means if you've performed a
+`memcache::raw_set` on a key, it should be safe to perform
+a `memcache::raw_append` on it. `memcache::raw_append` may render
+data set through `memcache::set`, `memcache::add`, or 
+`memcache::replace` to be un-usable with `memcache::get` due
+to serialization errors.]
+
+[note The append operation is only supported from memcached version
+1.2.5 and upwards.]
+
+[endsect] [/ memcache::raw_append]
+
+[section:raw_prepend memcache::raw_prepend]
+
+The `memcache::raw_prepend` directive instructs the __memcache_handle__
+to perform a prepend operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key. `memcache::raw_prepend` does not perform a serialization of
+a given value, which should be an `std::string` or of a type
+convertible to an `std::string`.
+
+    template <typename T>
+    detail::raw_prepend_directive<> raw_prepend(T _key, std::string const & value, time_t timeout=0, uint16_t flags=0);
+
+The following examples prepends the raw string "hello, world!" for the
+key "hello_world" without using any extra serialization.
+
+    mc << memcache::raw_prepend("hello_world", "hello, world!");
+
+[warning Only use `memcache::raw_prepend` on data already set as
+raw in the memcache server. This means if you've performed a
+`memcache::raw_set` on a key, it should be safe to perform
+a `memcache::raw_prepend` on it. `memcache::raw_prepend` may render
+data set through `memcache::set`, `memcache::add`, or 
+`memcache::replace` to be un-usable with `memcache::get` due
+to serialization errors.]
+
+[note The prepend operation is only supported from memcached version
+1.2.5 and upwards.]
+
+[endsect] [/ memcache::raw_prepend]
 
 [section:server memcache::server]
 

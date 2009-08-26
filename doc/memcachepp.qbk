@@ -1,6 +1,6 @@
 [article Memcache++
     [quickbook 1.4]
-    [version 0.10]
+    [version 0.11]
     [authors [Berris, Dean Michael] ]
     [copyright 2007 2008 Friendster, Inc.]
     [copyright 2009 Dean Michael Berris ]
@@ -12,7 +12,7 @@
     ]
 ]
 
-[/ Memcache++ Document version 0.9 ]
+[/ Memcache++ Document version 0.11 ]
 [/ Jan. 23, 2008 ]
 
 [/ Some links]

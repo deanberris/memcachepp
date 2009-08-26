@@ -4,7 +4,7 @@
 <title>Handle</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Memcache++ 0.10">
+<link rel="start" href="../../index.html" title="Memcache++ 0.11">
 <link rel="up" href="../concepts.html" title="Concepts">
 <link rel="prev" href="../concepts.html" title="Concepts">
 <link rel="next" href="directive.html" title="Directive">
@@ -112,7 +112,7 @@
 </dl>
 </div>
 <div class="table">
-<a name="id2672263"></a><p class="title"><b>Table 1. Valid Constructs</b></p>
+<a name="id2613895"></a><p class="title"><b>Table 1. Valid Constructs</b></p>
 <div class="table-contents"><table class="table" summary="Valid Constructs">
 <colgroup>
 <col>
@@ -187,6 +187,23 @@
 <td>
             <p>
               Connects to all defined servers.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">version</span><span class="special">(</span><span class="identifier">o</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">string</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the version string at server offset <code class="computeroutput"><span class="identifier">o</span></code>
             </p>
             </td>
 </tr>
@@ -339,6 +356,146 @@
               setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
               and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
               with flag <code class="computeroutput"><span class="identifier">f</span></code>.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">e</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Associates the serialized form of <code class="computeroutput"><span class="identifier">d</span></code>
+              to key <code class="computeroutput"><span class="identifier">k</span></code> from the server
+              offset at <code class="computeroutput"><span class="identifier">o</span></code>, optionally
+              setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+              and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+              with flag <code class="computeroutput"><span class="identifier">f</span></code>. If the
+              server already contains the key <code class="computeroutput"><span class="identifier">k</span></code>
+              then the operation will not succeed.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">add_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">r</span><span class="special">,</span> <span class="identifier">e</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Associates the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+              to key <code class="computeroutput"><span class="identifier">k</span></code> from the server
+              offset at <code class="computeroutput"><span class="identifier">o</span></code>, optionally
+              setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+              and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+              with flag <code class="computeroutput"><span class="identifier">f</span></code>. If the
+              server already contains the key <code class="computeroutput"><span class="identifier">k</span></code>
+              then the operation will not succeed.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">replace</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">e</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Replaces the data stored in the server offset at <code class="computeroutput"><span class="identifier">o</span></code>
+              on key <code class="computeroutput"><span class="identifier">k</span></code> with the serialized
+              form of <code class="computeroutput"><span class="identifier">d</span></code>, optionally
+              setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+              and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+              with flag <code class="computeroutput"><span class="identifier">f</span></code>. If the
+              server doesn't contain the key <code class="computeroutput"><span class="identifier">k</span></code>
+              then the operation will not succeed.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">replace_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">r</span><span class="special">,</span> <span class="identifier">e</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Replaces the data stored in the server offset at <code class="computeroutput"><span class="identifier">o</span></code>
+              on key <code class="computeroutput"><span class="identifier">k</span></code> with the raw
+              data <code class="computeroutput"><span class="identifier">r</span></code>, optionally
+              setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+              and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+              with flag <code class="computeroutput"><span class="identifier">f</span></code>. If the
+              server doesn't contain the key <code class="computeroutput"><span class="identifier">k</span></code>
+              then the operation will not succeed.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">append_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">r</span><span class="special">,</span> <span class="identifier">e</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Appends the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+              to key <code class="computeroutput"><span class="identifier">k</span></code> from the server
+              offset at <code class="computeroutput"><span class="identifier">o</span></code>, ignoring
+              the expiration <code class="computeroutput"><span class="identifier">e</span></code> as
+              well as the failover expiration <code class="computeroutput"><span class="identifier">x</span></code>
+              and the flag <code class="computeroutput"><span class="identifier">f</span></code>.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">prepend_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">r</span><span class="special">,</span> <span class="identifier">e</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Prepends the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+              to key <code class="computeroutput"><span class="identifier">k</span></code> from the server
+              offset at <code class="computeroutput"><span class="identifier">o</span></code>, ignoring
+              the expiration <code class="computeroutput"><span class="identifier">e</span></code> as
+              well as the failover expiration <code class="computeroutput"><span class="identifier">x</span></code>
+              and the flag <code class="computeroutput"><span class="identifier">f</span></code>.
             </p>
             </td>
 </tr>

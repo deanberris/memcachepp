@@ -56,6 +56,9 @@ are supported:
     [[`mc.connect()`] [`void`]
         [Connects to all defined servers.]
     ]
+    [[`mc.version(o)`] [`string`]
+        [Returns the version string at server offset `o`]
+    ]
     [[`mc.delete_(o, k, t)`] [`void`]
         [Deletes data associated to key `k` at server offset `o`
         optionally scheduled at time `t`.]
@@ -88,6 +91,50 @@ are supported:
         [Associates the raw data `r` to key `k` from the server
         offset at `o`, optionally setting the expiration to
         `e` and on failover the expiration to `x` with flag `f`.
+        ]
+    ]
+    [[`mc.add<D>(o, k, d, e, x, f)`] [`void`]
+        [Associates the serialized form of `d` to key `k`
+        from the server offset at `o`, optionally setting
+        the expiration to `e` and on failover the expiration
+        to `x` with flag `f`. If the server already contains
+        the key `k` then the operation will not succeed.
+        ]
+    ]
+    [[`mc.add_raw(o, k, r, e, x, f)`] [`void`]
+        [Associates the raw data `r` to key `k` from the server
+        offset at `o`, optionally setting the expiration to
+        `e` and on failover the expiration to `x` with flag `f`.
+        If the server already contains the key `k` then the
+        operation will not succeed.
+        ]
+    ]
+    [[`mc.replace<D>(o, k, d, e, x, f)`] [`void`]
+        [Replaces the data stored in the server offset at `o`
+        on key `k` with the serialized form of `d`, optionally
+        setting the expiration to `e` and on failover the
+        expiration to `x` with flag `f`. If the server doesn't
+        contain the key `k` then the operation will not succeed.
+        ]
+    ]
+    [[`mc.replace_raw(o, k, r, e, x, f)`] [`void`]
+        [Replaces the data stored in the server offset at `o`
+        on key `k` with the raw data `r`, optionally setting the
+        expiration to `e` and on failover the expiration to `x`
+        with flag `f`. If the server doesn't contain the key `k`
+        then the operation will not succeed.
+        ]
+    ]
+    [[`mc.append_raw(o, k, r, e, x, f)`] [`void`]
+        [Appends the raw data `r` to key `k` from the server
+        offset at `o`, ignoring the expiration `e` as well as
+        the failover expiration `x` and the flag `f`.
+        ]
+    ]
+    [[`mc.prepend_raw(o, k, r, e, x, f)`] [`void`]
+        [Prepends the raw data `r` to key `k` from the server
+        offset at `o`, ignoring the expiration `e` as well as
+        the failover expiration `x` and the flag `f`.
         ]
     ]
 ]
