@@ -91,7 +91,7 @@ namespace memcache {
         
         void connect() { 
             typename threading_policy::lock scoped_lock(*this);
-            for_each(servers.begin(), servers.end(), connect_impl(_service));
+            for_each(servers.begin(), servers.end(), connect_impl(service_));
         };
 
         template <typename T> // T must be serializable
@@ -342,7 +342,7 @@ namespace memcache {
             typename threading_policy::lock scoped_lock(*this);
             pool_container().swap(pools);
             server_container().swap(servers);
-            _service.stop();
+            service_.stop();
         };
 
         friend struct basic_request<threading_policy, data_interchange_policy, hash_policy>;
@@ -479,7 +479,7 @@ namespace memcache {
             return make_tuple(connections, rehash);
         };
 
-        boost::asio::io_service _service;
+        boost::asio::io_service service_;
 
         template <class T>
             struct storage_base {
@@ -793,9 +793,9 @@ namespace memcache {
         
         struct connect_impl {
             explicit connect_impl(boost::asio::io_service & service) :
-                _service(service) { };
+                service_(service) { };
             
-            boost::asio::io_service & _service;
+            boost::asio::io_service & service_;
 
             template <class IoService, class Element>
                 pair<connection_ptr,error_code> 
@@ -809,9 +809,9 @@ namespace memcache {
                     using boost::asio::error::host_not_found;
 
                     connection_ptr new_connection(
-                            new tcp::socket(_service)
+                            new tcp::socket(service_)
                             );
-                    tcp::resolver resolver(_service);
+                    tcp::resolver resolver(service_);
                     tcp::resolver::query query(element.second.host, element.second.port, tcp::resolver::query::numeric_service);
                     tcp::resolver::iterator 
                         endpoint_iterator = resolver.resolve(query),
@@ -867,7 +867,7 @@ namespace memcache {
                     connection_ptr new_connection;
                     error_code error;
                     
-                    tie(new_connection, error) = connect(_service, element);
+                    tie(new_connection, error) = connect(service_, element);
                     
                     if (error) {
                         element.second.connected = false;
