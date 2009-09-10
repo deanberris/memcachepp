@@ -288,7 +288,44 @@ namespace memcache {
                ) throw key_not_found(key);
         };
 
+        void incr(size_t offset, string const & key, boost::uint64_t & holder, boost::uint64_t value) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+
+            connection_container connections;
+            tie(connections, ignore) = command_setup(offset);
+
+            if (!perform_action(
+                        incr_impl(
+                            key,
+                            holder,
+                            value
+                            ),
+                        connections
+                        )
+               ) throw key_not_found(key);
+        }
+
+        void decr(size_t offset, string const & key, boost::uint64_t & holder, boost::uint64_t value) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+
+            connection_container connections;
+            tie(connections, ignore) = command_setup(offset);
+
+            if (!perform_action(
+                        decr_impl(
+                            key,
+                            holder,
+                            value
+                            ),
+                        connections
+                        )
+               ) throw key_not_found(key);
+        }
+        
         string version(size_t offset = 0) {
+            typename threading_policy::lock scoped_lock(*this);
             if (pools.empty())
                 throw no_available_servers();
 
@@ -329,7 +366,7 @@ namespace memcache {
             if (retrieve(get_impl<string, policies::string_preserve>(key, holder), connections))
                 throw key_not_found(key);
         };
-        
+
         bool is_connected(string const & server_name) { 
             typename threading_policy::lock scoped_lock(*this);
             typename server_container::const_iterator iterator = servers.find(server_name);
@@ -685,6 +722,82 @@ namespace memcache {
                         return true;
                     };
                 };
+
+        struct crement_base {
+            boost::uint64_t & holder;
+            string command;
+
+            explicit crement_base(boost::uint64_t & holder)
+                : holder(holder)
+            { }
+
+            template <class Iterator>
+                int operator()(Iterator & server_iterator) {
+                    static boost::regex eol_regex("\r\n");
+                    boost::asio::streambuf buffer;
+                    connection_ptr connection = server_iterator->second.connection;
+                    try {
+                        boost::asio::write(*connection,
+                                boost::asio::buffer(const_cast<char*>(command.c_str()),
+                                    sizeof(char) * command.size())
+                                );
+#ifdef _REENTRANT
+                        detail::read_handler handler_instance(
+                                *connection, 
+                                buffer, 
+                                eol_regex,
+                                MEMCACHE_TIMEOUT
+                                );
+                        handler_instance();
+#else
+                        boost::asio::read_until(*connection,
+                            buffer,
+                            eol_regex
+                        );
+#endif
+                    } catch (system_error & e) {
+                        server_iterator->second.error = e.code();
+                        server_iterator->second.connected = false;
+                        server_iterator->second.connection.reset();
+                        return 1;
+                    }
+
+                    istream response(&buffer);
+                    string line;
+                    getline(response, line);
+                    boost::trim_right(line);
+                    istringstream tokens(line);
+                    string next_token;
+                    tokens >> next_token;
+                    if (next_token == "NOT_FOUND") {
+                        return 1;
+                    }
+                    holder = boost::lexical_cast<boost::uint64_t>(next_token);
+                    return 0;
+                }
+        };
+
+        struct incr_impl : crement_base {
+            incr_impl(string const & key, boost::uint64_t & holder, boost::uint64_t value)
+                : crement_base(holder)
+            {
+                ostringstream command_stream;
+                command_stream
+                    << "incr " << key << " " << value << "\r\n";
+                crement_base::command = command_stream.str();
+            }
+        };
+
+        struct decr_impl : crement_base {
+            decr_impl(string const & key, boost::uint64_t & holder, boost::uint64_t value)
+                : crement_base(holder)
+            {
+                ostringstream command_stream;
+                command_stream
+                    << "decr " << key << " " << value << "\r\n";
+                crement_base::command = command_stream.str();
+            }
+        };
 
         struct version_impl {
             string command;

@@ -24,6 +24,8 @@
 #include <memcachepp/memcache/detail/directives/delete.hpp>
 #include <memcachepp/memcache/detail/directives/connect.hpp>
 #include <memcachepp/memcache/detail/directives/commit.hpp>
+#include <memcachepp/memcache/detail/directives/incr.hpp>
+#include <memcachepp/memcache/detail/directives/decr.hpp>
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_HPP__
 

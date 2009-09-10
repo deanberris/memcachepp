@@ -19,6 +19,7 @@
 #include <memcachepp/memcache.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 
 #include <boost/serialization/vector.hpp>
 
@@ -267,6 +268,26 @@ BOOST_AUTO_TEST_CASE ( grouped_requests_test ) {
     BOOST_CHECK_EQUAL (a_double, expected);
     BOOST_CHECK_EQUAL (a_string, std::string("Some String!"));
 };
+
+BOOST_AUTO_TEST_CASE ( incr_decr_test ) {
+    memcache::handle mc;
+    mc << memcache::server("localhost", 11211)
+        << memcache::connect;
+
+    boost::uint64_t value = 0u, expected_value = 1u, gotten_value;
+
+    try { mc << memcache::delete_("value"); } catch (...) { }
+    BOOST_CHECK_THROW ( mc << memcache::incr("value", gotten_value); , memcache::key_not_found);
+    BOOST_CHECK_THROW ( mc << memcache::decr("value", gotten_value); , memcache::key_not_found);
+    mc << memcache::raw_set("value", "0")
+        << memcache::incr("value", gotten_value);
+
+    BOOST_CHECK_EQUAL (gotten_value, expected_value);
+
+    mc << memcache::decr("value", gotten_value);
+
+    BOOST_CHECK_EQUAL (gotten_value, value);
+}
 
 BOOST_AUTO_TEST_CASE ( raw_set_get_test ) {
     memcache::handle mc;
