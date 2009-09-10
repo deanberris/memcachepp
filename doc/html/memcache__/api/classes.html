@@ -54,7 +54,7 @@
           Below is a detailed API guide to the class:
         </p>
 <div class="table">
-<a name="id2619459"></a><p class="title"><b>Table 6. Nested Types</b></p>
+<a name="id2674825"></a><p class="title"><b>Table 6. Nested Types</b></p>
 <div class="table-contents"><table class="table" summary="Nested Types">
 <colgroup>
 <col>
@@ -137,7 +137,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id2619620"></a><p class="title"><b>Table 7. Member methods</b></p>
+<a name="id2674986"></a><p class="title"><b>Table 7. Member methods</b></p>
 <div class="table-contents"><table class="table" summary="Member methods">
 <colgroup>
 <col>
@@ -618,6 +618,54 @@
                 in the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>.
                 <code class="computeroutput"><span class="identifier">value</span></code> is prepended
                 'as is' without serialization.
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">incr</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                <span class="keyword">const</span> <span class="special">&amp;</span>
+                <span class="identifier">key</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="special">&amp;</span>
+                <span class="identifier">holder</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">value</span><span class="special">)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">void</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                Increments the value associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                by <code class="computeroutput"><span class="identifier">value</span></code>. The new
+                value is then stored in <code class="computeroutput"><span class="identifier">holder</span></code>.
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">decr</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                <span class="keyword">const</span> <span class="special">&amp;</span>
+                <span class="identifier">key</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="special">&amp;</span>
+                <span class="identifier">holder</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">value</span><span class="special">)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">void</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                Decrements the value associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                by <code class="computeroutput"><span class="identifier">value</span></code>. The new
+                value is then stored in <code class="computeroutput"><span class="identifier">holder</span></code>.
               </p>
               </td>
 </tr>

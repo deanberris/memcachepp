@@ -41,6 +41,8 @@ are supported:
     [[l] [Pool information -- a `H::pool_info`]]
     [[r] [The raw `std::string` data.]]
     [[c] [A reference to a container `std::string`.]]
+    [[v] [A `boost::uint64_t` rvalue]]
+    [[h] [A `boost::uint64_t` lvalue]]
 ]
 
 [table Valid Constructs
@@ -135,6 +137,18 @@ are supported:
         [Prepends the raw data `r` to key `k` from the server
         offset at `o`, ignoring the expiration `e` as well as
         the failover expiration `x` and the flag `f`.
+        ]
+    ]
+    [[`mc.incr(o, k, h, v)] [`void`]
+        [Increments the value associated to key `k` from the
+        server offset at `o` by `v`, whose new value is put
+        into `h`.
+        ]
+    ]
+    [[`mc.decr(o, k, h, v)] [`void`]
+        [Decrements the value associated to key `k` from the
+        server offset at `o` by `v`, whose new value is put
+        into `h`.
         ]
     ]
 ]

@@ -139,6 +139,16 @@ Below is a detailed API guide to the class:
         serialization.
         ]
     ]
+    [[`incr(size_t offset, std::string const & key, boost::uint64_t & holder, boost::uint64_t value)`] [`void`]
+        [Increments the value associated to `key` by `value`. The new value
+        is then stored in `holder`.
+        ]
+    ]
+    [[`decr(size_t offset, std::string const & key, boost::uint64_t & holder, boost::uint64_t value)`] [`void`]
+        [Decrements the value associated to `key` by `value`. The new value
+        is then stored in `holder`.
+        ]
+    ]
 ]
 
 [endsect] [/ memcache::handle]
@@ -462,6 +472,60 @@ to serialization errors.]
 1.2.5 and upwards.]
 
 [endsect] [/ memcache::raw_prepend]
+
+[section:incr memcache::incr]
+
+The `memcache::incr` directive instructs the __memcache_handle__
+to perform an increment operation using the __memcache_handle__'s
+hashing policy to determine which server in the defined collection
+of servers to locate the data from, based on the hash on the provided
+key. `memcache::incr` will increment the value associated to the key
+by a certain given value (defaults to 1).
+
+The following example shows how to increment a value stored at key
+'key' by 10:
+
+    boost::uint64_t new_value;
+    mc << memcache::incr("key", new_value, 10u);
+
+[warning Remember, memcached will treat any data other than a string
+representation of a 64-bit unsigned integer as the value '0'. So if
+you intend to make the value of a key "incrementable", set the data
+using `memcache::raw_set` instead of `memcache::set`. This is because
+`memcache::set` will serialize the data accordingly while 
+`memcache::raw_set` will not.]
+
+If a key is not found from any of the servers, then the operation
+throws a `memcache::key_not_found`.
+
+[endsect] [/ memcache::incr]
+
+[section:decr memcache::decr]
+
+The `memcache::decr` directive instructs the __memcache_handle__
+to perform an decrement operation using the __memcache_handle__'s
+hashing policy to determine which server in the defined collection
+of servers to locate the data from, based on the hash on the provided
+key. `memcache::decr` will decrement the value associated to the key
+by a certain given value (defaults to 1).
+
+The following example shows how to decrement a value stored at key
+'key' by 10:
+
+    boost::uint64_t new_value;
+    mc << memcache::decr("key", new_value, 10u);
+
+[warning Remember, memcached will treat any data other than a string
+representation of a 64-bit unsigned integer as the value '0'. So if
+you intend to make the value of a key "decrementable", set the data
+using `memcache::raw_set` instead of `memcache::set`. This is because
+`memcache::set` will serialize the data accordingly while 
+`memcache::raw_set` will not.]
+
+If a key is not found from any of the servers, then the operation
+throws a `memcache::key_not_found`.
+
+[endsect] [/ memcache::decr]
 
 [section:server memcache::server]
 

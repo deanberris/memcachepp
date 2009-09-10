@@ -109,10 +109,18 @@
 <dd><p>
             A reference to a container <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
           </p></dd>
+<dt><span class="term">v</span></dt>
+<dd><p>
+            A <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span></code> rvalue
+          </p></dd>
+<dt><span class="term">h</span></dt>
+<dd><p>
+            A <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span></code> lvalue
+          </p></dd>
 </dl>
 </div>
 <div class="table">
-<a name="id2613895"></a><p class="title"><b>Table 1. Valid Constructs</b></p>
+<a name="id2668976"></a><p class="title"><b>Table 1. Valid Constructs</b></p>
 <div class="table-contents"><table class="table" summary="Valid Constructs">
 <colgroup>
 <col>
@@ -496,6 +504,38 @@
               the expiration <code class="computeroutput"><span class="identifier">e</span></code> as
               well as the failover expiration <code class="computeroutput"><span class="identifier">x</span></code>
               and the flag <code class="computeroutput"><span class="identifier">f</span></code>.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">incr</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span> <span class="identifier">k</span><span class="special">,</span> <span class="identifier">h</span><span class="special">,</span> <span class="identifier">v</span><span class="special">)]</span> <span class="special">[</span></code>void<code class="computeroutput"><span class="special">]</span>
+              <span class="special">[</span><span class="identifier">Increments</span>
+              <span class="identifier">the</span> <span class="identifier">value</span>
+              <span class="identifier">associated</span> <span class="identifier">to</span>
+              <span class="identifier">key</span> </code>k<code class="computeroutput"> <span class="identifier">from</span>
+              <span class="identifier">the</span> <span class="identifier">server</span>
+              <span class="identifier">offset</span> <span class="identifier">at</span>
+              </code>o<code class="computeroutput"> <span class="identifier">by</span> </code>v<code class="computeroutput"><span class="special">,</span> <span class="identifier">whose</span>
+              <span class="keyword">new</span> <span class="identifier">value</span>
+              <span class="identifier">is</span> <span class="identifier">put</span>
+              <span class="identifier">into</span> </code>h<code class="computeroutput"><span class="special">.</span>
+              <span class="special">]</span> <span class="special">]</span>
+              <span class="special">[[</span></code>mc.decr(o, k, h, v)
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">void</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Decrements the value associated to key <code class="computeroutput"><span class="identifier">k</span></code>
+              from the server offset at <code class="computeroutput"><span class="identifier">o</span></code>
+              by <code class="computeroutput"><span class="identifier">v</span></code>, whose new value
+              is put into <code class="computeroutput"><span class="identifier">h</span></code>.
             </p>
             </td>
 </tr>

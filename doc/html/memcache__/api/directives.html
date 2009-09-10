@@ -29,6 +29,8 @@
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.set_raw"> memcache::raw_set</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.raw_append"> memcache::raw_append</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.raw_prepend"> memcache::raw_prepend</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.incr"> memcache::incr</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.decr"> memcache::decr</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.server"> memcache::server</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.pool"> memcache::pool</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.connect"> memcache::connect</a></span></dt>
@@ -412,6 +414,82 @@
             and upwards.
           </p></td></tr>
 </table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.incr"></a><a class="link" href="directives.html#memcache__.api.directives.incr" title="memcache::incr"> memcache::incr</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform an increment operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to locate the data from,
+          based on the hash on the provided key. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span></code>
+          will increment the value associated to the key by a certain given value
+          (defaults to 1).
+        </p>
+<p>
+          The following example shows how to increment a value stored at key 'key'
+          by 10:
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">new_value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="number">10u</span><span class="special">);</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Remember, memcached will treat any data other than a string representation
+            of a 64-bit unsigned integer as the value '0'. So if you intend to make
+            the value of a key "incrementable", set the data using <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> instead of <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>.
+            This is because <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>
+            will serialize the data accordingly while <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code>
+            will not.
+          </p></td></tr>
+</table></div>
+<p>
+          If a key is not found from any of the servers, then the operation throws
+          a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">key_not_found</span></code>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.decr"></a><a class="link" href="directives.html#memcache__.api.directives.decr" title="memcache::decr"> memcache::decr</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform an decrement operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to locate the data from,
+          based on the hash on the provided key. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span></code>
+          will decrement the value associated to the key by a certain given value
+          (defaults to 1).
+        </p>
+<p>
+          The following example shows how to decrement a value stored at key 'key'
+          by 10:
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">new_value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="number">10u</span><span class="special">);</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Remember, memcached will treat any data other than a string representation
+            of a 64-bit unsigned integer as the value '0'. So if you intend to make
+            the value of a key "decrementable", set the data using <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> instead of <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>.
+            This is because <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>
+            will serialize the data accordingly while <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code>
+            will not.
+          </p></td></tr>
+</table></div>
+<p>
+          If a key is not found from any of the servers, then the operation throws
+          a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">key_not_found</span></code>.
+        </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
