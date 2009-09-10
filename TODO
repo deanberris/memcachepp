@@ -2,8 +2,8 @@
  - add error handling for "ERROR", "CLIENT_ERROR"
    and "SERVER_ERROR". See memcached protocol for
    details.
- - add support for 'increment' and 'decrement'
-   operations.
+ - add support for cas
+ - add support for gets
  
 DONE 
 
@@ -16,6 +16,8 @@ DONE
  - add support for 'prepend' operation
  - add support for 'replace' operation
  - add support for 'version' operation
+ - add support for 'increment' and 'decrement'
+   operations.
 
 * version 0.10
  - fluent interface merged

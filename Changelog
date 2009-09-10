@@ -1,4 +1,5 @@
 Release 0.11:
+    * Adding support for incr and decr.
     * Adding support for raw_append, raw_prepend, and checking for server version.
     * Adding support for raw_replace.
     * Adding replace support.
