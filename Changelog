@@ -17,6 +17,7 @@ Release 0.11:
     * Code cleanup for eventual refactoring.
     * Small performance enhancing changes; making regex objects function-local static, using STL find_if for some hand-written loops.
     * Adding concept checks to memcache++ implementation; moving handler implementation to its own header file.
+    * Qualifying calls to boost::fusion::tie to prevent ambiguous calls to tie error.
 
 Release 0.10:
     * Documenting fluent interface; added remove function.
