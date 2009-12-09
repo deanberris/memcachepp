@@ -46,7 +46,6 @@ namespace memcache {
     using boost::system::error_code;
     using boost::system::system_error;
     using boost::fusion::tuple;
-    using boost::fusion::tie;
     using boost::fusion::make_tuple;
     using boost::fusion::ignore;
     
@@ -100,7 +99,7 @@ namespace memcache {
             validate(key);
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         add_impl<T, data_interchange_policy>(
@@ -122,7 +121,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         add_impl<string, policies::string_preserve>(
@@ -144,7 +143,7 @@ namespace memcache {
             validate(key);
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         replace_impl<T, data_interchange_policy>(
@@ -166,7 +165,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         replace_impl<string, policies::string_preserve>(
@@ -188,7 +187,7 @@ namespace memcache {
             validate(key);
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         set_impl<T, data_interchange_policy>(
@@ -210,7 +209,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         set_impl<string, policies::string_preserve>(
@@ -232,7 +231,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         append_impl<string, policies::string_preserve>(
@@ -254,7 +253,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                         prepend_impl<string, policies::string_preserve>(
@@ -276,7 +275,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = command_setup(offset);
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
 
             if (!perform_action(
                     delete_impl(
@@ -293,7 +292,7 @@ namespace memcache {
             validate(key);
 
             connection_container connections;
-            tie(connections, ignore) = command_setup(offset);
+            boost::fusion::tie(connections, ignore) = command_setup(offset);
 
             if (!perform_action(
                         incr_impl(
@@ -311,7 +310,7 @@ namespace memcache {
             validate(key);
 
             connection_container connections;
-            tie(connections, ignore) = command_setup(offset);
+            boost::fusion::tie(connections, ignore) = command_setup(offset);
 
             if (!perform_action(
                         decr_impl(
@@ -330,7 +329,7 @@ namespace memcache {
                 throw no_available_servers();
 
             connection_container connections;
-            tie(connections, ignore) = command_setup(offset);
+            boost::fusion::tie(connections, ignore) = command_setup(offset);
 
             string version_string;
             if (!perform_action(
@@ -350,7 +349,7 @@ namespace memcache {
             validate(key);
 
             connection_container connections;
-            tie(connections, ignore) = command_setup(offset);
+            boost::fusion::tie(connections, ignore) = command_setup(offset);
 
             if (retrieve(get_impl<T, data_interchange_policy>(key, holder), connections))
                 throw key_not_found(key);
@@ -361,7 +360,7 @@ namespace memcache {
             validate(key);
 
             connection_container connections;
-            tie(connections, ignore) = command_setup(offset);
+            boost::fusion::tie(connections, ignore) = command_setup(offset);
 
             if (retrieve(get_impl<string, policies::string_preserve>(key, holder), connections))
                 throw key_not_found(key);
@@ -423,7 +422,7 @@ namespace memcache {
 
             connection_container connections;
             bool rehash;
-            tie(connections, rehash) = get_connections(offset);
+            boost::fusion::tie(connections, rehash) = get_connections(offset);
 
             return make_tuple(connections, rehash);
         }
@@ -980,7 +979,7 @@ namespace memcache {
                     connection_ptr new_connection;
                     error_code error;
                     
-                    tie(new_connection, error) = connect(service_, element);
+                    boost::fusion::tie(new_connection, error) = connect(service_, element);
                     
                     if (error) {
                         element.second.connected = false;

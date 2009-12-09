@@ -71,7 +71,7 @@ namespace memcache {
 
             typename handle_type::connection_container connections;
             bool rehash;
-            tie(connections, rehash) = _handle.get_connections(offset);
+            boost::fusion::tie(connections, rehash) = _handle.get_connections(offset);
             
             typename handle_type::connection_container::iterator
                 server_iterator_iterator = connections.begin();
