@@ -11,43 +11,32 @@ the fluent interface supported functions.
 `using namespace memcache::fluent;` directive in the scope you
 want to be able to use the fluent interface.]
 
-[heading Setting a Value]
-
 [table
-    [[Directives] [Fluent]]
+    [[Directives] [Fluent] [Description]]
     [
      [`mc << memcache::set("key", value);`] 
      [`key(mc, "key") = value;`]
+     [Sets the value of the given key.]
     ]
-]
-
-[heading Retrieving a Value]
-
-[table
-    [[Directives] [Fluent]]
     [
      [`mc << memcache::get("key", value);`]
      [`wrap(value) = get(mc, "key");`]
+     [Retrieve the value set for the given key.]
     ]
-]
-
-[heading Setting a Raw Value]
-
-[table
-    [[Directives] [Fluent]]
     [
      [`mc << memcache::raw_set("key", "value");`]
      [`key(mc, "key") %= "value";`]
+     [Set the raw value of the given key.]
     ]
-]
-
-[heading Retrieving a Raw Value]
-
-[table
-    [[Directives] [Fluent]]
     [
      [`mc << memcache::raw_get("key", container);`]
      [`wrap(container) = raw(mc, "key");`]
+     [Retrieve the raw value of the given key.]
+    ]
+    [
+     [`mc << memcache::replace("key", value);`]
+     [`key(mc, "key") ^= value;`]
+     [Replace the value associated with the given key.]
     ]
 ]
 

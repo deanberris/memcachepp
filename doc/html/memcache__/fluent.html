@@ -37,12 +37,9 @@
         directive in the scope you want to be able to use the fluent interface.
       </p></td></tr>
 </table></div>
-<a name="memcache__.fluent.setting_a_value"></a><h4>
-<a name="id2662883"></a>
-      <a class="link" href="fluent.html#memcache__.fluent.setting_a_value">Setting a Value</a>
-    </h4>
 <div class="informaltable"><table class="table">
 <colgroup>
+<col>
 <col>
 <col>
 </colgroup>
@@ -57,8 +54,14 @@
               Fluent
             </p>
             </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
@@ -72,30 +75,13 @@
               <span class="special">=</span> <span class="identifier">value</span><span class="special">;</span></code>
             </p>
             </td>
-</tr></tbody>
-</table></div>
-<a name="memcache__.fluent.retrieving_a_value"></a><h4>
-<a name="id2663054"></a>
-      <a class="link" href="fluent.html#memcache__.fluent.retrieving_a_value">Retrieving a Value</a>
-    </h4>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
+<td>
             <p>
-              Directives
+              Sets the value of the given key.
             </p>
-            </th>
-<th>
-            <p>
-              Fluent
-            </p>
-            </th>
-</tr></thead>
-<tbody><tr>
+            </td>
+</tr>
+<tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
@@ -109,30 +95,13 @@
               <span class="special">=</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">);</span></code>
             </p>
             </td>
-</tr></tbody>
-</table></div>
-<a name="memcache__.fluent.setting_a_raw_value"></a><h4>
-<a name="id2663234"></a>
-      <a class="link" href="fluent.html#memcache__.fluent.setting_a_raw_value">Setting a Raw Value</a>
-    </h4>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
+<td>
             <p>
-              Directives
+              Retrieve the value set for the given key.
             </p>
-            </th>
-<th>
-            <p>
-              Fluent
-            </p>
-            </th>
-</tr></thead>
-<tbody><tr>
+            </td>
+</tr>
+<tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
@@ -146,30 +115,13 @@
               <span class="special">%=</span> <span class="string">"value"</span><span class="special">;</span></code>
             </p>
             </td>
-</tr></tbody>
-</table></div>
-<a name="memcache__.fluent.retrieving_a_raw_value"></a><h4>
-<a name="id2663407"></a>
-      <a class="link" href="fluent.html#memcache__.fluent.retrieving_a_raw_value">Retrieving a Raw Value</a>
-    </h4>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
+<td>
             <p>
-              Directives
+              Set the raw value of the given key.
             </p>
-            </th>
-<th>
-            <p>
-              Fluent
-            </p>
-            </th>
-</tr></thead>
-<tbody><tr>
+            </td>
+</tr>
+<tr>
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
@@ -183,7 +135,33 @@
               <span class="special">=</span> <span class="identifier">raw</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">);</span></code>
             </p>
             </td>
-</tr></tbody>
+<td>
+            <p>
+              Retrieve the raw value of the given key.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+              <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+              <span class="identifier">value</span><span class="special">);</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+              <span class="special">^=</span> <span class="identifier">value</span><span class="special">;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Replace the value associated with the given key.
+            </p>
+            </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
