@@ -8,6 +8,7 @@
 #ifndef __MEMCACHE_DETAIL_DIRECTIVES_RAW_SET_HPP__
 #define __MEMCACHE_DETAIL_DIRECTIVES_RAW_SET_HPP__
 
+#include <memcachepp/memcache/detail/expiration.hpp>
 #include <memcachepp/memcache/detail/tags.hpp>
 
 namespace memcache { namespace detail {
@@ -43,10 +44,30 @@ namespace memcache { namespace detail {
 
 }; // namespace detail
 
-    template <typename T>
-    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, boost::uint16_t flags = 0) {
-        return detail::raw_set_directive<>(std::string(_key), std::string(value), flags, timeout, timeout);
+    template <class T>
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, time_t failover_timeout=0, boost::uint16_t flags = 0) {
+        return detail::raw_set_directive<>(std::string(_key), value, flags, timeout, failover_timeout);
     };
+
+    template <class T>
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, detail::expire_type const & expiration, boost::uint16_t flags = 0) {
+        return detail::raw_set_directive<>(std::string(_key), value, flags, expiration.timeout, expiration.timeout);
+    }
+
+    template <class T>
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, boost::uint16_t flags = 0) {
+        return detail::raw_set_directive<>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
+    }
+
+    template <class T>
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, detail::failover_expire_type const & failover_expiration, boost::uint16_t flags = 0) {
+        return detail::raw_set_directive<>(std::string(_key), value, flags, 0, failover_expiration.timeout);
+    }
+
+    template <class T>
+    inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, boost::uint16_t flags = 0) {
+        return detail::raw_set_directive<>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
+    }
 
 }; // namespace memcache
 

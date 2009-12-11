@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_DETAIL_DIRECTIVES_SET_HPP__
-#define __MEMACAHE_DETAIL_DIRECTIVES_SET_HPP__
+#ifndef MEMCACHE_DETAIL_DIRECTIVES_SET_HPP
+#define MEMACAHE_DETAIL_DIRECTIVES_SET_HPP
 
 #include <memcachepp/memcache/detail/expiration.hpp>
 
@@ -66,5 +66,5 @@ namespace memcache { namespace detail {
 
 }; // namespace memcache
 
-#endif // __MEMACAHE_DETAIL_DIRECTIVES_SET_HPP__
+#endif // MEMACAHE_DETAIL_DIRECTIVES_SET_HPP
 

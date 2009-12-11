@@ -32,11 +32,11 @@ namespace memcache {
                      std::string const & key
                     )
                     :
-                _handle(handle),
-                _key(key)
+                handle_(handle),
+                key_(key)
                 {
-                    _expiration.timeout = 0;
-                    _failover_expiration.timeout = 0;
+                    expiration_.timeout = 0;
+                    failover_expiration_.timeout = 0;
                 };
 
                 explicit key_impl
@@ -46,26 +46,26 @@ namespace memcache {
                      detail::expire_type const & expiration
                     )
                     :
-                _handle(handle),
-                _key(key),
-                _expiration(expiration)
+                handle_(handle),
+                key_(key),
+                expiration_(expiration)
                 {
-                    _failover_expiration.timeout = 0;
+                    failover_expiration_.timeout = 0;
                 };
 
                 explicit key_impl
                     (
                      Handle & handle,
                      std::string const & key,
-                     detail::failover_expire_type const & failover_expiration
+                     detail::failover_expire_type const & failoverexpiration_
                     )
                     :
-                _handle(handle),
-                _key(key),
-                _expiration(),
-                _failover_expiration(failover_expiration)
+                handle_(handle),
+                key_(key),
+                expiration_(),
+                failover_expiration_(failoverexpiration_)
                 {
-                    _expiration.timeout = 0;
+                    expiration_.timeout = 0;
                 };
 
                 explicit key_impl
@@ -73,42 +73,49 @@ namespace memcache {
                      Handle & handle,
                      std::string const & key,
                      detail::expire_type const & expiration,
-                     detail::failover_expire_type const & failover_expiration
+                     detail::failover_expire_type const & failoverexpiration_
                     )
                     :
-                _handle(handle),
-                _key(key),
-                _expiration(expiration),
-                _failover_expiration(failover_expiration)
+                handle_(handle),
+                key_(key),
+                expiration_(expiration),
+                failover_expiration_(failoverexpiration_)
                 { };
 
                 explicit key_impl
                     (
                      Handle & handle,
                      std::string const & key,
-                     detail::failover_expire_type const & failover_expiration,
+                     detail::failover_expire_type const & failoverexpiration_,
                      detail::expire_type const & expiration
                     )
                     :
-                _handle(handle),
-                _key(key),
-                _expiration(expiration),
-                _failover_expiration(failover_expiration)
+                handle_(handle),
+                key_(key),
+                expiration_(expiration),
+                failover_expiration_(failoverexpiration_)
                 { };
 
                 template <typename DataType>
                     key_impl const &
                     operator=(DataType const & data) const {
-                        _handle << 
-                            ::memcache::set(_key, data, _expiration, _failover_expiration);
+                        handle_ << 
+                            ::memcache::set(key_, data, expiration_, failover_expiration_);
                         return *this;
                     };
+
+                key_impl const &
+                operator %=(string const & data) const {
+                    handle_ <<
+                        ::memcache::raw_set(key_, data, expiration_, failover_expiration_);
+                    return *this;
+                }
                 
                 private:
-                    Handle & _handle;
-                    mutable std::string _key;
-                    mutable detail::expire_type _expiration;
-                    mutable detail::failover_expire_type _failover_expiration;
+                    Handle & handle_;
+                    mutable std::string key_;
+                    mutable detail::expire_type expiration_;
+                    mutable detail::failover_expire_type failover_expiration_;
             };
 
     }; // namespace fluent

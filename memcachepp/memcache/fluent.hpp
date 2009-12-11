@@ -8,6 +8,7 @@
 
 #include <memcachepp/memcache/fluent/wrap.hpp>
 #include <memcachepp/memcache/fluent/get.hpp>
+#include <memcachepp/memcache/fluent/raw.hpp>
 #include <memcachepp/memcache/fluent/key.hpp>
 #include <memcachepp/memcache/fluent/remove.hpp>
 

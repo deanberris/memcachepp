@@ -47,5 +47,15 @@ BOOST_AUTO_TEST_CASE ( key_set_test ) {
     BOOST_CHECK_EQUAL ( std::string("Hello, World! Again!"), container );
 };
 
+BOOST_AUTO_TEST_CASE ( key_raw_test ) {
+    // We want to set the raw contents of a key in memcache
+    // using the %= directive.
+    using namespace memcache::fluent;
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") %= std::string("raw_data") );
+    std::string container;
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL ( std::string("raw_data"), container );
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
