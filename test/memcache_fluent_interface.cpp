@@ -57,5 +57,18 @@ BOOST_AUTO_TEST_CASE ( key_raw_test ) {
     BOOST_CHECK_EQUAL ( std::string("raw_data"), container );
 }
 
+BOOST_AUTO_TEST_CASE ( key_replace_test ) {
+    // Now we want to be able to replace the contents of a key
+    // that should already be in memcache.
+    using namespace memcache::fluent;
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") = std::string("The quick brown fox...") );
+    std::string container;
+    BOOST_CHECK_NO_THROW ( wrap(container) = get(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("The quick brown fox..."), container );
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") ^= std::string("The quick brown fox jumps!") );
+    BOOST_CHECK_NO_THROW ( wrap(container) = get(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("The quick brown fox jumps!"), container );
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 

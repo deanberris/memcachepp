@@ -110,6 +110,14 @@ namespace memcache {
                         ::memcache::raw_set(key_, data, expiration_, failover_expiration_);
                     return *this;
                 }
+
+                template <class DataType>
+                key_impl const &
+                operator ^=(DataType const & data) const {
+                    handle_ <<
+                        ::memcache::replace(key_, data, expiration_, failover_expiration_);
+                    return *this;
+                }
                 
                 private:
                     Handle & handle_;
