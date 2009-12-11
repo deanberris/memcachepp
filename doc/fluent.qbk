@@ -1,0 +1,55 @@
+[section:fluent Fluent Interface]
+
+There is an alternative interface provided for using the library.
+This section is dedicated to covering the parallels between the
+fluent interface and the normal directive-based interface. Each
+construct is presented as a side-by-side comparison at least for 
+the fluent interface supported functions.
+
+[note To use the fluent interface, you include the 
+`memcachepp/memcache/fluent.hpp` header, and then issue the 
+`using namespace memcache::fluent;` directive in the scope you
+want to be able to use the fluent interface.]
+
+[heading Setting a Value]
+
+[table
+    [[Directives] [Fluent]]
+    [
+     [`mc << memcache::set("key", value);`] 
+     [`key(mc, "key") = value;`]
+    ]
+]
+
+[heading Retrieving a Value]
+
+[table
+    [[Directives] [Fluent]]
+    [
+     [`mc << memcache::get("key", value);`]
+     [`wrap(value) = get(mc, "key");`]
+    ]
+]
+
+[heading Setting a Raw Value]
+
+[table
+    [[Directives] [Fluent]]
+    [
+     [`mc << memcache::raw_set("key", "value");`]
+     [`key(mc, "key") %= "value";`]
+    ]
+]
+
+[heading Retrieving a Raw Value]
+
+[table
+    [[Directives] [Fluent]]
+    [
+     [`mc << memcache::raw_get("key", container);`]
+     [`wrap(container) = raw(mc, "key");`]
+    ]
+]
+
+[endsect] [/Fluent Interface] 
+

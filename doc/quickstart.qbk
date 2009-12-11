@@ -142,5 +142,7 @@ There is basically no difference between using the fluent interface and
 the verbose interface. Using either one is supported, although for better
 readability the fluent interface may be preferred.
 
+[note You can read more about the Fluent interface in the [link memcache__.fluent Fluent Interface] section.]
+
 [endsect]
 

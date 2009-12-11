@@ -1,6 +1,7 @@
 [article Memcache++
-    [quickbook 1.4]
-    [version 0.11]
+    [quickbook 1.5]
+    [version 0.12]
+    [id memcachepp]
     [authors [Berris, Dean Michael] ]
     [copyright 2007 2008 Friendster, Inc.]
     [copyright 2009 Dean Michael Berris ]
@@ -13,7 +14,7 @@
 ]
 
 [/ Memcache++ Document version 0.11 ]
-[/ Jan. 23, 2008 ]
+[/ December. 12, 2009 ]
 
 [/ Some links]
 [def __note__ [$images/note.png]]
@@ -40,5 +41,7 @@
 [include concepts.qbk]
 [include design.qbk]
 [include api-reference.qbk]
+[include fluent.qbk]
 [include references.qbk]
 [include acknowledgements.qbk]
+
