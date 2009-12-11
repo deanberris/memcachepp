@@ -14,7 +14,7 @@ On Hacking Memcache++:
       and patches.
     * Use git and clone
 
-      git://memcachepp.git.sourceforge.net/gitroot/memcachepp/memcachepp
+      git://github.com/mikhailberis/memcachepp.git
 
 On Testing Memcache++:
 
