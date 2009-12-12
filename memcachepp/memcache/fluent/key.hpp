@@ -136,17 +136,35 @@ namespace memcache {
                 }
 
                 key_impl const & 
-                operator +=(string const & data) const {
+                operator >>=(string const & data) const {
                     handle_ <<
                         ::memcache::raw_append(key_, data, expiration_, failover_expiration_);
                     return *this;
                 }
 
                 key_impl const &
-                operator -=(string const & data) const {
+                operator <<=(string const & data) const {
                     handle_ <<
                         ::memcache::raw_prepend(key_, data, expiration_, failover_expiration_);
                     return *this;
+                }
+
+                key_impl const &
+                operator ++(int) const {
+                    handle_ <<
+                        ::memcache::incr(key_, value_, 1u);
+                    return *this;
+                }
+
+                key_impl const & 
+                operator --(int) const {
+                    handle_ <<
+                        ::memcache::decr(key_, value_, 1u);
+                    return *this;
+                }
+
+                operator boost::uint64_t const & () const {
+                    return value_;
                 }
                 
                 private:
@@ -154,6 +172,7 @@ namespace memcache {
                     mutable std::string key_;
                     mutable detail::expire_type expiration_;
                     mutable detail::failover_expire_type failover_expiration_;
+                    mutable boost::uint64_t value_;
             };
 
     }; // namespace fluent

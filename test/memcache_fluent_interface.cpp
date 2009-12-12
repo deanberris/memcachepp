@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE ( key_raw_append_test ) {
     BOOST_CHECK_NO_THROW ( key(mc, "hello") *= "Hello" );
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("Hello"), container );
-    BOOST_CHECK_NO_THROW ( key(mc, "hello") += " World!" );
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") >>= " World!" );
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("Hello World!"), container );
 }
@@ -109,9 +109,26 @@ BOOST_AUTO_TEST_CASE ( key_raw_prepend_test ) {
     BOOST_CHECK_NO_THROW ( key(mc, "hello") *= "World!" );
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("World!"), container );
-    BOOST_CHECK_NO_THROW ( key(mc, "hello") -= "Hello " );
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") <<= "Hello " );
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("Hello World!"), container );
+}
+
+BOOST_AUTO_TEST_CASE ( key_increment_decrement_test ) {
+    // We want to support incrementing and decrementing raw-set keys.
+    using namespace memcache::fluent;
+    boost::uint64_t value = 0u;
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") *= "0" );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("0"), container );
+    BOOST_CHECK_NO_THROW ( value = key(mc, "hello")++ );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("1"), container );
+    BOOST_CHECK_EQUAL    ( 1u, value );
+    BOOST_CHECK_NO_THROW ( value = key(mc, "hello")-- );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("0"), container );
+    BOOST_CHECK_EQUAL    ( 0u, value );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
