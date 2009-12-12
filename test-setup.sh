@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MEMCACHED=`which memcached`
+MEMCACHED=../memcached-1.4.4/memcached
 
 if [ ! -x $MEMCACHED ]; then
     echo "'memcached' not found in PATH. Bailing out."

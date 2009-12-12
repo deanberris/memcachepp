@@ -111,9 +111,6 @@ BOOST_AUTO_TEST_CASE ( raw_append_test ) {
     mc << memcache::server("localhost", 11211)
         << memcache::connect;
 
-    if (mc.version() != "1.2.5")
-        return;
-
     std::string some_string = "";
     try { mc << memcache::delete_("99"); } catch (...) {}
 
@@ -130,9 +127,6 @@ BOOST_AUTO_TEST_CASE ( raw_prepend_test ) {
     memcache::handle mc;
     mc << memcache::server("localhost", 11211)
         << memcache::connect;
-
-    if (mc.version() != "1.2.5")
-        return;
 
     std::string some_string = "";
     try { mc << memcache::delete_("99"); } catch (...) {}
