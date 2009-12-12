@@ -15,6 +15,7 @@
 
 struct fixtures {
     memcache::handle mc;
+    std::string container;
     fixtures() {
         mc << memcache::server("localhost", 11211) << memcache::connect;
         BOOST_REQUIRE ( mc.is_connected("localhost:11211") );
@@ -30,7 +31,6 @@ BOOST_AUTO_TEST_CASE ( assignment_test ) {
     // The idea here is that it should be easy to assign data
     // to the left-hand-side object using a "get(mc, 'key')"
     mc << memcache::set("hello", std::string("Hello, World!"));
-    std::string container;
     using namespace memcache::fluent;
     BOOST_CHECK_NO_THROW( wrap(container) = get(mc, "hello") );
     BOOST_CHECK_EQUAL ( "Hello, World!", container );
@@ -42,7 +42,6 @@ BOOST_AUTO_TEST_CASE ( key_set_test ) {
     // left hand side is termed to be a "key".
     using namespace memcache::fluent;
     BOOST_CHECK_NO_THROW( key(mc, "hello") = std::string("Hello, World! Again!") );
-    std::string container;
     BOOST_CHECK_NO_THROW( wrap(container) = get(mc, "hello") );
     BOOST_CHECK_EQUAL ( std::string("Hello, World! Again!"), container );
 };
@@ -52,7 +51,6 @@ BOOST_AUTO_TEST_CASE ( key_raw_test ) {
     // using the %= directive.
     using namespace memcache::fluent;
     BOOST_CHECK_NO_THROW ( key(mc, "hello") %= std::string("raw_data") );
-    std::string container;
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL ( std::string("raw_data"), container );
 }
@@ -62,7 +60,6 @@ BOOST_AUTO_TEST_CASE ( key_replace_test ) {
     // that should already be in memcache.
     using namespace memcache::fluent;
     BOOST_CHECK_NO_THROW ( key(mc, "hello") = std::string("The quick brown fox...") );
-    std::string container;
     BOOST_CHECK_NO_THROW ( wrap(container) = get(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("The quick brown fox..."), container );
     BOOST_CHECK_NO_THROW ( key(mc, "hello") ^= std::string("The quick brown fox jumps!") );
@@ -75,7 +72,6 @@ BOOST_AUTO_TEST_CASE ( key_add_test ) {
     // in memcache.
     using namespace memcache::fluent;
     BOOST_CHECK_NO_THROW ( key(mc, "hello") /= std::string("I added this.") );
-    std::string container;
     BOOST_CHECK_NO_THROW ( wrap(container) = get(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("I added this."), container );
     BOOST_CHECK_THROW    ( key(mc, "hello") /= std::string("I tried..."), memcache::key_not_stored );
@@ -88,11 +84,22 @@ BOOST_AUTO_TEST_CASE ( key_raw_add_test ) {
     // the object serialized.
     using namespace memcache::fluent;
     BOOST_CHECK_NO_THROW ( key(mc, "hello") *= std::string("I added this.") );
-    std::string container;
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("I added this."), container );
     BOOST_CHECK_THROW    ( key(mc, "hello") *= std::string("I tried..."), memcache::key_not_stored );
     BOOST_CHECK_EQUAL    ( std::string("I added this."), container );
+}
+
+BOOST_AUTO_TEST_CASE ( key_raw_append_test ) {
+    // What we want to allow is to append to already raw-set values
+    // associated with a key in memcache using the APPEND operation.
+    using namespace memcache::fluent;
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") *= "Hello" );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("Hello"), container );
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") += " World!" );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("Hello World!"), container );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
