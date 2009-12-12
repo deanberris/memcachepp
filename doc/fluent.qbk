@@ -50,13 +50,33 @@ want to be able to use the fluent interface.]
     ]
     [
      [`mc << memcache::raw_append("key", "value");`]
-     [`key(mc, "key") += "value";`]
+     [`key(mc, "key") >>= "value";`]
      [Append the raw "value" to the raw value associated with the given key.]
     ]
     [
      [`mc << memcache::raw_prepend("key", "value");`]
-     [`key(mc, "key") -= "value";`]
+     [`key(mc, "key") <<= "value";`]
      [Prepend the raw "value" to the raw value associated with the given key.]
+    ]
+    [
+     [`mc << memcache::incr("key", holder, 1);`]
+     [`holder = key(mc, "key")++;`]
+     [Increment the value associated with key and then yield the value to holder.]
+    ]
+    [
+     [`mc << memcache::incr("key", holder, 10);`]
+     [`holder = key(mc, "key") += 10;`]
+     [Increment the value associated with key by 10 and then yield the value to holder.]
+    ]
+    [
+     [`mc << memcache::decr("key", holder, 1);`]
+     [`holder = key(mc, "key")--;`]
+     [Decrement the value associated with key and then yield the value to holder.]
+    ]
+    [
+     [`mc << memcache::decr("key", holder, 10);`]
+     [`holder = key(mc, "key") -= 10;`]
+     [Decrement the value associated with key by 10 and then yield the value to holder.]
     ]
 ]
 

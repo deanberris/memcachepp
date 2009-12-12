@@ -212,7 +212,7 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
-              <span class="special">+=</span> <span class="string">"value"</span><span class="special">;</span></code>
+              <span class="special">&gt;&gt;=</span> <span class="string">"value"</span><span class="special">;</span></code>
             </p>
             </td>
 <td>
@@ -233,13 +233,103 @@
 <td>
             <p>
               <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
-              <span class="special">-=</span> <span class="string">"value"</span><span class="special">;</span></code>
+              <span class="special">&lt;&lt;=</span> <span class="string">"value"</span><span class="special">;</span></code>
             </p>
             </td>
 <td>
             <p>
               Prepend the raw "value" to the raw value associated with
               the given key.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+              <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+              <span class="identifier">holder</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">);</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+              <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)++;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Increment the value associated with key and then yield the value to
+              holder.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+              <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+              <span class="identifier">holder</span><span class="special">,</span>
+              <span class="number">10</span><span class="special">);</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+              <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+              <span class="special">+=</span> <span class="number">10</span><span class="special">;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Increment the value associated with key by 10 and then yield the value
+              to holder.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+              <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+              <span class="identifier">holder</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">);</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+              <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)--;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Decrement the value associated with key and then yield the value to
+              holder.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+              <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+              <span class="identifier">holder</span><span class="special">,</span>
+              <span class="number">10</span><span class="special">);</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+              <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+              <span class="special">-=</span> <span class="number">10</span><span class="special">;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Decrement the value associated with key by 10 and then yield the value
+              to holder.
             </p>
             </td>
 </tr>
