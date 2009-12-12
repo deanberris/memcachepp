@@ -70,5 +70,17 @@ BOOST_AUTO_TEST_CASE ( key_replace_test ) {
     BOOST_CHECK_EQUAL    ( std::string("The quick brown fox jumps!"), container );
 }
 
+BOOST_AUTO_TEST_CASE ( key_add_test ) {
+    // What we want to add a key which should not already be
+    // in memcache.
+    using namespace memcache::fluent;
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") /= std::string("I added this.") );
+    std::string container;
+    BOOST_CHECK_NO_THROW ( wrap(container) = get(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("I added this."), container );
+    BOOST_CHECK_THROW    ( key(mc, "hello") /= std::string("I tried..."), memcache::key_not_stored );
+    BOOST_CHECK_EQUAL    ( std::string("I added this."), container );
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 

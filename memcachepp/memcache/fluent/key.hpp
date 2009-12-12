@@ -1,6 +1,7 @@
 
 // Copyright 2008 (c) Friendster, Inc.
 // Copyright 2008 (c) Dean Michael Berris <dmberris@friendster.com>
+// Copyright 2009 (c) Dean Michael Berris <mikhailberis@gmail.com>
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -116,6 +117,14 @@ namespace memcache {
                 operator ^=(DataType const & data) const {
                     handle_ <<
                         ::memcache::replace(key_, data, expiration_, failover_expiration_);
+                    return *this;
+                }
+
+                template <class DataType>
+                key_impl const &
+                operator /=(DataType const & data) const {
+                    handle_ <<
+                        ::memcache::add(key_, data, expiration_, failover_expiration_);
                     return *this;
                 }
                 

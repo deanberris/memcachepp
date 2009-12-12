@@ -1,1 +1,8 @@
 bin
+CMakeFiles
+CMakeCache.txt
+*.swp
+*.cmake
+Makefile
+Testing
+test-bin
