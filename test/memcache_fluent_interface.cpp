@@ -129,6 +129,14 @@ BOOST_AUTO_TEST_CASE ( key_increment_decrement_test ) {
     BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
     BOOST_CHECK_EQUAL    ( std::string("0"), container );
     BOOST_CHECK_EQUAL    ( 0u, value );
+    BOOST_CHECK_NO_THROW ( value = key(mc, "hello") += 10u );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("10"), container );
+    BOOST_CHECK_EQUAL    ( 10u, value );
+    BOOST_CHECK_NO_THROW ( value = key(mc, "hello") -= 10u );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("0 "), container );
+    BOOST_CHECK_EQUAL    ( 0u, value );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

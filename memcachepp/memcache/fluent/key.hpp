@@ -156,10 +156,24 @@ namespace memcache {
                     return *this;
                 }
 
+                key_impl const &
+                operator +=(boost::uint64_t const & increment) const {
+                    handle_ <<
+                        ::memcache::incr(key_, value_, increment);
+                    return *this;
+                }
+
                 key_impl const & 
                 operator --(int) const {
                     handle_ <<
                         ::memcache::decr(key_, value_, 1u);
+                    return *this;
+                }
+
+                key_impl const &
+                operator -=(boost::uint64_t const & decrement) const {
+                    handle_ <<
+                        ::memcache::decr(key_, value_, decrement);
                     return *this;
                 }
 
