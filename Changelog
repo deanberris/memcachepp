@@ -18,6 +18,23 @@ Release 0.11:
     * Small performance enhancing changes; making regex objects function-local static, using STL find_if for some hand-written loops.
     * Adding concept checks to memcache++ implementation; moving handler implementation to its own header file.
     * Qualifying calls to boost::fusion::tie to prevent ambiguous calls to tie error.
+    * Adding minimal documentation for the fluent interface.
+    * Adding support for CMake as a build system; only for testing.
+    * Adding support for a fluent raw_add using operator *=.
+    * Adding support for prepending with operator -= in the fluent interface.
+    * Adding support for raw appending using operator+= in the fluent interface.
+    * Adding support for raw-setting in the fluent interface.
+    * Changing the interface for append and prepend, implementing unitary increment and decrement.
+    * Fixing test, maybe found potential bug with memcached incr/decr functionality.
+    * Refactoring fluent interface test.
+    * Supporting value replacement in the fluent interface.
+    * Updating clone URL in README.
+    * Updating documentation for fluent replacement.
+    * Updating documentation regarding interface changes.
+    * Updating documentation to highlight raw_add in the fluent interface.
+    * Updating documentation to reflect the fluent interface to raw_append with operator+=.
+    * Updating documentation to support add semantics using operator /= for keys in the fluent interface.
+    * Updating tests to assume locally running memcached is version 1.4.4.
 
 Release 0.10:
     * Documenting fluent interface; added remove function.
