@@ -51,7 +51,12 @@ want to be able to use the fluent interface.]
     [
      [`mc << memcache::raw_append("key", "value");`]
      [`key(mc, "key") += "value";`]
-     [Append the raw "value" to the value associated with the given key.]
+     [Append the raw "value" to the raw value associated with the given key.]
+    ]
+    [
+     [`mc << memcache::raw_prepend("key", "value");`]
+     [`key(mc, "key") -= "value";`]
+     [Prepend the raw "value" to the raw value associated with the given key.]
     ]
 ]
 

@@ -141,6 +141,13 @@ namespace memcache {
                         ::memcache::raw_append(key_, data, expiration_, failover_expiration_);
                     return *this;
                 }
+
+                key_impl const &
+                operator -=(string const & data) const {
+                    handle_ <<
+                        ::memcache::raw_prepend(key_, data, expiration_, failover_expiration_);
+                    return *this;
+                }
                 
                 private:
                     Handle & handle_;

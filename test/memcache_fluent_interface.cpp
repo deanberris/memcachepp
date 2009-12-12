@@ -102,5 +102,17 @@ BOOST_AUTO_TEST_CASE ( key_raw_append_test ) {
     BOOST_CHECK_EQUAL    ( std::string("Hello World!"), container );
 }
 
+BOOST_AUTO_TEST_CASE ( key_raw_prepend_test ) {
+    // What we want to allow is to prepend to already raw-set values
+    // associated with a key in the memcache using the PREPEND operation.
+    using namespace memcache::fluent;
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") *= "World!" );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("World!"), container );
+    BOOST_CHECK_NO_THROW ( key(mc, "hello") -= "Hello " );
+    BOOST_CHECK_NO_THROW ( wrap(container) = raw(mc, "hello") );
+    BOOST_CHECK_EQUAL    ( std::string("Hello World!"), container );
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 

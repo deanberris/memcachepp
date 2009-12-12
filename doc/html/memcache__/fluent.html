@@ -217,8 +217,29 @@
             </td>
 <td>
             <p>
-              Append the raw "value" to the value associated with the given
-              key.
+              Append the raw "value" to the raw value associated with the
+              given key.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+              <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+              <span class="string">"value"</span><span class="special">);</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+              <span class="special">-=</span> <span class="string">"value"</span><span class="special">;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Prepend the raw "value" to the raw value associated with
+              the given key.
             </p>
             </td>
 </tr>
