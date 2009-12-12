@@ -43,6 +43,11 @@ want to be able to use the fluent interface.]
      [`key(mc, "key") /= value;`]
      [Add the value associated with the given key.]
     ]
+    [
+     [`mc << memcache::raw_add("key", "value");`]
+     [`key(mc, "key") *= "value";`]
+     [Add the raw "value" associated with the given key.]
+    ]
 ]
 
 [endsect] [/Fluent Interface] 
