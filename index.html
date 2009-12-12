@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>mikhailberis/memcachepp @ GitHub</title>
+	
+	<style type="text/css">
+		body {
+  		margin-top: 1.0em;
+  		background-color: #aeb8ef;
+		  font-family: "Helvetica,Arial,FreeSans"; 
+  		color: #000000;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+		h1 { font-size: 3.8em; color: #514710; margin-bottom: 3px; }
+		h1 .small { font-size: 0.4em; }
+		h1 a { text-decoration: none }
+		h2 { font-size: 1.5em; color: #514710; }
+    h3 { text-align: center; color: #514710; }
+    a { color: #514710; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+		pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+	</style>
+	
+</head>
+
+<body>
+  <a href="http://github.com/mikhailberis/memcachepp"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+  <div id="container">
+
+    <div class="download">
+      <a href="http://github.com/mikhailberis/memcachepp/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/mikhailberis/memcachepp/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+      
+    <h1><a href="http://github.com/mikhailberis/memcachepp">memcachepp</a> 
+      <span class="small">by <a href="http://github.com/mikhailberis">mikhailberis</a></span></h1>
+
+    <div class="description">
+      A header-only memcache client for C++ leveraging the Boost C++ Library.
+    </div>
+
+    <p>NOTES:
+
+On Hacking Memcache++:
+
+    * When you find a bug, write a unit test to reproduce the bug
+      then make sure that any fixes will not cause regressions to
+      earlier marked passing tests.
+    * Send email to <mikhailberis@gmail.com> for feature requests
+      and patches.
+    * Use git and clone
+
+      git://github.com/mikhailberis/memcachepp.git
+
+On Testing Memcache++:
+
+    * You need at least 4 running instances of memcached on the
+      local machine to run the tests. The provided test-setup.sh
+      script assumes you have memcached installed and available
+      from the path. To run it, you need administrator privileges
+      on the local machine.
+    * Invoking 'bjam' in the home directory will require that you
+      have properly installed and set up the Boost.Build version 2
+      build system on your machine, and the BOOST_ROOT environment
+      variable defined to point to the Boost C++ Library
+      distribution root directory.
+
+On Installing Memcache++:
+
+    * Memcache++ is header-only, meaning it can be made part of
+      the application you're building. This requires though that
+      at build-time, the Boost C++ Library 1.38 or a checkout of
+      the Boost subversion trunk is accessible.
+    * The required libraries are:
+        - Boost.Serialization
+        - Boost.Asio (and Boost.System)
+        - Boost.Regex
+        - Boost.Spirit
+        - Boost.String_algo
+        - Boost.Concept_check
+</p><h2>Dependencies</h2>
+<p>Boost C++ Library (1.38 or SVN Trunk)
+Boost.Serialization
+Boost.Asio (and Boost.System)
+Boost.Regex
+Boost.Spirit
+Boost.String_algo
+Boost.Concept_check</p>
+<h2>Install</h2>
+<p>Memcache++ is header-only, meaning it can be made part of the application you're building. This requires though that at build-time, the Boost C++ Library 1.38 or a checkout of the Boost subversion trunk is accessible.
+</p>
+<h2>License</h2>
+<p>Boost Software License</p>
+<h2>Authors</h2>
+<p>Dean Michael Berris (mikhailberis@gmail.com)<br/><br/>      </p>
+<h2>Contact</h2>
+<p>Dean Michael Berris (mikhailberis@gmail.com)<br/>      </p>
+
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="http://github.com/mikhailberis/memcachepp/zipball/master">zip</a> or
+      <a href="http://github.com/mikhailberis/memcachepp/tarball/master">tar</a> formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/mikhailberis/memcachepp</pre>
+    </p>
+      
+    <div class="footer">
+      get the source code on GitHub : <a href="http://github.com/mikhailberis/memcachepp">mikhailberis/memcachepp</a>
+    </div>
+    
+  </div>
+
+  
+</body>
+</html>
