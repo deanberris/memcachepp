@@ -1,13 +1,16 @@
 Memcache++ - a memcache client library
 ======================================
 
-Requires:
+Requirements
+------------
 
 * Boost C++ Library (1.38 or SVN Trunk)
+* GCC 4.4.x
 
-NOTES:
+Notes
+-----
 
-On Hacking Memcache++:
+On Hacking Memcache++
 
 * When you find a bug, write a unit test to reproduce the bug
   then make sure that any fixes will not cause regressions to
