@@ -58,6 +58,10 @@ Below is a detailed API guide to the class:
         [Get the data associated to `key` from the memcache server
         identified by `offset` deserialized into `holder`.]
     ]
+    [[`template <typename T> gets(size_t offset, std::string const & key, T & holder, boost::uint64_t & cas_value)`] [`void`]
+        [Get the data associated to `key` from the memcache server
+        identified by `offset` deserialized into `holder` and the server-held `cas_value`.]
+    ]
     [[`get_raw(size_t offset, std::string const & key, std::string & holder)`] [`void`]
         [Get the data associated to `key` from the memcache server
         identified by `offset` and stored as a string into `holder`.]
@@ -77,6 +81,13 @@ Below is a detailed API guide to the class:
         by `offset`, on failover set the expiration to 
         `failover_expiraton`, while when successful set the 
         expiration to `expiration`.]
+    ]
+    [[`template <typename T> check_and_set(size_t offset, std::string const & key, T const & value, boost::uint64_t cas_value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`] 
+        [Sets the `key` to `value` in the memcache server identified 
+        by `offset`, on failover set the expiration to 
+        `failover_expiraton`, while when successful set the 
+        expiration to `expiration`, but only if the server has the
+        same `cas_value` for `key`.]
     ]
     [[`set_raw(size_t offset, std::string const & key, std::string const & value, time_t expiration, time_t failover_expiration, uint16_t flags=0)`] [`void`]
         [Sets the `key` to `value` in the memcache server identified
@@ -186,6 +197,58 @@ specialization of `detail::get_directive` which is then applied
 to the __memcache_handle__ `mc`.
 
 [endsect] [/ memcache::get]
+
+[section:gets memcache::gets]
+
+The `memcache::gets` directive instructs the __memcache_hande__ to 
+perform a get operation using the __memcache_handle__'s hashing
+policy to determine which server in the defined collection of
+servers to get the data from, based on the hash on the provided
+key.
+
+    template <typename T, typename _T>
+    detail::get_directive<_T>
+    gets(T _key, _T & holder, boost::uint64_t & cas_value);
+
+At compile time, `T` and `_T` don't have to be explicitly stated
+because it can be deduced by the compiler. For example:
+
+    int a;
+    double b;
+    std::string c;
+    boost::uin64_t cas_value;
+    mc << memcache::gets("key_a", a, cas_value)
+        << memcache::gets("key_b", b, cas_value)
+        << memcache::gets("key_c", c, cas_value);
+
+The compiler will then be able to determine that `T` is a `char[6]`
+while `a` is an `int`, `b` is a double, and `c` is a `std::string`.
+Each call to `memcache::gets` above will return the correct
+specialization of `detail::get_directive` which is then applied
+to the __memcache_handle__ `mc`.
+
+The `cas_value` that is specified here is useful if you intend to
+use the `memcache::cas` directive.
+
+[endsect] [/ memcache::gets]
+
+[section:cas memcache::cas]
+
+CAS stands for check and set and is meant to be used to make sure that an update
+to a key is done only if the key's value has not been modified since the last
+`memcache::gets`. This directive uses the `cas_value` retrieved after performing
+a `memcache::gets`.
+
+    boost::uint64_t cas_value;
+    std::string value;
+    mc << memcache::gets("key", value, cas_value);
+    // ... do some work ...
+    mc << memcache::cas("key", "new value", cas_value);
+
+When a `memcache::cas` fails to update the value, it will throw the exception
+`memcache::key_not_stored`.
+
+[endsect] [/ memcache::cas]
 
 [section:set memcache::set]
 

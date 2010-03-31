@@ -4,7 +4,7 @@
     [id memcachepp]
     [authors [Berris, Dean Michael] ]
     [copyright 2007 2008 Friendster, Inc.]
-    [copyright 2009 Dean Michael Berris ]
+    [copyright 2009 2010 Dean Michael Berris ]
     [purpose Type safe headery only memcache client for C++]
     [license
         Distributed under the Boost Software License, Version 1.0.
@@ -23,7 +23,7 @@
 [def __warning__ [$images/warning.png]]
 [def :-) [$images/smiley.png]]
 [def __friendster__ [@http://www.friendster.com/ Friendster]]
-[def __memcached__ [@http://www.danga.com/memcached/ Memcached]]
+[def __memcached__ [@http://memcached.org/ Memcached]]
 [def __boost__ [@http://www.boost.org/ Boost]]
 [def __boost_asio__ [@http://asio.sourceforge.net/ Boost.Asio]]
 [def __boost_date_time__ [@http://boost.org/doc/html/date_time.html Boost.Date_Time]]

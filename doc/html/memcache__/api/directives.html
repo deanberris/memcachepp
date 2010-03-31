@@ -10,7 +10,7 @@
 <link rel="next" href="../fluent.html" title="Fluent Interface">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="277" height="86" src="../../images/memcachepp.png"></td></tr></table>
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
 <hr>
 <div class="spirit-nav">
 <a accesskey="p" href="classes.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../api.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../fluent.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
@@ -21,6 +21,8 @@
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.get"> memcache::get</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.gets"> memcache::gets</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.cas"> memcache::cas</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.set"> memcache::set</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.add"> memcache::add</a></span></dt>
 <dt><span class="section"><a href="directives.html#memcache__.api.directives.replace"> memcache::replace</a></span></dt>
@@ -69,6 +71,70 @@
           Each call to <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> above will return the correct specialization
           of <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span></code> which is then applied to
           the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> <code class="computeroutput"><span class="identifier">mc</span></code>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.gets"></a><a class="link" href="directives.html#memcache__.api.directives.gets" title="memcache::gets"> memcache::gets</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code> directive instructs the __memcache<span class="underline">hande</span>_ to perform a get operation using the
+          <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">gets</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="special">&amp;</span> <span class="identifier">cas_value</span><span class="special">);</span>
+</pre>
+<p>
+          At compile time, <code class="computeroutput"><span class="identifier">T</span></code> and
+          <code class="computeroutput"><span class="identifier">_T</span></code> don't have to be explicitly
+          stated because it can be deduced by the compiler. For example:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">a</span><span class="special">;</span>
+<span class="keyword">double</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">c</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">uin64_t</span> <span class="identifier">cas_value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">);</span>
+</pre>
+<p>
+          The compiler will then be able to determine that <code class="computeroutput"><span class="identifier">T</span></code>
+          is a <code class="computeroutput"><span class="keyword">char</span><span class="special">[</span><span class="number">6</span><span class="special">]</span></code> while
+          <code class="computeroutput"><span class="identifier">a</span></code> is an <code class="computeroutput"><span class="keyword">int</span></code>,
+          <code class="computeroutput"><span class="identifier">b</span></code> is a double, and <code class="computeroutput"><span class="identifier">c</span></code> is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+          Each call to <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code> above will return the correct specialization
+          of <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span></code> which is then applied to
+          the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> <code class="computeroutput"><span class="identifier">mc</span></code>.
+        </p>
+<p>
+          The <code class="computeroutput"><span class="identifier">cas_value</span></code> that is specified
+          here is useful if you intend to use the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">cas</span></code>
+          directive.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.cas"></a><a class="link" href="directives.html#memcache__.api.directives.cas" title="memcache::cas"> memcache::cas</a>
+</h4></div></div></div>
+<p>
+          CAS stands for check and set and is meant to be used to make sure that
+          an update to a key is done only if the key's value has not been modified
+          since the last <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code>.
+          This directive uses the <code class="computeroutput"><span class="identifier">cas_value</span></code>
+          retrieved after performing a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code>.
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">cas_value</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">);</span>
+<span class="comment">// ... do some work ...
+</span><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">cas</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="string">"new value"</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">);</span>
+</pre>
+<p>
+          When a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">cas</span></code> fails to update the value, it will
+          throw the exception <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">key_not_stored</span></code>.
         </p>
 </div>
 <div class="section" lang="en">
@@ -611,7 +677,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009 Dean Michael Berris <p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

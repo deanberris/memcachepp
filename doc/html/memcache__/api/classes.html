@@ -10,7 +10,7 @@
 <link rel="next" href="directives.html" title="Directives">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="277" height="86" src="../../images/memcachepp.png"></td></tr></table>
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
 <hr>
 <div class="spirit-nav">
 <a accesskey="p" href="../api.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../api.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
@@ -301,6 +301,30 @@
 <tr>
 <td>
               <p>
+                <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">gets</span><span class="special">(</span><span class="identifier">size_t</span>
+                <span class="identifier">offset</span><span class="special">,</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span>
+                <span class="special">&amp;</span> <span class="identifier">cas_value</span><span class="special">)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">void</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                Get the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                from the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>
+                deserialized into <code class="computeroutput"><span class="identifier">holder</span></code>
+                and the server-held <code class="computeroutput"><span class="identifier">cas_value</span></code>.
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
                 <code class="computeroutput"><span class="identifier">get_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
                 <span class="keyword">const</span> <span class="special">&amp;</span>
                 <span class="identifier">key</span><span class="special">,</span>
@@ -399,6 +423,37 @@
                 server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
                 on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiraton</span></code>,
                 while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">check_and_set</span><span class="special">(</span><span class="identifier">size_t</span>
+                <span class="identifier">offset</span><span class="special">,</span>
+                <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span>
+                <span class="identifier">value</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">cas_value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                <span class="identifier">expiration</span><span class="special">,</span>
+                <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">void</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                Sets the <code class="computeroutput"><span class="identifier">key</span></code> to
+                <code class="computeroutput"><span class="identifier">value</span></code> in the memcache
+                server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiraton</span></code>,
+                while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>,
+                but only if the server has the same <code class="computeroutput"><span class="identifier">cas_value</span></code>
+                for <code class="computeroutput"><span class="identifier">key</span></code>.
               </p>
               </td>
 </tr>
@@ -677,7 +732,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009 Dean Michael Berris <p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

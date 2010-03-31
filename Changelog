@@ -1,3 +1,6 @@
+Release 0.12:
+    * Adding support for cas and gets.
+
 Release 0.11:
     * Adding support for incr and decr.
     * Adding support for raw_append, raw_prepend, and checking for server version.
