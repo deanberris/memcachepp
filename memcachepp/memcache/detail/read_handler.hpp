@@ -10,6 +10,11 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+
+#ifdef _REENTRANT
+#include <boost/optional.hpp>
+#endif
+
 #include <memcachepp/memcache/tags.hpp>
 
 namespace memcache { namespace detail {

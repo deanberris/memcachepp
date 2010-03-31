@@ -131,7 +131,8 @@ namespace memcache {
                     std::string data_string = data.str();
 
                     try {
-                        if (!detail::parse_response(data_string, callbacks)) {
+                        boost::uint64_t cas_value = 0u;
+                        if (!detail::parse_response(data_string, callbacks, cas_value)) {
                             std::istringstream tokenizer(data_string);
                             std::string first_token;
                             tokenizer >> first_token;

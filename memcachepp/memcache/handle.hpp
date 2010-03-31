@@ -202,6 +202,29 @@ namespace memcache {
                         )
                ) throw key_not_stored(key);
         };
+        
+        template <typename T> // T must be serializable
+        void check_and_set(size_t offset, string const & key, T const & value, boost::uint64_t cas_value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+            connection_container connections;
+            bool rehash;
+            boost::fusion::tie(connections, rehash) = command_setup(offset);
+
+            if (!perform_action(
+                        check_and_set_impl<T, data_interchange_policy>(
+                            key, 
+                            value,
+                            cas_value, 
+                            expiration, 
+                            failover_expiration, 
+                            flags,
+                            rehash
+                            ),
+                        connections
+                        )
+               ) throw key_not_stored(key);
+        };
 
         void set_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
@@ -351,7 +374,20 @@ namespace memcache {
             connection_container connections;
             boost::fusion::tie(connections, ignore) = command_setup(offset);
 
-            if (retrieve(get_impl<T, data_interchange_policy>(key, holder), connections))
+            boost::uint64_t cas_value;
+            if (retrieve(get_impl<T, data_interchange_policy>(key, holder, cas_value), connections))
+                throw key_not_found(key);
+        };
+
+        template <typename T> // T must be serializable
+        void gets(size_t offset, string const & key, T & holder, boost::uint64_t & cas_value) {
+            typename threading_policy::lock scoped_lock(*this);
+            validate(key);
+
+            connection_container connections;
+            boost::fusion::tie(connections, ignore) = command_setup(offset);
+
+            if (retrieve(gets_impl<T, data_interchange_policy>(key, holder, cas_value), connections))
                 throw key_not_found(key);
         };
 
@@ -362,7 +398,8 @@ namespace memcache {
             connection_container connections;
             boost::fusion::tie(connections, ignore) = command_setup(offset);
 
-            if (retrieve(get_impl<string, policies::string_preserve>(key, holder), connections))
+            boost::uint64_t cas_value = 0u;
+            if (retrieve(get_impl<string, policies::string_preserve>(key, holder, cas_value), connections))
                 throw key_not_found(key);
         };
 
@@ -576,6 +613,26 @@ namespace memcache {
                 
             };
 
+        template <typename T, typename set_interchange_policy>
+            struct check_and_set_impl : storage_base<T> {
+                explicit check_and_set_impl(string const & key, T const & value, boost::uint64_t cas_value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) 
+                    { 
+                        ostringstream output_bytes_stream;
+                        typename set_interchange_policy::oarchive archive(output_bytes_stream);
+                        archive << value;
+
+                        ostringstream command_stream;
+                        command_stream << "cas " << key << " " << flags
+                            << " " << (rehash ? failover_expiration : expiration)
+                            << " " << output_bytes_stream.str().size() 
+                            << " " << cas_value
+                            << "\r\n"
+                            << output_bytes_stream.str() << "\r\n";
+                        storage_base<T>::command = command_stream.str();
+                    };
+                
+            };
+
         template <class T, class set_interchange_policy>
             struct replace_impl : storage_base<T> {
                 explicit replace_impl(string const & key, T const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags, bool rehash) {
@@ -640,22 +697,21 @@ namespace memcache {
                         storage_base<T>::command = command_stream.str();
                 }
             };
-        
+
         template <typename holder_type, class get_interchange_policy>
-            struct get_impl {
+        struct get_base {
                 string _key;
                 holder_type & _holder;
+                boost::uint64_t & cas_value;
                 string command;
-                explicit get_impl(string const & key, holder_type & holder)
-                    : _key(key), _holder(holder) 
-                    {
-                        ostringstream command_stream;
-                        command_stream << "get " << key << "\r\n";
-                        command = command_stream.str();
-                    };
-                
+
+                get_base(string const & key, holder_type & holder, boost::uint64_t & cas_value)
+                : _key(key), _holder(holder), cas_value(cas_value)
+                {
+                }
+
                 template <typename T>
-                    bool operator() (T & server_iterator) {
+                   bool operator() (T & server_iterator) {
                         static boost::regex end_indicator("(END\r\n)|(SERVER_ERROR\\S)|(CLIENT_ERROR\\S)|(ERROR\r\n)");
                         boost::asio::streambuf buffer;
                         connection_ptr connection = server_iterator->second.connection;
@@ -700,7 +756,7 @@ namespace memcache {
                         string data_string(data.str());
 
                         try {
-                            if (!detail::parse_response(data_string, callbacks)) {
+                            if (!detail::parse_response(data_string, callbacks, cas_value)) {
                                 istringstream tokenizer(data_string);
                                 string first_token;
                                 tokenizer >> first_token;
@@ -720,7 +776,30 @@ namespace memcache {
 
                         return true;
                     };
+        };
+        
+        template <typename holder_type, class get_interchange_policy>
+            struct get_impl : get_base<holder_type, get_interchange_policy> {
+                explicit get_impl(string const & key, holder_type & holder, boost::uint64_t & cas_value)
+                    : get_base<holder_type, get_interchange_policy>(key, holder, cas_value)
+                    {
+                        ostringstream command_stream;
+                        command_stream << "get " << key << "\r\n";
+                        get_base<holder_type, get_interchange_policy>::command = command_stream.str();
+                    };
+                
                 };
+
+        template <typename holder_type, class get_interchange_policy>
+            struct gets_impl : get_base<holder_type, get_interchange_policy> {
+                explicit gets_impl(string const & key, holder_type & holder, boost::uint64_t & cas_value)
+                : get_base<holder_type, get_interchange_policy>(key, holder, cas_value)
+                {
+                    ostringstream command_stream;
+                    command_stream << "gets " << key << "\r\n";
+                    get_base<holder_type, get_interchange_policy>::command = command_stream.str();
+                }
+            };
 
         struct crement_base {
             boost::uint64_t & holder;

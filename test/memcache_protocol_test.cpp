@@ -157,7 +157,6 @@ BOOST_AUTO_TEST_CASE ( raw_add_test ) {
     try { mc << memcache::delete_("99"); } catch (...) {}
 }
 
-
 BOOST_AUTO_TEST_CASE ( failover_expiration_test ) {
     memcache::handle mc;
     mc << memcache::server("aodjfgbie", 11111)
@@ -309,6 +308,29 @@ BOOST_AUTO_TEST_CASE ( raw_set_get_with_null_test ) {
     BOOST_CHECK_NO_THROW (mc << memcache::raw_get("key", value)) ;
     BOOST_CHECK_EQUAL (value, test);
 };
+
+BOOST_AUTO_TEST_CASE ( cas_gets_test ) {
+    memcache::handle mc;
+    mc << memcache::server("localhost", 11211) << memcache::connect;
+
+    std::string test = "the quick brown fox jumps over the lazy dog";
+    std::string test2 = "this is the new data";
+    
+    try { mc << memcache::delete_("key") ; } catch (...) { };
+
+    std::string retrieved;
+    boost::uint64_t cas_value = 0u;
+    BOOST_CHECK_NO_THROW ( mc << memcache::set("key", test) );
+    BOOST_CHECK_THROW    ( mc << memcache::cas("key", test2, cas_value); , memcache::key_not_stored );
+    BOOST_CHECK_NO_THROW ( mc << memcache::gets("key", retrieved, cas_value) );
+    BOOST_CHECK_EQUAL    ( test, retrieved );
+    BOOST_CHECK_NO_THROW ( mc << memcache::cas("key", test2, cas_value) );
+    BOOST_CHECK_NO_THROW ( mc << memcache::gets("key", retrieved, cas_value) );
+    BOOST_CHECK_EQUAL    ( test2, retrieved );
+    BOOST_CHECK_NO_THROW ( mc << memcache::cas("key", test, cas_value) );
+    BOOST_CHECK_NO_THROW ( mc << memcache::gets("key", retrieved, cas_value) );
+    BOOST_CHECK_EQUAL    ( test, retrieved );
+}
 
 void do_call() {
     memcache::handle mc;

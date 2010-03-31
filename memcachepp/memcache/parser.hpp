@@ -20,6 +20,7 @@
 #include <boost/spirit/include/classic_attribute.hpp>
 #include <boost/spirit/include/classic_loops.hpp>
 #include <boost/spirit/include/phoenix1_statements.hpp>
+#include <boost/cstdint.hpp>
 
 namespace memcache { namespace detail {
 
@@ -33,6 +34,7 @@ namespace memcache { namespace detail {
 
         std::string key, data;
         size_t size;
+        boost::uint64_t & cas_value;
         
         struct perform_callback {
             perform_callback(callback_container & callbacks,
@@ -52,8 +54,8 @@ namespace memcache { namespace detail {
             };
         };
         
-        explicit protocol_parser(callback_container & callbacks)
-            : _callbacks(callbacks) 
+        explicit protocol_parser(boost::uint64_t & cas_value, callback_container & callbacks)
+            : cas_value(cas_value), _callbacks(callbacks) 
         { 
 
             response_header = chseq_p("VALUE ")
@@ -62,6 +64,9 @@ namespace memcache { namespace detail {
                                 >> uint_p // flags
                                 >> ch_p(' ')
                                 >> uint_p[var(size) = arg1] // bytes
+                                >> !(
+                                    ch_p(' ') >> uint_p[var(cas_value) = arg1] // cas value
+                                )
                             ;
             response = +(response_header 
                             >> chseq_p("\r\n") 
@@ -85,8 +90,8 @@ namespace memcache { namespace detail {
     };
 
     template <class callback_container_type>
-    bool parse_response(std::string const & buffer, callback_container_type & callbacks) {
-        protocol_parser<callback_container_type> parser_instance(callbacks);
+    bool parse_response(std::string const & buffer, callback_container_type & callbacks, boost::uint64_t & cas_value) {
+        protocol_parser<callback_container_type> parser_instance(cas_value, callbacks);
         return parse(buffer.begin(), buffer.end(), parser_instance.response).full;
     };
     

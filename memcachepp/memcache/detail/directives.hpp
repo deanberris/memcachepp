@@ -26,6 +26,8 @@
 #include <memcachepp/memcache/detail/directives/commit.hpp>
 #include <memcachepp/memcache/detail/directives/incr.hpp>
 #include <memcachepp/memcache/detail/directives/decr.hpp>
+#include <memcachepp/memcache/detail/directives/cas.hpp>
+#include <memcachepp/memcache/detail/directives/gets.hpp>
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_HPP__
 

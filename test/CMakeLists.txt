@@ -4,6 +4,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 
 if (Boost_FOUND)
+    add_definitions( -D_REENTRANT )
     add_executable(memcache_fluent memcache_fluent_interface.cpp)
     add_executable(memcache_hash memcache_hash_test.cpp)
     add_executable(memcache_pool memcache_pool_test.cpp)
