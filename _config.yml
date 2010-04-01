@@ -1,0 +1,5 @@
+lsi: true
+paginate: 3
+permalink: date
+destination: _site
+
