@@ -16,6 +16,7 @@
 #endif
 
 #include <memcachepp/memcache/tags.hpp>
+#include <boost/regex.hpp>
 
 namespace memcache { namespace detail {
 

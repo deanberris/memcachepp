@@ -1,6 +1,6 @@
 
 // Copyright 2007, 2008 (c) Friendster, Inc.
-// Copyright 2007, 2008 (c) Dean Michael Berris <dmberris@friendster.com>
+// Copyright 2007-2010 (c) Dean Michael Berris <mikhailberis@gmail.com>
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -16,83 +16,108 @@
 #ifndef __MEMCACHEPP_PARSER_HPP__
 #define __MEMCACHEPP_PARSER_HPP__
 
-#include <boost/spirit/include/classic_core.hpp>
-#include <boost/spirit/include/classic_attribute.hpp>
-#include <boost/spirit/include/classic_loops.hpp>
-#include <boost/spirit/include/phoenix1_statements.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix.hpp>
+#include <boost/fusion/tuple.hpp>
 #include <boost/cstdint.hpp>
 
 namespace memcache { namespace detail {
 
-    using namespace boost::spirit::classic;
-    using namespace phoenix;
+    using namespace boost::spirit::qi;
+    using namespace boost::phoenix;
     
-    template <class callback_container>
-    struct protocol_parser {
-        callback_container & _callbacks;
-        rule<scanner<std::string::const_iterator> > response, response_header;
+    struct value_response_grammar : 
+        grammar<std::string::const_iterator, 
+            fusion::vector<
+                std::string // the key name
+                , boost::uint16_t // the flags
+                , size_t // the size
+                , boost::optional<boost::uint64_t> // the cas value
+                , std::string // the data
+            >(),
+            locals<size_t>
+        >
+    {
+        value_response_grammar() : base_type(start) {
+            using namespace boost::spirit::qi::labels;
+            using namespace boost::phoenix::arg_names;
+            key %= 
+                +(alnum|punct)
+            ;
 
-        std::string key, data;
-        size_t size;
-        boost::uint64_t & cas_value;
-        
-        struct perform_callback {
-            perform_callback(callback_container & callbacks,
-                std::string const & key,
-                std::string const & data) : 
-                    _callbacks(callbacks),
-                    _key(key),
-                    _data(data)
-                    { }
-            mutable callback_container & _callbacks;
-            std::string const & _key;
-            std::string const & _data;
-            
-            template <typename T>
-            void operator() (T, T) const {
-                _callbacks[_key](_data);
-            };
-        };
-        
-        explicit protocol_parser(boost::uint64_t & cas_value, callback_container & callbacks)
-            : cas_value(cas_value), _callbacks(callbacks) 
-        { 
+            flags %=
+                lit(" ")
+                >> uint_
+            ;
 
-            response_header = chseq_p("VALUE ")
-                                >> (+(alnum_p|punct_p))[var(key) = construct_<std::string>(arg1, arg2)] // key
-                                >> ch_p(' ')
-                                >> uint_p // flags
-                                >> ch_p(' ')
-                                >> uint_p[var(size) = arg1] // bytes
-                                >> !(
-                                    ch_p(' ') >> uint_p[var(cas_value) = arg1] // cas value
-                                )
-                            ;
-            response = +(response_header 
-                            >> chseq_p("\r\n") 
-                            >> lexeme_d[repeat_p(boost::cref(size))[anychar_p]]
-                                [
-                                    if_(arg1 != arg2) [
-                                        var(data) = construct_<std::string>(arg1, arg2)
-                                    ].else_[
-                                        var(data) = ""
-                                    ]
-                                ] // data
-                            >> chseq_p("\r\n")
-                            >> eps_p[perform_callback(boost::ref(_callbacks),
-                                boost::cref(key), boost::cref(data))] // callback
-                            )
-                        >> chseq_p("END\r\n")
-                        >> end_p
-                        ;
-        };
+            data %=
+                lit("\r\n")
+                >> repeat(_r1)[char_]
+                >> lit("\r\nEND\r\n")
+            ;
 
+            cas %=
+                lit(" ")
+                >> ulong_long
+            ;
+
+            size %=
+                lit(" ")
+                >> ulong_
+            ;
+
+            start %= 
+                lit("VALUE")
+                >> key 
+                >> flags
+                >> size[_a = boost::spirit::qi::_1]
+                >> -cas
+                >> data(_a)
+            ;
+        }
+
+        rule<std::string::const_iterator, std::string()> key;
+        rule<std::string::const_iterator, boost::uint16_t()> flags;
+        rule<std::string::const_iterator, size_t()> size;
+        rule<std::string::const_iterator, std::string(size_t)> data;
+        rule<std::string::const_iterator, boost::uint64_t()> cas;
+        rule<std::string::const_iterator, 
+            fusion::vector<
+                std::string // the key name
+                , boost::uint16_t // the flags
+                , size_t // the size of the data
+                , boost::optional<boost::uint64_t> // the cas value
+                , std::string // the data
+            >(),
+            locals<
+                size_t // the size of the data
+            >
+            > start;
     };
 
     template <class callback_container_type>
     bool parse_response(std::string const & buffer, callback_container_type & callbacks, boost::uint64_t & cas_value) {
-        protocol_parser<callback_container_type> parser_instance(cas_value, callbacks);
-        return parse(buffer.begin(), buffer.end(), parser_instance.response).full;
+        // FIXME pass out the flags too?
+        static value_response_grammar value_response;
+        fusion::vector<
+            std::string
+            , boost::uint16_t
+            , size_t
+            , boost::optional<boost::uint64_t>
+            , std::string
+        > result;
+        std::string::const_iterator begin = buffer.begin()
+                                    , end = buffer.end();
+        bool ok = parse(
+            begin, end              // the input range
+            , value_response        // the context
+            , result                // the synthesized attribute
+            );
+        callbacks[fusion::get<0>(result)](fusion::get<4>(result));
+        if (fusion::get<3>(result)) {
+            cas_value = *fusion::get<3>(result);
+        }
+        return ok;
     };
     
 }; // namespace detail

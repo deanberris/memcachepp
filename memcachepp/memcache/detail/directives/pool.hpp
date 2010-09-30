@@ -73,7 +73,7 @@ namespace memcache { namespace detail {
 
     template <>
         struct pool_directive<server_pool> {
-            mutable server_pool & _pool;
+            server_pool & _pool;
             explicit pool_directive(server_pool & pool)
                 : _pool(pool)
                 { };

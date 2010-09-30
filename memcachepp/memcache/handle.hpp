@@ -25,6 +25,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
+#include <boost/regex.hpp>
 
 namespace memcache {
 

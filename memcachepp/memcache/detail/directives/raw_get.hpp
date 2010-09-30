@@ -32,7 +32,7 @@ namespace memcache { namespace detail {
         private:
 
         mutable std::string _key;
-        mutable std::string & _value;
+        std::string & _value;
     };
 
 };
