@@ -25,6 +25,7 @@ namespace memcache { namespace detail {
 
     using namespace boost::spirit::qi;
     using namespace boost::phoenix;
+    namespace fusion = boost::fusion;
     
     struct value_response_grammar : 
         grammar<std::string::const_iterator, 
@@ -46,33 +47,33 @@ namespace memcache { namespace detail {
             ;
 
             flags %=
-                lit(" ")
-                >> uint_
+                uint_
             ;
 
             data %=
-                lit("\r\n")
-                >> repeat(_r1)[char_]
+                repeat(_r1)[char_]
                 >> lit("\r\nEND\r\n")
             ;
 
             cas %=
-                lit(" ")
-                >> ulong_long
+                ulong_long
             ;
 
             size %=
-                lit(" ")
-                >> ulong_
+                ulong_
             ;
 
             start %= 
-                lit("VALUE")
+                lit("VALUE ")
                 >> key 
+                >> ' '
                 >> flags
+                >> ' '
                 >> size[_a = boost::spirit::qi::_1]
-                >> -cas
+                >> -(lit(' ') >> cas)
+                >> lit("\r\n")
                 >> data(_a)
+                >> lit("\r\nEND\r\n")
             ;
         }
 
