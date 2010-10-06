@@ -40,12 +40,14 @@ namespace memcache { namespace policies {
 
 }; // namespace policies
 
-    inline  policies::string_preserve::oarchive & operator<< ( policies::string_preserve::oarchive & archive, std::string const & str) {
+    template <class String>
+    inline  policies::string_preserve::oarchive & operator<< ( policies::string_preserve::oarchive & archive, String const & str) {
         archive._os.str(str);
         return archive;
     };
 
-    inline  policies::string_preserve::iarchive & operator>> ( policies::string_preserve::iarchive & archive, std::string & str) {
+    template <class String>
+    inline  policies::string_preserve::iarchive & operator>> ( policies::string_preserve::iarchive & archive, String & str) {
         std::stringbuf buffer;
         while (!archive._is.eof()) {
             archive._is.get(buffer);

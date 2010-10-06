@@ -16,8 +16,24 @@
 #ifndef __MEMCACHEPP_PARSER_HPP__
 #define __MEMCACHEPP_PARSER_HPP__
 
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix.hpp>
+#include <boost/spirit/include/qi_core.hpp>
+#include <boost/spirit/include/qi_char_.hpp>
+#include <boost/spirit/include/qi_char.hpp>
+#include <boost/spirit/include/qi_lit.hpp>
+#include <boost/spirit/include/qi_repeat.hpp>
+#include <boost/spirit/include/qi_parse_attr.hpp>
+#include <boost/spirit/include/qi_sequence.hpp>
+#include <boost/spirit/include/qi_grammar.hpp>
+#include <boost/spirit/include/qi_uint.hpp>
+#include <boost/spirit/include/qi_plus.hpp>
+#include <boost/spirit/include/qi_alternative.hpp>
+#include <boost/spirit/include/qi_rule.hpp>
+#include <boost/spirit/include/qi_operator.hpp>
+#include <boost/spirit/include/qi_domain.hpp>
+#include <boost/spirit/include/support_argument.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/cstdint.hpp>
 
@@ -69,7 +85,7 @@ namespace memcache { namespace detail {
                 >> ' '
                 >> flags
                 >> ' '
-                >> size[_a = boost::spirit::qi::_1]
+                >> size[_a = boost::spirit::qi::labels::_1]
                 >> -(lit(' ') >> cas)
                 >> lit("\r\n")
                 >> data(_a)
