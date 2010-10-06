@@ -31,14 +31,12 @@ namespace memcache { namespace policies {
             std::istream & _is;
         };
 
-        template <class String>
-        inline oarchive & operator<< ( oarchive & archive, String const & str) {
+        inline oarchive & operator<< ( oarchive & archive, std::string const & str) {
             archive._os.str(str);
             return archive;
         };
 
-        template <class String>
-        inline iarchive & operator>> ( iarchive & archive, String & str) {
+        inline iarchive & operator>> ( iarchive & archive, std::string & str) {
             std::stringbuf buffer;
             while (!archive._is.eof()) {
                 archive._is.get(buffer);
