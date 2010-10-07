@@ -1,6 +1,6 @@
 [article Memcache++
     [quickbook 1.5]
-    [version 0.12]
+    [version 0.12.1]
     [id memcachepp]
     [authors [Berris, Dean Michael] ]
     [copyright 2007 2008 Friendster, Inc.]
@@ -33,6 +33,8 @@
 [def __boost_system__ Boost.System]
 [def __boost_thread__ [@http://boost.org/doc/html/thread.html Boost.Thread]]
 [def __memcache_handle__ `memcache::handle`]
+
+[note You can always get the latest memcache++ release from [@http://github.com/mikhailberis/memcachepp/downloads]. Support is also available from the Users/Developers mailing list at [@http://groups.google.com/group/memcachepp]. ]
 
 [include introduction.qbk]
 [include overview.qbk]

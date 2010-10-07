@@ -19,21 +19,27 @@ version (January 2008) with the exception that it's distributed
 under the 
 [@http://www.boost.org/LICENSE_1_0.txt] Boost Software License].
 
+Since 2008, the library has been updated to support newer additions
+to the memcached protocol. The current maintainer (Dean Michael Berris)
+is taking care of the development and release management of the
+client library.
+
 [note Dean Michael Berris was a Software Engineer at
 Friendster, Inc. responsible for developing and maintaining C++
 based services in the __friendster__ Infrastructure Services
-team from February 2007 to June 2009. He is at the time of this writing
-a consulting systems architect for a telecom subsidiary in the Philippines.]
+team from February 2007 to June 2009.]
 
-Support for this project is available via the users mailing list
-while technical discussions are reserved for the developers
-mailing list.
+Support and technical discussion of the development of the library is
+available via the [@http://groups.google.com/group/memcachepp mailing list].
 
 The __boost__ C++ libraries are required when building the
 Memcache++ client. This implementation has been tested and developed
 with the GNU Compiler Collection (GCC) as the primary target 
 officially supported compiler on Linux as the primary target
 platform.
+
+As of 2010, Memcache++ has also been tested with the [@http://clang.llvm.org/ clang]
+compiler.
 
 [endsect]
 
