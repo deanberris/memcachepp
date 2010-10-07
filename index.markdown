@@ -11,6 +11,14 @@ top: README
 A header-only memcache client for C++ leveraging the 
 Boost C++ Library.
 
+## Download
+
+You can download memcache++ from [the project downloads page](http://github.com/mikhailberis/memcachepp/downloads).
+
+You can also clone this project with [Git](http://git-scm.com) by running:
+
+    $ git clone git://github.com/mikhailberis/memcachepp
+
 ## Documentation
 
 You can read the documentation for different versions of memcache++ through
@@ -55,13 +63,4 @@ the following links:
   - Boost.Spirit
   - Boost.String_algo
   - Boost.Concept_check
-
-## Download
-
-You can download this project in either [zip](http://github.com/mikhailberis/memcachepp/zipball/master)
-or [tar](http://github.com/mikhailberis/memcachepp/tarball/master) formats.
-
-You can also clone this project with [Git](http://git-scm.com) by running:
-
-    $ git clone git://github.com/mikhailberis/memcachepp
 
