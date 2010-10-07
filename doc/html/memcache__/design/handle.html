@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>The Memcache++ Handle</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Memcache++ 0.12">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Memcache++ 0.12">
 <link rel="up" href="../design.html" title="Design">
 <link rel="prev" href="../design.html" title="Design">
 <link rel="next" href="directives.html" title="The Directives">
@@ -13,13 +13,13 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../design.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../design.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../design.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../design.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="memcache__.design.handle"></a><a class="link" href="handle.html" title="The Memcache++ Handle"> The Memcache++ Handle</a>
+<a name="memcache__.design.handle"></a><a class="link" href="handle.html" title="The Memcache++ Handle">The Memcache++ Handle</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="handle.html#memcache__.design.handle.policies"> Policies</a></span></dt></dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="handle.html#memcache__.design.handle.policies">Policies</a></span></dt></dl></div>
 <p>
         The provided <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> in the memcache library is a typedef
         of the <code class="computeroutput"><span class="identifier">basic_handle</span></code> template
@@ -44,24 +44,24 @@
         <span class="special">...</span>
     <span class="special">};</span>
 </pre>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="memcache__.design.handle.policies"></a><a class="link" href="handle.html#memcache__.design.handle.policies" title="Policies"> Policies</a>
+<a name="memcache__.design.handle.policies"></a><a class="link" href="handle.html#memcache__.design.handle.policies" title="Policies">Policies</a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.threading"> Threading
+<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.threading">Threading
           Policy</a></span></dt>
-<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.serialization">
-          Data Interchange Policy</a></span></dt>
-<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.hash"> Hash Policy</a></span></dt>
+<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.serialization">Data
+          Interchange Policy</a></span></dt>
+<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.hash">Hash Policy</a></span></dt>
 </dl></div>
 <p>
           The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> has three policies that specify
           how the handle behaves. Let's look at each one in greater detail:
         </p>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="memcache__.design.handle.policies.threading"></a><a class="link" href="handle.html#memcache__.design.handle.policies.threading" title="Threading Policy"> Threading
+<a name="memcache__.design.handle.policies.threading"></a><a class="link" href="handle.html#memcache__.design.handle.policies.threading" title="Threading Policy">Threading
           Policy</a>
 </h5></div></div></div>
 <p>
@@ -76,16 +76,16 @@
 <dl>
 <dt><span class="term">T</span></dt>
 <dd><p>
-                The threading policy type
-              </p></dd>
+                  The threading policy type
+                </p></dd>
 <dt><span class="term">t</span></dt>
 <dd><p>
-                Instance of T
-              </p></dd>
+                  Instance of T
+                </p></dd>
 <dt><span class="term">T::L</span></dt>
 <dd><p>
-                Nested Scoped Lock type
-              </p></dd>
+                  Nested Scoped Lock type
+                </p></dd>
 </dl>
 </div>
 <div class="table">
@@ -98,55 +98,55 @@
 </colgroup>
 <thead><tr>
 <th>
-                <p>
-                  Expression
-                </p>
-                </th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
 <th>
-                <p>
-                  Result
-                </p>
-                </th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
 <th>
-                <p>
-                  Description
-                </p>
-                </th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">T</span><span class="special">()</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">T</span><span class="special">()</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <span class="bold"><strong>N/A</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Default Constructable
-                </p>
-                </td>
+                    <p>
+                      Default Constructable
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">L</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">L</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <span class="bold"><strong>N/A</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Instantiate a scoped lock bound to <code class="computeroutput"><span class="identifier">t</span></code>
-                </p>
-                </td>
+                    <p>
+                      Instantiate a scoped lock bound to <code class="computeroutput"><span class="identifier">t</span></code>
+                    </p>
+                  </td>
 </tr>
 </tbody>
 </table></div>
@@ -157,7 +157,7 @@
           </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/html/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -167,10 +167,10 @@
             </p></td></tr>
 </table></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="memcache__.design.handle.policies.serialization"></a><a class="link" href="handle.html#memcache__.design.handle.policies.serialization" title="Data Interchange Policy">
-          Data Interchange Policy</a>
+<a name="memcache__.design.handle.policies.serialization"></a><a class="link" href="handle.html#memcache__.design.handle.policies.serialization" title="Data Interchange Policy">Data
+          Interchange Policy</a>
 </h5></div></div></div>
 <p>
             A Data Interchange Policy (better description than serialization policy)
@@ -183,40 +183,40 @@
 <dl>
 <dt><span class="term">D</span></dt>
 <dd><p>
-                The Data Interchange Policy type
-              </p></dd>
+                  The Data Interchange Policy type
+                </p></dd>
 <dt><span class="term">D::O</span></dt>
 <dd><p>
-                The Output Archive type
-              </p></dd>
+                  The Output Archive type
+                </p></dd>
 <dt><span class="term">D::I</span></dt>
 <dd><p>
-                The Input Archive type
-              </p></dd>
+                  The Input Archive type
+                </p></dd>
 <dt><span class="term">D::E</span></dt>
 <dd><p>
-                The Archive Exception thrown on archive related errors
-              </p></dd>
+                  The Archive Exception thrown on archive related errors
+                </p></dd>
 <dt><span class="term">s</span></dt>
 <dd><p>
-                An Input Stream source buffer of bytes (<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">istream</span></code>)
-              </p></dd>
+                  An Input Stream source buffer of bytes (<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">istream</span></code>)
+                </p></dd>
 <dt><span class="term">d</span></dt>
 <dd><p>
-                An Output Stream destination buffer of bytes (<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>)
-              </p></dd>
+                  An Output Stream destination buffer of bytes (<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>)
+                </p></dd>
 <dt><span class="term">o</span></dt>
 <dd><p>
-                An instance of D::O
-              </p></dd>
+                  An instance of D::O
+                </p></dd>
 <dt><span class="term">i</span></dt>
 <dd><p>
-                An instance of D::I
-              </p></dd>
+                  An instance of D::I
+                </p></dd>
 <dt><span class="term">v</span></dt>
 <dd><p>
-                A Serializable object
-              </p></dd>
+                  A Serializable object
+                </p></dd>
 </dl>
 </div>
 <div class="table">
@@ -229,112 +229,112 @@
 </colgroup>
 <thead><tr>
 <th>
-                <p>
-                  Expression
-                </p>
-                </th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
 <th>
-                <p>
-                  Result
-                </p>
-                </th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
 <th>
-                <p>
-                  Description
-                </p>
-                </th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">D</span><span class="special">()</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">()</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <span class="bold"><strong>N/A</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Default Constructable
-                </p>
-                </td>
+                    <p>
+                      Default Constructable
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">O</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">O</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <span class="bold"><strong>N/A</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Nested Output Archive type should take an output stream as the
-                  sole parameter of the constructor.
-                </p>
-                </td>
+                    <p>
+                      Nested Output Archive type should take an output stream as
+                      the sole parameter of the constructor.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">I</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">I</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <span class="bold"><strong>N/A</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Nested Input Archive type should take an input stream as the sole
-                  parameter of the constructor.
-                </p>
-                </td>
+                    <p>
+                      Nested Input Archive type should take an input stream as the
+                      sole parameter of the constructor.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">o</span> <span class="special">&lt;&lt;</span>
-                  <span class="identifier">v</span><span class="special">;</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">o</span> <span class="special">&lt;&lt;</span>
+                      <span class="identifier">v</span><span class="special">;</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">O</span> <span class="special">&amp;</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">O</span> <span class="special">&amp;</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Push <code class="computeroutput"><span class="identifier">v</span></code> serialized
-                  into the Output Archive.
-                </p>
-                </td>
+                    <p>
+                      Push <code class="computeroutput"><span class="identifier">v</span></code> serialized
+                      into the Output Archive.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">i</span> <span class="special">&gt;&gt;</span>
-                  <span class="identifier">v</span><span class="special">;</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">i</span> <span class="special">&gt;&gt;</span>
+                      <span class="identifier">v</span><span class="special">;</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">I</span> <span class="special">&amp;</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">I</span> <span class="special">&amp;</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Deserialize the contents of <code class="computeroutput"><span class="identifier">i</span></code>
-                  into <code class="computeroutput"><span class="identifier">v</span></code>.
-                </p>
-                </td>
+                    <p>
+                      Deserialize the contents of <code class="computeroutput"><span class="identifier">i</span></code>
+                      into <code class="computeroutput"><span class="identifier">v</span></code>.
+                    </p>
+                  </td>
 </tr>
 </tbody>
 </table></div>
@@ -345,7 +345,7 @@
           </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/html/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -359,21 +359,21 @@
             There are three defined Data Interchange Policies in Memcache++. These
             are:
           </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">binary_interchange</span></code> (memcache/policies/binary_interchange.hpp)
-            </li>
-<li>
-<code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">text_interchange</span></code> (memcache/policies/text_interchange.hpp)
-            </li>
-<li>
-<code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">string_preserve</span></code> (memcache/policies/string_preserve.hpp)
-            </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">binary_interchange</span></code> (memcache/policies/binary_interchange.hpp)
+              </li>
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">text_interchange</span></code> (memcache/policies/text_interchange.hpp)
+              </li>
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">string_preserve</span></code> (memcache/policies/string_preserve.hpp)
+              </li>
 </ul></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="memcache__.design.handle.policies.hash"></a><a class="link" href="handle.html#memcache__.design.handle.policies.hash" title="Hash Policy"> Hash Policy</a>
+<a name="memcache__.design.handle.policies.hash"></a><a class="link" href="handle.html#memcache__.design.handle.policies.hash" title="Hash Policy">Hash Policy</a>
 </h5></div></div></div>
 <p>
             A Hash Policy type determines how the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>
@@ -384,21 +384,21 @@
 <dl>
 <dt><span class="term">H</span></dt>
 <dd><p>
-                The Hash Policy type
-              </p></dd>
+                  The Hash Policy type
+                </p></dd>
 <dt><span class="term">h</span></dt>
 <dd><p>
-                Instance of H
-              </p></dd>
+                  Instance of H
+                </p></dd>
 <dt><span class="term">k</span></dt>
 <dd><p>
-                A <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
-              </p></dd>
+                  A <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+                </p></dd>
 <dt><span class="term">s</span></dt>
 <dd><p>
-                A <code class="computeroutput"><span class="identifier">size_t</span></code> indicating
-                the number of servers
-              </p></dd>
+                  A <code class="computeroutput"><span class="identifier">size_t</span></code> indicating
+                  the number of servers
+                </p></dd>
 </dl>
 </div>
 <div class="table">
@@ -411,57 +411,57 @@
 </colgroup>
 <thead><tr>
 <th>
-                <p>
-                  Expression
-                </p>
-                </th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
 <th>
-                <p>
-                  Result
-                </p>
-                </th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
 <th>
-                <p>
-                  Description
-                </p>
-                </th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">H</span><span class="special">()</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">H</span><span class="special">()</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <span class="bold"><strong>N/A</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Default Constructable
-                </p>
-                </td>
+                    <p>
+                      Default Constructable
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">h</span><span class="special">.</span><span class="identifier">hash</span><span class="special">(</span><span class="identifier">k</span><span class="special">,</span>
-                  <span class="identifier">s</span><span class="special">)</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">h</span><span class="special">.</span><span class="identifier">hash</span><span class="special">(</span><span class="identifier">k</span><span class="special">,</span>
+                      <span class="identifier">s</span><span class="special">)</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">size_t</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">size_t</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Returns the hash computed offset given the key and the number of
-                  servers.
-                </p>
-                </td>
+                    <p>
+                      Returns the hash computed offset given the key and the number
+                      of servers.
+                    </p>
+                  </td>
 </tr>
 </tbody>
 </table></div>
@@ -483,7 +483,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../design.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../design.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../design.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../design.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
