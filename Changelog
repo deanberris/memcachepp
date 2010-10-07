@@ -1,5 +1,6 @@
 Release 0.12:
     * Adding support for cas and gets.
+    * Porting parser to use Boost.Spirit 2.4, in Boost 1.44.0
 
 Release 0.11:
     * Adding support for incr and decr.
