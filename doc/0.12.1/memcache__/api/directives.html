@@ -1,0 +1,691 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Directives</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Memcache++ 0.12.1">
+<link rel="up" href="../api.html" title="API Reference">
+<link rel="prev" href="classes.html" title="Classes">
+<link rel="next" href="../fluent.html" title="Fluent Interface">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="classes.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../api.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../fluent.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="memcache__.api.directives"></a><a class="link" href="directives.html" title="Directives">Directives</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.get">memcache::get</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.gets">memcache::gets</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.cas">memcache::cas</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.set">memcache::set</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.add">memcache::add</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.replace">memcache::replace</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.delete_">memcache::delete_</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.get_raw">memcache::raw_get</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.set_raw">memcache::raw_set</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.raw_append">memcache::raw_append</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.raw_prepend">memcache::raw_prepend</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.incr">memcache::incr</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.decr">memcache::decr</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.server">memcache::server</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.pool">memcache::pool</a></span></dt>
+<dt><span class="section"><a href="directives.html#memcache__.api.directives.connect">memcache::connect</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.get"></a><a class="link" href="directives.html#memcache__.api.directives.get" title="memcache::get">memcache::get</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> directive instructs the __memcache<span class="underline">hande</span>_ to perform a get operation using the
+          <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">get</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">);</span>
+</pre>
+<p>
+          At compile time, <code class="computeroutput"><span class="identifier">T</span></code> and
+          <code class="computeroutput"><span class="identifier">_T</span></code> don't have to be explicitly
+          stated because it can be deduced by the compiler. For example:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">a</span><span class="special">;</span>
+<span class="keyword">double</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">c</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="identifier">a</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="identifier">b</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">c</span><span class="special">);</span>
+</pre>
+<p>
+          The compiler will then be able to determine that <code class="computeroutput"><span class="identifier">T</span></code>
+          is a <code class="computeroutput"><span class="keyword">char</span><span class="special">[</span><span class="number">6</span><span class="special">]</span></code> while
+          <code class="computeroutput"><span class="identifier">a</span></code> is an <code class="computeroutput"><span class="keyword">int</span></code>,
+          <code class="computeroutput"><span class="identifier">b</span></code> is a double, and <code class="computeroutput"><span class="identifier">c</span></code> is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+          Each call to <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> above will return the correct specialization
+          of <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span></code> which is then applied to
+          the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> <code class="computeroutput"><span class="identifier">mc</span></code>.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.gets"></a><a class="link" href="directives.html#memcache__.api.directives.gets" title="memcache::gets">memcache::gets</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code> directive instructs the __memcache<span class="underline">hande</span>_ to perform a get operation using the
+          <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">gets</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="special">&amp;</span> <span class="identifier">cas_value</span><span class="special">);</span>
+</pre>
+<p>
+          At compile time, <code class="computeroutput"><span class="identifier">T</span></code> and
+          <code class="computeroutput"><span class="identifier">_T</span></code> don't have to be explicitly
+          stated because it can be deduced by the compiler. For example:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">a</span><span class="special">;</span>
+<span class="keyword">double</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">c</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">uin64_t</span> <span class="identifier">cas_value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">);</span>
+</pre>
+<p>
+          The compiler will then be able to determine that <code class="computeroutput"><span class="identifier">T</span></code>
+          is a <code class="computeroutput"><span class="keyword">char</span><span class="special">[</span><span class="number">6</span><span class="special">]</span></code> while
+          <code class="computeroutput"><span class="identifier">a</span></code> is an <code class="computeroutput"><span class="keyword">int</span></code>,
+          <code class="computeroutput"><span class="identifier">b</span></code> is a double, and <code class="computeroutput"><span class="identifier">c</span></code> is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+          Each call to <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code> above will return the correct specialization
+          of <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">get_directive</span></code> which is then applied to
+          the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> <code class="computeroutput"><span class="identifier">mc</span></code>.
+        </p>
+<p>
+          The <code class="computeroutput"><span class="identifier">cas_value</span></code> that is specified
+          here is useful if you intend to use the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">cas</span></code>
+          directive.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.cas"></a><a class="link" href="directives.html#memcache__.api.directives.cas" title="memcache::cas">memcache::cas</a>
+</h4></div></div></div>
+<p>
+          CAS stands for check and set and is meant to be used to make sure that
+          an update to a key is done only if the key's value has not been modified
+          since the last <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code>.
+          This directive uses the <code class="computeroutput"><span class="identifier">cas_value</span></code>
+          retrieved after performing a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span></code>.
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">cas_value</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">gets</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">);</span>
+<span class="comment">// ... do some work ...
+</span><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">cas</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="string">"new value"</span><span class="special">,</span> <span class="identifier">cas_value</span><span class="special">);</span>
+</pre>
+<p>
+          When a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">cas</span></code> fails to update the value, it will
+          throw the exception <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">key_not_stored</span></code>.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.set"></a><a class="link" href="directives.html#memcache__.api.directives.set" title="memcache::set">memcache::set</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform a set operation using
+          the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to set the data in, based
+          on the hash on the provided key.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">set_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">set</span><span class="special">(</span><span class="identifier">_T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">set_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">set_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">set_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+</pre>
+<p>
+          There are four overloads to the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>
+          directive, which corresponds to different ways of setting the expiration
+          of the key being set.
+        </p>
+<p>
+          The first version defaults the timeout to 0, which means the key set is
+          not set to expire. When timeout is set though, this is used to determine
+          when the key is expired. When there is a re-hash of the key to a different
+          server -- which happens when the server it's intended for, for some reason
+          cannot accomodate the set request -- the same timeout is used.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="number">100</span><span class="special">);</span>
+</pre>
+<p>
+          The second and third version allows for defining different expirations
+          when the set is successful (value denoted by <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span></code>)
+          and when the key is re-hashed to a different server (value denoted by
+          <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span></code>).
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="keyword">double</span><span class="special">(</span><span class="number">2.5</span><span class="special">),</span> <span class="identifier">expire</span><span class="special">(</span><span class="number">300</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">60</span><span class="special">))</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">100</span><span class="special">));</span>
+</pre>
+<p>
+          The fourth version is equivalent to setting the expiration to 0, while
+          setting the failover expiration to what <code class="computeroutput"><span class="identifier">failover_expiration</span></code>
+          is set to when a re-hash of a key occurs.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.add"></a><a class="link" href="directives.html#memcache__.api.directives.add" title="memcache::add">memcache::add</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform an add operation using
+          the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to set the data in, based
+          on the hash on the provided key.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">add_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">add</span><span class="special">(</span><span class="identifier">_T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">add_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">add</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">add_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">add</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">add_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">add</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+</pre>
+<p>
+          There are four overloads to the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span></code>
+          directive, which corresponds to different ways of setting the expiration
+          of the key being added.
+        </p>
+<p>
+          The first version defaults the timeout to 0, which means the key set is
+          not set to expire. When timeout is set though, this is used to determine
+          when the key is expired. When there is a re-hash of the key to a different
+          server -- which happens when the server it's intended for, for some reason
+          cannot accomodate the set request -- the same timeout is used.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="number">100</span><span class="special">);</span>
+</pre>
+<p>
+          The second and third version allows for defining different expirations
+          when the set is successful (value denoted by <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span></code>)
+          and when the key is re-hashed to a different server (value denoted by
+          <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span></code>).
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="keyword">double</span><span class="special">(</span><span class="number">2.5</span><span class="special">),</span> <span class="identifier">expire</span><span class="special">(</span><span class="number">300</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">60</span><span class="special">))</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">100</span><span class="special">));</span>
+</pre>
+<p>
+          The fourth version is equivalent to setting the expiration to 0, while
+          setting the failover expiration to what <code class="computeroutput"><span class="identifier">failover_expiration</span></code>
+          is set to when a re-hash of a key occurs.
+        </p>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span></code> directive will throw a <code class="computeroutput"><span class="identifier">key_not_stored</span></code> exception when the key
+          provided already exists in the memcache server.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.replace"></a><a class="link" href="directives.html#memcache__.api.directives.replace" title="memcache::replace">memcache::replace</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform a replace operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to set the data in, based
+          on the hash on the provided key.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">replace_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">replace</span><span class="special">(</span><span class="identifier">_T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">replace_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">replace</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">replace_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">replace</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">replace_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">replace</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">_T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+</pre>
+<p>
+          There are four overloads to the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span></code>
+          directive, which corresponds to different ways of setting the expiration
+          of the key being added.
+        </p>
+<p>
+          The first version defaults the timeout to 0, which means the key set is
+          not set to expire. When timeout is set though, this is used to determine
+          when the key is expired. When there is a re-hash of the key to a different
+          server -- which happens when the server it's intended for, for some reason
+          cannot accomodate the set request -- the same timeout is used.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">,</span> <span class="number">100</span><span class="special">);</span>
+</pre>
+<p>
+          The second and third version allows for defining different expirations
+          when the set is successful (value denoted by <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">expire_type</span></code>)
+          and when the key is re-hashed to a different server (value denoted by
+          <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">failover_expire_type</span></code>).
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="keyword">double</span><span class="special">(</span><span class="number">2.5</span><span class="special">),</span> <span class="identifier">expire</span><span class="special">(</span><span class="number">300</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">60</span><span class="special">))</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span><span class="special">(</span><span class="string">"key_c"</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="string">"Hello, World!"</span><span class="special">),</span> <span class="identifier">failover_expire</span><span class="special">(</span><span class="number">100</span><span class="special">));</span>
+</pre>
+<p>
+          The fourth version is equivalent to setting the expiration to 0, while
+          setting the failover expiration to what <code class="computeroutput"><span class="identifier">failover_expiration</span></code>
+          is set to when a re-hash of a key occurs.
+        </p>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span></code> directive will throw a <code class="computeroutput"><span class="identifier">key_not_stored</span></code> exception when the key
+          provided doesn't exist in the memcache server.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.delete_"></a><a class="link" href="directives.html#memcache__.api.directives.delete_" title="memcache::delete_">memcache::delete_</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to delete data from the appropriate
+          memcache server assosicated to a given key. The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span></code>
+          directive uses the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s
+          hashing implementation to determine which memcache server the key can be
+          located from.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">delete_directive</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">delete_</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">);</span>
+</pre>
+<p>
+          They type of <code class="computeroutput"><span class="identifier">key</span></code> is unspecified,
+          but the requirement is that it is convertible to an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+          An example usage of the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span></code>
+          directive is shown below, which deletes the key and data associated with
+          "key_a" from the appropriate server.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span><span class="special">(</span><span class="string">"key_a"</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.get_raw"></a><a class="link" href="directives.html#memcache__.api.directives.get_raw" title="memcache::raw_get">memcache::raw_get</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_get</span></code> directive instructs the __memcache<span class="underline">hande</span>_ to perform a get operation using the
+          <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key. The difference between a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> and <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_get</span></code>
+          is that <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_get</span></code> does not perform a deserialization
+          to a holder -- which is required to be an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+        </p>
+<p>
+          Whatever the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> gets in the form of a string from
+          the memcache server the <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_get_directive</span><span class="special">&lt;&gt;</span></code> will put in the provided <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> holder.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_get_directive</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">raw_get</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">);</span>
+</pre>
+<p>
+          The following example gets the raw data from the correct memcache server,
+          and puts the data into an std::string holder:
+        </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">raw_data</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_get</span><span class="special">(</span><span class="string">"key_b"</span><span class="special">,</span> <span class="identifier">raw_data</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.set_raw"></a><a class="link" href="directives.html#memcache__.api.directives.set_raw" title="memcache::raw_set">memcache::raw_set</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform a set operation using
+          the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key. The difference between a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code> and <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code>
+          is that <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> does not perform a serialization
+          of a given value, which should be an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+          or of a type convertible to an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_set_directive</span><span class="special">&lt;&gt;</span> <span class="identifier">raw_set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span><span class="special">=</span><span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+</pre>
+<p>
+          The following examples sets the raw string "hello, world!" for
+          the key "hello_world" without using any extra serialization.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">,</span> <span class="string">"hello, world!"</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.raw_append"></a><a class="link" href="directives.html#memcache__.api.directives.raw_append" title="memcache::raw_append">memcache::raw_append</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform an append operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span></code>
+          does not perform a serialization of a given value, which should be an
+          <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> or of a type convertible to an
+          <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_append_directive</span><span class="special">&lt;&gt;</span> <span class="identifier">raw_append</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span><span class="special">=</span><span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+</pre>
+<p>
+          The following examples appends the raw string "hello, world!"
+          for the key "hello_world" without using any extra serialization.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">,</span> <span class="string">"hello, world!"</span><span class="special">);</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Only use <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span></code> on data already set as raw
+            in the memcache server. This means if you've performed a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> on a key, it should be safe
+            to perform a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span></code>
+            on it. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span></code> may render data set through
+            <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>, <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span></code>,
+            or <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span></code> to be un-usable with <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> due to serialization errors.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            The append operation is only supported from memcached version 1.2.5 and
+            upwards.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.raw_prepend"></a><a class="link" href="directives.html#memcache__.api.directives.raw_prepend" title="memcache::raw_prepend">memcache::raw_prepend</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span></code> directive instructs the
+          <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform a prepend operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to get the data from,
+          based on the hash on the provided key. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span></code>
+          does not perform a serialization of a given value, which should be an
+          <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> or of a type convertible to an
+          <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">raw_prepend_directive</span><span class="special">&lt;&gt;</span> <span class="identifier">raw_prepend</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_key</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span> <span class="identifier">timeout</span><span class="special">=</span><span class="number">0</span><span class="special">,</span> <span class="identifier">uint16_t</span> <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+</pre>
+<p>
+          The following examples prepends the raw string "hello, world!"
+          for the key "hello_world" without using any extra serialization.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span><span class="special">(</span><span class="string">"hello_world"</span><span class="special">,</span> <span class="string">"hello, world!"</span><span class="special">);</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Only use <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span></code> on data already set as
+            raw in the memcache server. This means if you've performed a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> on a key, it should be safe
+            to perform a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span></code>
+            on it. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span></code> may render data set through
+            <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>, <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span></code>,
+            or <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span></code> to be un-usable with <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> due to serialization errors.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            The prepend operation is only supported from memcached version 1.2.5
+            and upwards.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.incr"></a><a class="link" href="directives.html#memcache__.api.directives.incr" title="memcache::incr">memcache::incr</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform an increment operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to locate the data from,
+          based on the hash on the provided key. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span></code>
+          will increment the value associated to the key by a certain given value
+          (defaults to 1).
+        </p>
+<p>
+          The following example shows how to increment a value stored at key 'key'
+          by 10:
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">new_value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="number">10u</span><span class="special">);</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Remember, memcached will treat any data other than a string representation
+            of a 64-bit unsigned integer as the value '0'. So if you intend to make
+            the value of a key "incrementable", set the data using <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> instead of <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>.
+            This is because <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>
+            will serialize the data accordingly while <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code>
+            will not.
+          </p></td></tr>
+</table></div>
+<p>
+          If a key is not found from any of the servers, then the operation throws
+          a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">key_not_found</span></code>.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.decr"></a><a class="link" href="directives.html#memcache__.api.directives.decr" title="memcache::decr">memcache::decr</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to perform an decrement operation
+          using the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>'s hashing policy to determine
+          which server in the defined collection of servers to locate the data from,
+          based on the hash on the provided key. <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span></code>
+          will decrement the value associated to the key by a certain given value
+          (defaults to 1).
+        </p>
+<p>
+          The following example shows how to decrement a value stored at key 'key'
+          by 10:
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">new_value</span><span class="special">;</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="number">10u</span><span class="special">);</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Remember, memcached will treat any data other than a string representation
+            of a 64-bit unsigned integer as the value '0'. So if you intend to make
+            the value of a key "decrementable", set the data using <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code> instead of <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>.
+            This is because <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code>
+            will serialize the data accordingly while <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span></code>
+            will not.
+          </p></td></tr>
+</table></div>
+<p>
+          If a key is not found from any of the servers, then the operation throws
+          a <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">key_not_found</span></code>.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.server"></a><a class="link" href="directives.html#memcache__.api.directives.server" title="memcache::server">memcache::server</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span></code> directive adds a given server
+          host name and port as a defined server available to the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>.
+          In the default implementation of the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>,
+          a concatenation of the hostname and port are used as the identifier for
+          the key for an internal <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">server_directive</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">server</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_name</span><span class="special">,</span> <span class="identifier">_T</span> <span class="identifier">_port</span><span class="special">);</span>
+</pre>
+<p>
+          The condition for the type of <code class="computeroutput"><span class="identifier">_port</span></code>
+          is that it's of an integral type; <code class="computeroutput"><span class="identifier">_name</span></code>
+          should be convertible to an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+        </p>
+<p>
+          Given the following example, the two servers 'localhost:11211' and 'localhost:11212'
+          are given as two servers to which the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>
+          will have access to.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11211</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11212</span><span class="special">);</span>
+</pre>
+<p>
+          Using the lexicographical sorting of the aggregate names, given server
+          offset 0 will map to 'localhost:11211', while server offset 1 will map
+          to 'localhost:11212'.
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+            The consequence of this design is that servers can only be defined once.
+            Even if a server is added multiple times into the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>,
+            only one identifier is held regarding that server. This is the default
+            implementation of the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>.
+          </p>
+<p>
+            This may change in the future, though there have not yet been plans to
+            implement any different strategies.
+          </p>
+</td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.pool"></a><a class="link" href="directives.html#memcache__.api.directives.pool" title="memcache::pool">memcache::pool</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span></code> directive adds a set of servers
+          to act as a redundant collection. The implementation of the get, set, and
+          delete operations change a bit when you use pools instead of just single
+          servers. The pool acts like a single server addressable via an offset.
+        </p>
+<p>
+          Here's how the implementations change depending on the use of the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span></code>.
+        </p>
+<p>
+          For <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span></code> operations, the first in the set
+          of servers is queried for the key and for some reason a problem is encountered
+          (connection lost, key not found, etc.) then the remaining servers are tried
+          in succession until the key is retrieved. If the key cannot be retrieved
+          from any of the servers, an error is thrown.
+        </p>
+<p>
+          For <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span></code> operations, the key is set on all
+          the servers part of the pool.
+        </p>
+<p>
+          For <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">delete_</span></code> operations, the key is deleted
+          on all the servers part of the pool.
+        </p>
+<pre class="programlisting"><span class="identifier">deatil</span><span class="special">::</span><span class="identifier">pool_directive</span><span class="special">&lt;</span><span class="identifier">server_pool</span><span class="special">&gt;</span>
+<span class="identifier">pool</span><span class="special">(</span><span class="identifier">server_pool</span> <span class="special">&amp;</span> <span class="identifier">pool_</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">detail</span><span class="special">::</span><span class="identifier">pool_directive</span><span class="special">&lt;</span><span class="identifier">_T</span><span class="special">&gt;</span>
+<span class="identifier">pool</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">_name</span><span class="special">,</span> <span class="identifier">_T</span> <span class="identifier">servers</span><span class="special">);</span>
+</pre>
+<p>
+          The first version supports use of the <code class="computeroutput"><span class="identifier">server_pool</span></code>
+          type:
+        </p>
+<pre class="programlisting"><span class="identifier">server_pool</span> <span class="identifier">pool1</span><span class="special">(</span><span class="string">"pool1"</span><span class="special">);</span>
+<span class="identifier">pool1</span><span class="special">.</span><span class="identifier">add_server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11211</span><span class="special">);</span>
+<span class="identifier">pool1</span><span class="special">.</span><span class="identifier">add_server</span><span class="special">(</span><span class="string">"localhost"</span><span class="special">,</span> <span class="number">11212</span><span class="special">);</span>
+<span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span><span class="special">(</span><span class="identifier">pool1</span><span class="special">);</span>
+</pre>
+<p>
+          The second version supports the tuple interface, which can be used in the
+          case of statically sized pools:
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">pool</span><span class="special">(</span>
+        <span class="string">"pool1"</span><span class="special">,</span> 
+        <span class="identifier">make_tuple</span><span class="special">(</span><span class="string">"localhost:11211"</span><span class="special">,</span> <span class="string">"localhost:11212"</span><span class="special">)</span>
+        <span class="special">);</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.directives.connect"></a><a class="link" href="directives.html#memcache__.api.directives.connect" title="memcache::connect">memcache::connect</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">connect</span></code> directive instructs the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> to connect to all defined servers
+          which have been marked as disconnected.
+        </p>
+<pre class="programlisting"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span> <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">connect</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="classes.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../api.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../fluent.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

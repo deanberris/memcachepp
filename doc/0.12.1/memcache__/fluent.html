@@ -1,0 +1,352 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Fluent Interface</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Memcache++ 0.12.1">
+<link rel="up" href="../index.html" title="Memcache++ 0.12.1">
+<link rel="prev" href="api/directives.html" title="Directives">
+<link rel="next" href="references.html" title="References">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../images/memcachepp.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="api/directives.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="references.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="memcache__.fluent"></a><a class="link" href="fluent.html" title="Fluent Interface">Fluent Interface</a>
+</h2></div></div></div>
+<p>
+      There is an alternative interface provided for using the library. This section
+      is dedicated to covering the parallels between the fluent interface and the
+      normal directive-based interface. Each construct is presented as a side-by-side
+      comparison at least for the fluent interface supported functions.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        To use the fluent interface, you include the <code class="computeroutput"><span class="identifier">memcachepp</span><span class="special">/</span><span class="identifier">memcache</span><span class="special">/</span><span class="identifier">fluent</span><span class="special">.</span><span class="identifier">hpp</span></code> header,
+        and then issue the <code class="computeroutput"><span class="keyword">using</span> <span class="keyword">namespace</span>
+        <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">fluent</span><span class="special">;</span></code>
+        directive in the scope you want to be able to use the fluent interface.
+      </p></td></tr>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Directives
+              </p>
+            </th>
+<th>
+              <p>
+                Fluent
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">set</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">value</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">=</span> <span class="identifier">value</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Sets the value of the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">value</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">wrap</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span>
+                <span class="special">=</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Retrieve the value set for the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_set</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="string">"value"</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">%=</span> <span class="string">"value"</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Set the raw value of the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_get</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">container</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">wrap</span><span class="special">(</span><span class="identifier">container</span><span class="special">)</span>
+                <span class="special">=</span> <span class="identifier">raw</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Retrieve the raw value of the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">replace</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">value</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">^=</span> <span class="identifier">value</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the value associated with the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">add</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">value</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">/=</span> <span class="identifier">value</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Add the value associated with the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_add</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="string">"value"</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">*=</span> <span class="string">"value"</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Add the raw "value" associated with the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_append</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="string">"value"</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">&gt;&gt;=</span> <span class="string">"value"</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Append the raw "value" to the raw value associated with
+                the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">raw_prepend</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="string">"value"</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">&lt;&lt;=</span> <span class="string">"value"</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Prepend the raw "value" to the raw value associated with
+                the given key.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">holder</span><span class="special">,</span>
+                <span class="number">1</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+                <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)++;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Increment the value associated with key and then yield the value
+                to holder.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">incr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">holder</span><span class="special">,</span>
+                <span class="number">10</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+                <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">+=</span> <span class="number">10</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Increment the value associated with key by 10 and then yield the
+                value to holder.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">holder</span><span class="special">,</span>
+                <span class="number">1</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+                <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)--;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Decrement the value associated with key and then yield the value
+                to holder.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">mc</span> <span class="special">&lt;&lt;</span>
+                <span class="identifier">memcache</span><span class="special">::</span><span class="identifier">decr</span><span class="special">(</span><span class="string">"key"</span><span class="special">,</span>
+                <span class="identifier">holder</span><span class="special">,</span>
+                <span class="number">10</span><span class="special">);</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">holder</span> <span class="special">=</span>
+                <span class="identifier">key</span><span class="special">(</span><span class="identifier">mc</span><span class="special">,</span> <span class="string">"key"</span><span class="special">)</span>
+                <span class="special">-=</span> <span class="number">10</span><span class="special">;</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Decrement the value associated with key by 10 and then yield the
+                value to holder.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="api/directives.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="references.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

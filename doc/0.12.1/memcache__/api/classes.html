@@ -1,0 +1,754 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Classes</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Memcache++ 0.12.1">
+<link rel="up" href="../api.html" title="API Reference">
+<link rel="prev" href="../api.html" title="API Reference">
+<link rel="next" href="directives.html" title="Directives">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../api.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../api.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="memcache__.api.classes"></a><a class="link" href="classes.html" title="Classes">Classes</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="classes.html#memcache__.api.classes.memcache_handle">memcache::handle</a></span></dt></dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.api.classes.memcache_handle"></a><a class="link" href="classes.html#memcache__.api.classes.memcache_handle" title="memcache::handle">memcache::handle</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> is the center of the Memcache++
+          Client library. All the memcache related functionality is implemented in
+          this class.
+        </p>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> implementation supports the following
+          features:
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              Server Pools -- define a group of servers to act as redundant pools,
+              where set and delete operations are mirrored to all members of the
+              pool; get operations happen on only the first member that responds,
+              other members only get queried when the first one doesn't respond appropriately.
+            </li>
+<li class="listitem">
+              Persistent Connections -- instead of making many multiple connections,
+              persistent connections are kept to minimize the overhead of creating
+              new connections to the servers
+            </li>
+<li class="listitem">
+              Thread-Safe Operations -- in multi-threaded (<code class="computeroutput"><span class="identifier">_REENTRANT</span></code>)
+              mode, all methods requiring access to persistent connections are atomic.
+            </li>
+</ul></div>
+<p>
+          Below is a detailed API guide to the class:
+        </p>
+<div class="table">
+<a name="memcache__.api.classes.memcache_handle.nested_types"></a><p class="title"><b>Table&#160;6.&#160;Nested Types</b></p>
+<div class="table-contents"><table class="table" summary="Nested Types">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">connection_ptr</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Connection pointer type.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">server_info</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Server information type.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">pool_info</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pool information type.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">server_container</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Server container type.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">pool_container</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pool container type.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="memcache__.api.classes.memcache_handle.member_methods"></a><p class="title"><b>Table&#160;7.&#160;Member methods</b></p>
+<div class="table-contents"><table class="table" summary="Member methods">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">basic_handle</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="bold"><strong>N/A</strong></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Default Constructor
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">add_pool</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">pool_name</span><span class="special">,</span> <span class="identifier">pool_info</span>
+                    <span class="identifier">p_info</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Add pool to the handle.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">add_server</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">server_name</span><span class="special">,</span> <span class="identifier">server_info</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">s_info</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Add server to the handle.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">connect</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Connect to defined memcache servers.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">version</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Returns the version string of the memcache server identified
+                    by <code class="computeroutput"><span class="identifier">offset</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">delete_</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">delay</span>
+                    <span class="special">=</span> <span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Delete the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    from the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    set delay to <code class="computeroutput"><span class="identifier">delay</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">size_t</span>
+                    <span class="identifier">offset</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span>
+                    <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Get the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    from the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>
+                    deserialized into <code class="computeroutput"><span class="identifier">holder</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">gets</span><span class="special">(</span><span class="identifier">size_t</span>
+                    <span class="identifier">offset</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span>
+                    <span class="special">&amp;</span> <span class="identifier">holder</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span>
+                    <span class="special">&amp;</span> <span class="identifier">cas_value</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Get the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    from the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>
+                    deserialized into <code class="computeroutput"><span class="identifier">holder</span></code>
+                    and the server-held <code class="computeroutput"><span class="identifier">cas_value</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">get_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span>
+                    <span class="identifier">holder</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Get the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    from the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>
+                    and stored as a string into <code class="computeroutput"><span class="identifier">holder</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">is_connected</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">server_name</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">bool</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Returns whether a connection to the server identified with host
+                    name <code class="computeroutput"><span class="identifier">server_name</span></code>
+                    is active.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">pool_count</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    size_t
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Returns the number of pools defined in the handle.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">server_count</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    size_t
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Returns the number of servers defined in the handle.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">set</span><span class="special">(</span><span class="identifier">size_t</span>
+                    <span class="identifier">offset</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">value</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Sets the <code class="computeroutput"><span class="identifier">key</span></code>
+                    to <code class="computeroutput"><span class="identifier">value</span></code> in the
+                    memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiraton</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">check_and_set</span><span class="special">(</span><span class="identifier">size_t</span>
+                    <span class="identifier">offset</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">value</span><span class="special">,</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">cas_value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">expiration</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Sets the <code class="computeroutput"><span class="identifier">key</span></code>
+                    to <code class="computeroutput"><span class="identifier">value</span></code> in the
+                    memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiraton</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>,
+                    but only if the server has the same <code class="computeroutput"><span class="identifier">cas_value</span></code>
+                    for <code class="computeroutput"><span class="identifier">key</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">set_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">expiration</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Sets the <code class="computeroutput"><span class="identifier">key</span></code>
+                    to <code class="computeroutput"><span class="identifier">value</span></code> in the
+                    memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiration</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+                    The value set here is set 'as is' without serialization.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">size_t</span>
+                    <span class="identifier">offset</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">value</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Adds the <code class="computeroutput"><span class="identifier">key</span></code>
+                    associated to <code class="computeroutput"><span class="identifier">value</span></code>
+                    in the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiration</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+                  </p>
+                  <p>
+                    Will throw <code class="computeroutput"><span class="identifier">key_not_stored</span></code>
+                    if <code class="computeroutput"><span class="identifier">key</span></code> is already
+                    present in the memcache server.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">add_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">expiration</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Adds the <code class="computeroutput"><span class="identifier">key</span></code>
+                    to <code class="computeroutput"><span class="identifier">value</span></code> in the
+                    memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiration</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+                    The value set here is set 'as is' without serialization.
+                  </p>
+                  <p>
+                    Will throw <code class="computeroutput"><span class="identifier">key_not_stored</span></code>
+                    if <code class="computeroutput"><span class="identifier">key</span></code> is already
+                    present in the memcache server.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">replace</span><span class="special">(</span><span class="identifier">size_t</span>
+                    <span class="identifier">offset</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">key</span><span class="special">,</span> <span class="identifier">T</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">value</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">expiration</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Replaces the <code class="computeroutput"><span class="identifier">key</span></code>
+                    associated to <code class="computeroutput"><span class="identifier">value</span></code>
+                    in the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiration</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+                  </p>
+                  <p>
+                    Will throw <code class="computeroutput"><span class="identifier">key_not_stored</span></code>
+                    if <code class="computeroutput"><span class="identifier">key</span></code> is not
+                    present in the memcache server.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">replace_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">expiration</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Replaces the <code class="computeroutput"><span class="identifier">key</span></code>
+                    to <code class="computeroutput"><span class="identifier">value</span></code> in the
+                    memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>,
+                    on failover set the expiration to <code class="computeroutput"><span class="identifier">failover_expiration</span></code>,
+                    while when successful set the expiration to <code class="computeroutput"><span class="identifier">expiration</span></code>.
+                    The value set here is set 'as is' without serialization.
+                  </p>
+                  <p>
+                    Will throw <code class="computeroutput"><span class="identifier">key_not_stored</span></code>
+                    if <code class="computeroutput"><span class="identifier">key</span></code> is not
+                    present in the memcache server.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">append_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">expiration</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Appends <code class="computeroutput"><span class="identifier">value</span></code>
+                    to the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    in the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>.
+                    <code class="computeroutput"><span class="identifier">value</span></code> is appended
+                    'as is' without serialization.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">prepend_raw</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="keyword">const</span>
+                    <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">time_t</span>
+                    <span class="identifier">expiration</span><span class="special">,</span>
+                    <span class="identifier">time_t</span> <span class="identifier">failover_expiration</span><span class="special">,</span> <span class="identifier">uint16_t</span>
+                    <span class="identifier">flags</span><span class="special">=</span><span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Prepends <code class="computeroutput"><span class="identifier">value</span></code>
+                    to the data associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    in the memcache server identified by <code class="computeroutput"><span class="identifier">offset</span></code>.
+                    <code class="computeroutput"><span class="identifier">value</span></code> is prepended
+                    'as is' without serialization.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">incr</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="special">&amp;</span>
+                    <span class="identifier">holder</span><span class="special">,</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">value</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Increments the value associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    by <code class="computeroutput"><span class="identifier">value</span></code>. The
+                    new value is then stored in <code class="computeroutput"><span class="identifier">holder</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">decr</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">offset</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+                    <span class="keyword">const</span> <span class="special">&amp;</span>
+                    <span class="identifier">key</span><span class="special">,</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="special">&amp;</span>
+                    <span class="identifier">holder</span><span class="special">,</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span> <span class="identifier">value</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Decrements the value associated to <code class="computeroutput"><span class="identifier">key</span></code>
+                    by <code class="computeroutput"><span class="identifier">value</span></code>. The
+                    new value is then stored in <code class="computeroutput"><span class="identifier">holder</span></code>.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../api.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../api.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Overview</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Memcache++ 0.12.1">
+<link rel="up" href="../index.html" title="Memcache++ 0.12.1">
+<link rel="prev" href="intro.html" title="Introduction">
+<link rel="next" href="quickstart.html" title="Quick Start">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../images/memcachepp.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="intro.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="quickstart.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="memcache__.overview"></a><a class="link" href="overview.html" title="Overview">Overview</a>
+</h2></div></div></div>
+<p>
+      The Memcache++ client is a header-only library, meaning all the implementations
+      of the memcache client protocol are compiled into the programs that use it.
+      There are no special build instructions for installing the memcache client
+      -- but the following Boost libraries have to be present when building and linking
+      the application that uses the client:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          <a href="http://asio.sourceforge.net/" target="_top">Boost.Asio</a>
+        </li>
+<li class="listitem">
+          <a href="http://boost.org/doc/html/date_time.html" target="_top">Boost.Date_Time</a>
+        </li>
+<li class="listitem">
+          Boost.Fusion
+        </li>
+<li class="listitem">
+          <a href="http://boost.org/libs/regex/doc/index.html" target="_top">Boost.Regex</a>
+        </li>
+<li class="listitem">
+          <a href="http://boost.org/libs/serialization/doc/index.html" target="_top">Boost.Serialization</a>
+        </li>
+<li class="listitem">
+          <a href="http://spirit.sourceforge.net/" target="_top">Boost.Spirit</a>
+        </li>
+<li class="listitem">
+          Boost.System
+        </li>
+<li class="listitem">
+          <a href="http://boost.org/doc/html/thread.html" target="_top">Boost.Thread</a>
+        </li>
+</ul></div>
+<p>
+      The implementation has been tested with GCC 4.1.2, GCC 4.3.3 on the Linux platform
+      (32-bit and 64-bit) and with Microsoft (R) Visual C++ (TM) 2008 on the Windows
+      (32-bit and 64-bit) platform.
+    </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        To use the library in thread-safe mode, the <code class="computeroutput"><span class="identifier">_REENTRANT</span></code>
+        macro should be defined. The default threading policy when the reentrant
+        macro is defined uses <a href="http://boost.org/doc/html/thread.html" target="_top">Boost.Thread</a>.
+      </p></td></tr>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="intro.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="quickstart.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

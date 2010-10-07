@@ -1,0 +1,610 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Handle</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Memcache++ 0.12.1">
+<link rel="up" href="../concepts.html" title="Concepts">
+<link rel="prev" href="../concepts.html" title="Concepts">
+<link rel="next" href="directive.html" title="Directive">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../concepts.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directive.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="memcache__.concepts.handle"></a><a class="link" href="handle.html" title="Handle">Handle</a>
+</h3></div></div></div>
+<p>
+        In Memcache++, a type models the Handle concept when it fulfills the following
+        requirements:
+      </p>
+<div class="variablelist">
+<p class="title"><b>Requirements</b></p>
+<dl>
+<dt><span class="term">NonCopyable</span></dt>
+<dd><p>
+              It is not possible to construct copies of an instance of the type
+            </p></dd>
+<dt><span class="term">DefaultConstructable</span></dt>
+<dd><p>
+              The default constructor for the type is defined
+            </p></dd>
+</dl>
+</div>
+<p>
+        Further, a type models the Handle concept when the following constructs are
+        supported:
+      </p>
+<div class="variablelist">
+<p class="title"><b>Legend</b></p>
+<dl>
+<dt><span class="term">H</span></dt>
+<dd><p>
+              The handle type.
+            </p></dd>
+<dt><span class="term">k</span></dt>
+<dd><p>
+              The key -- a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+            </p></dd>
+<dt><span class="term">D</span></dt>
+<dd><p>
+              The data type.
+            </p></dd>
+<dt><span class="term">d</span></dt>
+<dd><p>
+              Instance of D
+            </p></dd>
+<dt><span class="term">mc</span></dt>
+<dd><p>
+              An instance of H.
+            </p></dd>
+<dt><span class="term">o</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">size_t</span></code> offset value.
+            </p></dd>
+<dt><span class="term">t</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">time_t</span></code> value.
+            </p></dd>
+<dt><span class="term">e</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">time_t</span></code> value representing
+              the expiration in seconds or an absolute time.
+            </p></dd>
+<dt><span class="term">x</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">time_t</span></code> value representing
+              the failover expiration in seconds of an absolute time.
+            </p></dd>
+<dt><span class="term">f</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">uint16_t</span></code> flag value
+            </p></dd>
+<dt><span class="term">s</span></dt>
+<dd><p>
+              The server host name -- a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+            </p></dd>
+<dt><span class="term">i</span></dt>
+<dd><p>
+              Server information -- a <code class="computeroutput"><span class="identifier">H</span><span class="special">::</span><span class="identifier">server_info</span></code>
+            </p></dd>
+<dt><span class="term">p</span></dt>
+<dd><p>
+              The pool name -- a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+            </p></dd>
+<dt><span class="term">l</span></dt>
+<dd><p>
+              Pool information -- a <code class="computeroutput"><span class="identifier">H</span><span class="special">::</span><span class="identifier">pool_info</span></code>
+            </p></dd>
+<dt><span class="term">r</span></dt>
+<dd><p>
+              The raw <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> data.
+            </p></dd>
+<dt><span class="term">c</span></dt>
+<dd><p>
+              A reference to a container <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>.
+            </p></dd>
+<dt><span class="term">v</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span></code> rvalue
+            </p></dd>
+<dt><span class="term">h</span></dt>
+<dd><p>
+              A <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint64_t</span></code> lvalue
+            </p></dd>
+</dl>
+</div>
+<div class="table">
+<a name="memcache__.concepts.handle.valid_constructs"></a><p class="title"><b>Table&#160;1.&#160;Valid Constructs</b></p>
+<div class="table-contents"><table class="table" summary="Valid Constructs">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Result
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">add_server</span><span class="special">(</span><span class="identifier">s</span><span class="special">,</span>
+                  <span class="identifier">i</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Adds the server identified by <code class="computeroutput"><span class="identifier">s</span></code>
+                  with the information contained by <code class="computeroutput"><span class="identifier">i</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">add_pool</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span>
+                  <span class="identifier">l</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Adds a server pool identified by <code class="computeroutput"><span class="identifier">p</span></code>
+                  with the information contained by <code class="computeroutput"><span class="identifier">l</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">connect</span><span class="special">()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Connects to all defined servers.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">version</span><span class="special">(</span><span class="identifier">o</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">string</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns the version string at server offset <code class="computeroutput"><span class="identifier">o</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">delete_</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">t</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Deletes data associated to key <code class="computeroutput"><span class="identifier">k</span></code>
+                  at server offset <code class="computeroutput"><span class="identifier">o</span></code>
+                  optionally scheduled at time <code class="computeroutput"><span class="identifier">t</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">d</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Retrieves data from the server associated to key <code class="computeroutput"><span class="identifier">k</span></code> deserialized into <code class="computeroutput"><span class="identifier">d</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">get_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">c</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Retrieves data from the server associated to key <code class="computeroutput"><span class="identifier">k</span></code> and stored as an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> into <code class="computeroutput"><span class="identifier">c</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">is_connected</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">bool</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns true if the memcache handle is still connected to server
+                  host <code class="computeroutput"><span class="identifier">s</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">pool_count</span><span class="special">()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">size_t</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns the number of pools defined in the Handle.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">server_count</span><span class="special">()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">size_t</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns the number of servers defined for the Handle.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">d</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Associates the serialized form of <code class="computeroutput"><span class="identifier">d</span></code>
+                  to key <code class="computeroutput"><span class="identifier">k</span></code> from the
+                  server offset at <code class="computeroutput"><span class="identifier">o</span></code>,
+                  optionally setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+                  and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+                  with flag <code class="computeroutput"><span class="identifier">f</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">set_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">r</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Associates the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+                  to key <code class="computeroutput"><span class="identifier">k</span></code> from the
+                  server offset at <code class="computeroutput"><span class="identifier">o</span></code>,
+                  optionally setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+                  and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+                  with flag <code class="computeroutput"><span class="identifier">f</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">d</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Associates the serialized form of <code class="computeroutput"><span class="identifier">d</span></code>
+                  to key <code class="computeroutput"><span class="identifier">k</span></code> from the
+                  server offset at <code class="computeroutput"><span class="identifier">o</span></code>,
+                  optionally setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+                  and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+                  with flag <code class="computeroutput"><span class="identifier">f</span></code>. If
+                  the server already contains the key <code class="computeroutput"><span class="identifier">k</span></code>
+                  then the operation will not succeed.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">add_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">r</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Associates the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+                  to key <code class="computeroutput"><span class="identifier">k</span></code> from the
+                  server offset at <code class="computeroutput"><span class="identifier">o</span></code>,
+                  optionally setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+                  and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+                  with flag <code class="computeroutput"><span class="identifier">f</span></code>. If
+                  the server already contains the key <code class="computeroutput"><span class="identifier">k</span></code>
+                  then the operation will not succeed.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">replace</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">d</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Replaces the data stored in the server offset at <code class="computeroutput"><span class="identifier">o</span></code> on key <code class="computeroutput"><span class="identifier">k</span></code>
+                  with the serialized form of <code class="computeroutput"><span class="identifier">d</span></code>,
+                  optionally setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+                  and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+                  with flag <code class="computeroutput"><span class="identifier">f</span></code>. If
+                  the server doesn't contain the key <code class="computeroutput"><span class="identifier">k</span></code>
+                  then the operation will not succeed.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">replace_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">r</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Replaces the data stored in the server offset at <code class="computeroutput"><span class="identifier">o</span></code> on key <code class="computeroutput"><span class="identifier">k</span></code>
+                  with the raw data <code class="computeroutput"><span class="identifier">r</span></code>,
+                  optionally setting the expiration to <code class="computeroutput"><span class="identifier">e</span></code>
+                  and on failover the expiration to <code class="computeroutput"><span class="identifier">x</span></code>
+                  with flag <code class="computeroutput"><span class="identifier">f</span></code>. If
+                  the server doesn't contain the key <code class="computeroutput"><span class="identifier">k</span></code>
+                  then the operation will not succeed.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">append_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">r</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Appends the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+                  to key <code class="computeroutput"><span class="identifier">k</span></code> from the
+                  server offset at <code class="computeroutput"><span class="identifier">o</span></code>,
+                  ignoring the expiration <code class="computeroutput"><span class="identifier">e</span></code>
+                  as well as the failover expiration <code class="computeroutput"><span class="identifier">x</span></code>
+                  and the flag <code class="computeroutput"><span class="identifier">f</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">prepend_raw</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">r</span><span class="special">,</span>
+                  <span class="identifier">e</span><span class="special">,</span>
+                  <span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">f</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Prepends the raw data <code class="computeroutput"><span class="identifier">r</span></code>
+                  to key <code class="computeroutput"><span class="identifier">k</span></code> from the
+                  server offset at <code class="computeroutput"><span class="identifier">o</span></code>,
+                  ignoring the expiration <code class="computeroutput"><span class="identifier">e</span></code>
+                  as well as the failover expiration <code class="computeroutput"><span class="identifier">x</span></code>
+                  and the flag <code class="computeroutput"><span class="identifier">f</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">mc</span><span class="special">.</span><span class="identifier">incr</span><span class="special">(</span><span class="identifier">o</span><span class="special">,</span>
+                  <span class="identifier">k</span><span class="special">,</span>
+                  <span class="identifier">h</span><span class="special">,</span>
+                  <span class="identifier">v</span><span class="special">)]</span>
+                  <span class="special">[</span></code>void<code class="computeroutput"><span class="special">]</span>
+                  <span class="special">[</span><span class="identifier">Increments</span>
+                  <span class="identifier">the</span> <span class="identifier">value</span>
+                  <span class="identifier">associated</span> <span class="identifier">to</span>
+                  <span class="identifier">key</span> </code>k<code class="computeroutput"> <span class="identifier">from</span>
+                  <span class="identifier">the</span> <span class="identifier">server</span>
+                  <span class="identifier">offset</span> <span class="identifier">at</span>
+                  </code>o<code class="computeroutput"> <span class="identifier">by</span> </code>v<code class="computeroutput"><span class="special">,</span> <span class="identifier">whose</span>
+                  <span class="keyword">new</span> <span class="identifier">value</span>
+                  <span class="identifier">is</span> <span class="identifier">put</span>
+                  <span class="identifier">into</span> </code>h<code class="computeroutput"><span class="special">.</span>
+                  <span class="special">]</span> <span class="special">]</span>
+                  <span class="special">[[</span></code>mc.decr(o, k, h, v)
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Decrements the value associated to key <code class="computeroutput"><span class="identifier">k</span></code>
+                  from the server offset at <code class="computeroutput"><span class="identifier">o</span></code>
+                  by <code class="computeroutput"><span class="identifier">v</span></code>, whose new
+                  value is put into <code class="computeroutput"><span class="identifier">h</span></code>.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        The implemented <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>
+        in memcachepp/memcache.hpp is one concrete implementation of the Handle concept.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../concepts.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directive.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

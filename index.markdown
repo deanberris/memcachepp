@@ -11,6 +11,13 @@ top: README
 A header-only memcache client for C++ leveraging the 
 Boost C++ Library.
 
+## Documentation
+
+You can read the documentation for different versions of memcache++ through
+the following links:
+
+* [0.12.1](http://mikhailberis.github.com/memcachepp/docs/0.12.1/)
+
 ## Notes
 
 ### On Hacking Memcache++:
@@ -18,9 +25,9 @@ Boost C++ Library.
 * When you find a bug, write a unit test to reproduce the bug then make sure 
   that any fixes will not cause regressions to earlier marked passing tests.
 * Send email to <mikhailberis@gmail.com> for feature requests and patches.
-* Use git and clone
-
-      git://github.com/mikhailberis/memcachepp.git
+* Go to http://github.com/mikhailberis/memcachepp and [fork](http://help.github.com/forking/) it.
+* Implement your stuff on your own port, then when you're ready submit a
+  [pull request](http://help.github.com/pull-request/).
 
 ### On Testing Memcache++:
 
@@ -39,7 +46,7 @@ Boost C++ Library.
 
 * Memcache++ is header-only, meaning it can be made part of
   the application you're building. This requires though that
-  at build-time, the Boost C++ Library 1.38 or a checkout of
+  at build-time, the Boost C++ Library 1.44 or a checkout of
   the Boost subversion trunk is accessible.
 * The required libraries are:
   - Boost.Serialization

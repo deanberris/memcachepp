@@ -1,0 +1,489 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>The Memcache++ Handle</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Memcache++ 0.12.1">
+<link rel="up" href="../design.html" title="Design">
+<link rel="prev" href="../design.html" title="Design">
+<link rel="next" href="directives.html" title="The Directives">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Memcache++ Client" width="" height="" src="../../images/memcachepp.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../design.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../design.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="memcache__.design.handle"></a><a class="link" href="handle.html" title="The Memcache++ Handle">The Memcache++ Handle</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="handle.html#memcache__.design.handle.policies">Policies</a></span></dt></dl></div>
+<p>
+        The provided <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> in the memcache library is a typedef
+        of the <code class="computeroutput"><span class="identifier">basic_handle</span></code> template
+        with some pre-defined policies set to default. The exact definition of the
+        <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> type is shown below:
+      </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_handle</span><span class="special">&lt;&gt;</span> <span class="identifier">handle</span> <span class="special">;</span>
+</pre>
+<p>
+        The defaults for the <code class="computeroutput"><span class="identifier">basic_handle</span></code>
+        type are given below:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
+    <span class="keyword">class</span> <span class="identifier">threading_policy</span> <span class="special">=</span> <span class="identifier">policies</span><span class="special">::</span><span class="identifier">default_threading</span><span class="special">&lt;&gt;,</span>
+    <span class="keyword">class</span> <span class="identifier">data_interchange_policy</span> <span class="special">=</span> <span class="identifier">policies</span><span class="special">::</span><span class="identifier">binary_interchange</span><span class="special">&lt;&gt;,</span>
+    <span class="keyword">class</span> <span class="identifier">hash_policy</span> <span class="special">=</span> <span class="identifier">policies</span><span class="special">::</span><span class="identifier">default_hash</span><span class="special">&lt;&gt;</span>
+<span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">basic_handle</span> <span class="special">:</span>
+    <span class="identifier">threading_policy</span><span class="special">,</span>
+    <span class="identifier">data_interchange_policy</span><span class="special">,</span>
+    <span class="identifier">hash_policy</span> <span class="special">{</span>
+        <span class="special">...</span>
+    <span class="special">};</span>
+</pre>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="memcache__.design.handle.policies"></a><a class="link" href="handle.html#memcache__.design.handle.policies" title="Policies">Policies</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.threading">Threading
+          Policy</a></span></dt>
+<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.serialization">Data
+          Interchange Policy</a></span></dt>
+<dt><span class="section"><a href="handle.html#memcache__.design.handle.policies.hash">Hash Policy</a></span></dt>
+</dl></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code> has three policies that specify
+          how the handle behaves. Let's look at each one in greater detail:
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="memcache__.design.handle.policies.threading"></a><a class="link" href="handle.html#memcache__.design.handle.policies.threading" title="Threading Policy">Threading
+          Policy</a>
+</h5></div></div></div>
+<p>
+            A Threading Policy defines how the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>
+            works with threads. At the very minimum, this policy defines a nested
+            Scoped Lock type that takes a reference to an instance of the Threading
+            Policy type to acquire a lock. More formally, the Threading Policy type
+            should define the following constructs:
+          </p>
+<div class="variablelist">
+<p class="title"><b>Legend</b></p>
+<dl>
+<dt><span class="term">T</span></dt>
+<dd><p>
+                  The threading policy type
+                </p></dd>
+<dt><span class="term">t</span></dt>
+<dd><p>
+                  Instance of T
+                </p></dd>
+<dt><span class="term">T::L</span></dt>
+<dd><p>
+                  Nested Scoped Lock type
+                </p></dd>
+</dl>
+</div>
+<div class="table">
+<a name="memcache__.design.handle.policies.threading.valid_constructs"></a><p class="title"><b>Table&#160;3.&#160;Valid Constructs</b></p>
+<div class="table-contents"><table class="table" summary="Valid Constructs">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">T</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Default Constructable
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">L</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Instantiate a scoped lock bound to <code class="computeroutput"><span class="identifier">t</span></code>
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+            A Threading Policy should also have a protected destructor to ensure
+            that the type cannot be instantiated but can be derived from.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              The default threading policy does absolutely no threading. However,
+              if <code class="computeroutput"><span class="identifier">_REENTRANT</span></code> is defined,
+              the default threading policy becomes a policy that relies on <a href="http://boost.org/doc/html/thread.html" target="_top">Boost.Thread</a>.
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="memcache__.design.handle.policies.serialization"></a><a class="link" href="handle.html#memcache__.design.handle.policies.serialization" title="Data Interchange Policy">Data
+          Interchange Policy</a>
+</h5></div></div></div>
+<p>
+            A Data Interchange Policy (better description than serialization policy)
+            defines how data to be stored in and retrieved from the <a href="http://memcached.org/" target="_top">Memcached</a>
+            instance is dealt with. It should define nested types for an Input Archive,
+            Output Archive, the Archive Exception to be expected. More formally:
+          </p>
+<div class="variablelist">
+<p class="title"><b>Legend</b></p>
+<dl>
+<dt><span class="term">D</span></dt>
+<dd><p>
+                  The Data Interchange Policy type
+                </p></dd>
+<dt><span class="term">D::O</span></dt>
+<dd><p>
+                  The Output Archive type
+                </p></dd>
+<dt><span class="term">D::I</span></dt>
+<dd><p>
+                  The Input Archive type
+                </p></dd>
+<dt><span class="term">D::E</span></dt>
+<dd><p>
+                  The Archive Exception thrown on archive related errors
+                </p></dd>
+<dt><span class="term">s</span></dt>
+<dd><p>
+                  An Input Stream source buffer of bytes (<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">istream</span></code>)
+                </p></dd>
+<dt><span class="term">d</span></dt>
+<dd><p>
+                  An Output Stream destination buffer of bytes (<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>)
+                </p></dd>
+<dt><span class="term">o</span></dt>
+<dd><p>
+                  An instance of D::O
+                </p></dd>
+<dt><span class="term">i</span></dt>
+<dd><p>
+                  An instance of D::I
+                </p></dd>
+<dt><span class="term">v</span></dt>
+<dd><p>
+                  A Serializable object
+                </p></dd>
+</dl>
+</div>
+<div class="table">
+<a name="memcache__.design.handle.policies.serialization.valid_constructs"></a><p class="title"><b>Table&#160;4.&#160;Valid Constructs</b></p>
+<div class="table-contents"><table class="table" summary="Valid Constructs">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Default Constructable
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">O</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Nested Output Archive type should take an output stream as
+                      the sole parameter of the constructor.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">I</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Nested Input Archive type should take an input stream as the
+                      sole parameter of the constructor.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">o</span> <span class="special">&lt;&lt;</span>
+                      <span class="identifier">v</span><span class="special">;</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">O</span> <span class="special">&amp;</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Push <code class="computeroutput"><span class="identifier">v</span></code> serialized
+                      into the Output Archive.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">i</span> <span class="special">&gt;&gt;</span>
+                      <span class="identifier">v</span><span class="special">;</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">D</span><span class="special">::</span><span class="identifier">I</span> <span class="special">&amp;</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Deserialize the contents of <code class="computeroutput"><span class="identifier">i</span></code>
+                      into <code class="computeroutput"><span class="identifier">v</span></code>.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+            A Data Interchange Policy should also have a protected desctructor to
+            ensure that the type cannot be instantiated but can be derived from.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              The default Data Interchange Policy uses the <a href="http://boost.org/libs/serialization/doc/index.html" target="_top">Boost.Serialization</a>
+              Binary Input/Output Archives. Please consult the <a href="http://boost.org/libs/serialization/doc/index.html" target="_top">Boost.Serialization</a>
+              documentation about the issues you may face with binary Input/Output
+              Archives.
+            </p></td></tr>
+</table></div>
+<p>
+            There are three defined Data Interchange Policies in Memcache++. These
+            are:
+          </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">binary_interchange</span></code> (memcache/policies/binary_interchange.hpp)
+              </li>
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">text_interchange</span></code> (memcache/policies/text_interchange.hpp)
+              </li>
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">string_preserve</span></code> (memcache/policies/string_preserve.hpp)
+              </li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="memcache__.design.handle.policies.hash"></a><a class="link" href="handle.html#memcache__.design.handle.policies.hash" title="Hash Policy">Hash Policy</a>
+</h5></div></div></div>
+<p>
+            A Hash Policy type determines how the <code class="computeroutput"><span class="identifier">memcache</span><span class="special">::</span><span class="identifier">handle</span></code>
+            chooses the server offset given a string key. More formally:
+          </p>
+<div class="variablelist">
+<p class="title"><b>Legend</b></p>
+<dl>
+<dt><span class="term">H</span></dt>
+<dd><p>
+                  The Hash Policy type
+                </p></dd>
+<dt><span class="term">h</span></dt>
+<dd><p>
+                  Instance of H
+                </p></dd>
+<dt><span class="term">k</span></dt>
+<dd><p>
+                  A <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+                </p></dd>
+<dt><span class="term">s</span></dt>
+<dd><p>
+                  A <code class="computeroutput"><span class="identifier">size_t</span></code> indicating
+                  the number of servers
+                </p></dd>
+</dl>
+</div>
+<div class="table">
+<a name="memcache__.design.handle.policies.hash.valid_constructs"></a><p class="title"><b>Table&#160;5.&#160;Valid Constructs</b></p>
+<div class="table-contents"><table class="table" summary="Valid Constructs">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">H</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="bold"><strong>N/A</strong></span>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Default Constructable
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">h</span><span class="special">.</span><span class="identifier">hash</span><span class="special">(</span><span class="identifier">k</span><span class="special">,</span>
+                      <span class="identifier">s</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">size_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Returns the hash computed offset given the key and the number
+                      of servers.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+            A Hash Policy type should also have a protected desctructor to ensure
+            that the type cannot be instantiated but can be derived from.
+          </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2007, 2008 Friendster, Inc.<br>Copyright &#169; 2009, 2010 Dean Michael Berris <p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../design.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../design.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="directives.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
