@@ -4,7 +4,7 @@ Memcache++ - a memcache client library
 Requirements
 ------------
 
-* Boost C++ Library (1.38 or SVN Trunk)
+* Boost C++ Library (1.44 or SVN Trunk)
 * GCC 4.4.x
 
 Notes
@@ -17,9 +17,9 @@ On Hacking Memcache++
   earlier marked passing tests.
 * Send email to <mikhailberis@gmail.com> for feature requests
   and patches.
-* Use git and clone
-
-      git://github.com/mikhailberis/memcachepp.git
+* Go to http://github.com/mikhailberis/memcachepp and fork it.
+* Implement your feature/enhancement and then send a pull
+  request.
 
 On Testing Memcache++:
 
