@@ -22,9 +22,9 @@ namespace memcache { namespace policies {
         protected: ~default_threading() { };
     };
 
-}; // namespace policies
+} // namespace policies
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_POLICIES_DEFAULT_THREADING_HPP__
 

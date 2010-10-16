@@ -16,9 +16,9 @@ namespace memcache {
         struct commit;
         struct request;
         struct container;
-    };
+    }
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_TAGS_HPP__
 

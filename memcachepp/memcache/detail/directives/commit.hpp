@@ -12,7 +12,7 @@ namespace memcache {
 
 	namespace helper {
 		struct commit_directive;
-	};
+	}
 
 	helper::commit_directive commit(helper::commit_directive);
 
@@ -23,15 +23,15 @@ namespace memcache {
 			commit_directive(const commit_directive &) { };
 			friend commit_directive memcache::commit(commit_directive);
 		};
-	};
+	}
 
 	typedef helper::commit_directive (*commit_directive_t)(helper::commit_directive);
 
 	inline helper::commit_directive commit(helper::commit_directive) {
 		return helper::commit_directive();
-	};
+	}
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_commit_HPP__
 

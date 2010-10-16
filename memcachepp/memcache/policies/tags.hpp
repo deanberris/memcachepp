@@ -12,11 +12,11 @@ namespace memcache { namespace policies { namespace tags {
 
     struct default_tag { };
 
-}; // namespace tags
+} // namespace tags
 
-}; // namespace policies
+} // namespace policies
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_POLICIES_TAGS_HPP__
 

@@ -36,7 +36,7 @@ namespace memcache {
         };
 
     typedef server_pool_impl<> server_pool;
-};
+}
 
 #endif // __MEMCACHE_SERVER_POOL_HPP__
 

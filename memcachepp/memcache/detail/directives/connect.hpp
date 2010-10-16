@@ -12,7 +12,7 @@ namespace memcache {
 
 	namespace helper {
 		struct connect_directive;
-	};
+	}
 
 	helper::connect_directive connect(helper::connect_directive);
 
@@ -23,15 +23,15 @@ namespace memcache {
 			connect_directive(const connect_directive &) { };
 			friend connect_directive memcache::connect(connect_directive);
 		};
-	};
+	}
 
 	typedef helper::connect_directive (*connect_directive_t)(helper::connect_directive);
 
 	inline helper::connect_directive connect(helper::connect_directive) {
 		return helper::connect_directive();
-	};
+	}
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_CONNECT_HPP__
 

@@ -32,7 +32,7 @@ namespace memcache {
             template <typename Container>
                 void operator() (Container & container) const {
                     _handle << ::memcache::get(_key, container);
-                };
+                }
             
             private:
                 Handle & _handle;
@@ -43,10 +43,10 @@ namespace memcache {
             inline get_impl<Handle>
             get(Handle & handle, std::string const & key) {
                 return get_impl<Handle>(handle, key);
-            };
+            }
 
-    }; // namespace fluent
+    } // namespace fluent
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // MEMCACHEPP_FLUENT_GET_20080220

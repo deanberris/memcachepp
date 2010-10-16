@@ -14,11 +14,11 @@ namespace memcache { namespace detail {
 
         struct default_tag { };
 
-    }; // namespace tags
+    } // namespace tags
     
-}; // namespace detail
+} // namespace detail
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_TAGS_HPP__
 

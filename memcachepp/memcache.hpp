@@ -54,7 +54,7 @@ namespace memcache {
 
     BOOST_CONCEPT_ASSERT((Handle<handle>));
 
-};
+}
 
 #endif
 

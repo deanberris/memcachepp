@@ -154,7 +154,7 @@ namespace memcache { namespace detail {
         > result;
         std::string::const_iterator begin = buffer.begin()
                                     , end = buffer.end();
-        bool ok = parse(
+        parse(
             begin, end              // the input range
             , value_response        // the context
             , result                // the synthesized attribute
@@ -170,11 +170,11 @@ namespace memcache { namespace detail {
             );
         
         return true;
-    };
+    }
     
-}; // namespace detail
+} // namespace detail
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif
 

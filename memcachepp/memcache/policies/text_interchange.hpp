@@ -23,9 +23,9 @@ namespace memcache { namespace policies {
             protected: ~text_interchange() { };
         };
         
-}; // namespace policies
+} // namespace policies
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_POLICIES_TEXT_INTERCHANGE_HPP__
 

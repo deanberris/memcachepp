@@ -34,7 +34,7 @@ namespace memcache { namespace policies {
         inline oarchive & operator<< ( oarchive & archive, std::string const & str) {
             archive._os.str(str);
             return archive;
-        };
+        }
 
         inline iarchive & operator>> ( iarchive & archive, std::string & str) {
             std::stringbuf buffer;
@@ -45,7 +45,7 @@ namespace memcache { namespace policies {
             };
             str = buffer.str();
             return archive;
-        };
+        }
 
     } // namespace detail
 
@@ -60,9 +60,9 @@ namespace memcache { namespace policies {
 
     typedef string_preserve_impl<> string_preserve;
 
-}; // namespace policies
+} // namespace policies
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_POLICIES_STRING_PRESERVE__
 

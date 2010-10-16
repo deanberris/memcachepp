@@ -31,7 +31,7 @@ namespace memcache { namespace detail {
                     _timeout, 
                     _failover_timeout, 
                     _flags);
-        };
+        }
 
         private:
 
@@ -42,29 +42,29 @@ namespace memcache { namespace detail {
         time_t _failover_timeout;
     };
 
-}; // namespace detail
+} // namespace detail
 
     template <typename T, typename _T>
 	inline detail::set_directive<_T> set(T _key, _T const & value, time_t timeout = 0, boost::uint16_t flags = 0) {
         return detail::set_directive<_T>(std::string(_key), value, flags, timeout, timeout);
-    };
+    }
 
     template <typename T, typename _T>
 	inline detail::set_directive<_T> set(T _key, _T const & value, detail::expire_type const & expiration, detail::failover_expire_type const & failover_expiration, boost::uint16_t flags = 0) {
         return detail::set_directive<_T>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
-    };
+    }
 
     template <typename T, typename _T>
 	inline detail::set_directive<_T> set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, boost::uint16_t flags = 0) {
         return detail::set_directive<_T>(std::string(_key), value, flags, 0, failover_expiration.timeout);
-    };
+    }
 
     template <typename T, typename _T>
 	inline detail::set_directive<_T> set(T _key, _T const & value, detail::failover_expire_type const & failover_expiration, detail::expire_type const & expiration, boost::uint16_t flags = 0) {
         return detail::set_directive<_T>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
-    };
+    }
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // MEMACAHE_DETAIL_DIRECTIVES_SET_HPP
 

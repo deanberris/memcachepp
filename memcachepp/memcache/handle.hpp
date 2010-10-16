@@ -114,7 +114,7 @@ namespace memcache {
                         connections
                         )
                ) throw key_not_stored(key);
-        };
+        }
 
         void add_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
@@ -158,7 +158,7 @@ namespace memcache {
                         connections
                         )
                ) throw key_not_stored(key);
-        };
+        }
 
         void replace_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
@@ -202,7 +202,7 @@ namespace memcache {
                         connections
                         )
                ) throw key_not_stored(key);
-        };
+        }
         
         template <typename T> // T must be serializable
         void check_and_set(size_t offset, string const & key, T const & value, boost::uint64_t cas_value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
@@ -225,7 +225,7 @@ namespace memcache {
                         connections
                         )
                ) throw key_not_stored(key);
-        };
+        }
 
         void set_raw(size_t offset, string const & key, string const & value, time_t expiration, time_t failover_expiration, boost::uint16_t flags = 0) {
             typename threading_policy::lock scoped_lock(*this);
@@ -378,7 +378,7 @@ namespace memcache {
             boost::uint64_t cas_value;
             if (retrieve(get_impl<T, data_interchange_policy>(key, holder, cas_value), connections))
                 throw key_not_found(key);
-        };
+        }
 
         template <typename T> // T must be serializable
         void gets(size_t offset, string const & key, T & holder, boost::uint64_t & cas_value) {
@@ -390,7 +390,7 @@ namespace memcache {
 
             if (retrieve(gets_impl<T, data_interchange_policy>(key, holder, cas_value), connections))
                 throw key_not_found(key);
-        };
+        }
 
         void get_raw(size_t offset, string const & key, string & holder) {
             typename threading_policy::lock scoped_lock(*this);
@@ -593,7 +593,7 @@ namespace memcache {
                             return 0; // indicate NO error
 
                         return 1;
-                    };
+                    }
             };
 
         template <typename T, typename set_interchange_policy>
@@ -776,7 +776,7 @@ namespace memcache {
                         };
 
                         return true;
-                    };
+                    }
         };
         
         template <typename holder_type, class get_interchange_policy>
@@ -973,7 +973,7 @@ namespace memcache {
                         return 1; // indicate error
 
                     return 1; // indicate error
-                };
+                }
         };
 
         void send_command(string const & command, boost::asio::ip::tcp::socket & socket) const {
@@ -1090,13 +1090,13 @@ namespace memcache {
     inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, directive_type const & directive) {
         directive(_handle);
         return _handle;
-    };
+    }
 
     template <typename threading_policy, class data_interchange_policy, class hash_policy>
     inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, connect_directive_t) {
         _handle.connect();
         return _handle;
-    };
+    }
 
 } // namespace memcache
 

@@ -68,9 +68,9 @@ namespace memcache { namespace detail {
 
 #endif // _REENTRANT
 
-}; // namespace detail
+} // namespace detail
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_READ_HANDLER_HPP__
 

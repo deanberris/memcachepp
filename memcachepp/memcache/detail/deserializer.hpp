@@ -29,9 +29,9 @@ namespace memcache { namespace detail {
         };
     };
 
-}; // namespace detail
+} // namespace detail
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DESERIALIZER_HPP__
 

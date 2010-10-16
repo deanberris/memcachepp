@@ -24,21 +24,21 @@ namespace memcache { namespace detail {
                             ), 
                         _key
                         );
-            };
+            }
 
             private:
 
             mutable std::string _key;
         };
 
-}; // namespace detail
+} // namespace detail
 
     template <typename T>
     inline detail::delete_directive<T> delete_(T _key) {
         return detail::delete_directive<T>(std::string(_key));
-    };
+    }
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_DELETE_HPP__
 

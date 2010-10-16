@@ -30,7 +30,7 @@ namespace memcache {
                     (key, detail::deserializer<T, data_interchange_policy>(holder))
                 );
             key_hash[hash].insert(key);
-        };
+        }
 
         void perform() {
             std::for_each(key_hash.begin(), key_hash.end(), 
@@ -168,13 +168,13 @@ namespace memcache {
     inline basic_request<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_request<threading_policy, data_interchange_policy, hash_policy> & _request, directive_type const & directive) {
         directive(_request);
         return _request;
-    };
+    }
 
     template <typename threading_policy, class data_interchange_policy, class hash_policy>
     inline basic_request<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_request<threading_policy, data_interchange_policy, hash_policy> & _request, commit_directive_t) {
         _request.perform();
         return _request;
-    };
+    }
 
 } // namespace memcache
 

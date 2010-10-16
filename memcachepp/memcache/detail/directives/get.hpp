@@ -27,7 +27,7 @@ namespace memcache { namespace detail {
                     _key, 
                     _holder
                     );
-        };
+        }
         
         private:
         
@@ -35,14 +35,14 @@ namespace memcache { namespace detail {
         T & _holder;
     };
 
-}; // namespace detail
+} // namespace detail
 
     template <typename _T>
     inline detail::get_directive<_T> get(std::string const & _key, _T & holder) {
         return detail::get_directive<_T>(_key, holder);
-    };
+    }
 
-}; // namespace detail
+} // namespace detail
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_GET_HPP__
 

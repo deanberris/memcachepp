@@ -24,8 +24,8 @@ namespace memcache { namespace policies {
         protected: ~binary_interchange() { };
     };
         
-}; // namespace policies
+} // namespace policies
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_POLICIES_BINARY_INTERCHANGE_HPP__

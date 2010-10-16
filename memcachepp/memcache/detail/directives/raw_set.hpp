@@ -31,7 +31,7 @@ namespace memcache { namespace detail {
                         _failover_timeout, 
                         _flags
                         );
-            };
+            }
 
             private:
 
@@ -42,12 +42,12 @@ namespace memcache { namespace detail {
             mutable time_t _failover_timeout;
         };
 
-}; // namespace detail
+} // namespace detail
 
     template <class T>
     inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, time_t timeout=0, time_t failover_timeout=0, boost::uint16_t flags = 0) {
         return detail::raw_set_directive<>(std::string(_key), value, flags, timeout, failover_timeout);
-    };
+    }
 
     template <class T>
     inline detail::raw_set_directive<> raw_set(T _key, std::string const & value, detail::expire_type const & expiration, boost::uint16_t flags = 0) {
@@ -69,7 +69,7 @@ namespace memcache { namespace detail {
         return detail::raw_set_directive<>(std::string(_key), value, flags, expiration.timeout, failover_expiration.timeout);
     }
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_DETAIL_DIRECTIVES_RAW_SET_HPP__
 

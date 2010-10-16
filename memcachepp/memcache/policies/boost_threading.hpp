@@ -41,9 +41,9 @@ namespace memcache { namespace policies {
 
 #endif    
 
-}; // namespace policies
+} // namespace policies
 
-}; // namespace memcache
+} // namespace memcache
 
 #endif // __MEMCACHE_POLICIES_BOOST_THREADING_HPP__
 

@@ -28,7 +28,7 @@ namespace memcache {
                         failover_timeout, 
                         flags
                         );
-            };
+            }
 
             private:
 
