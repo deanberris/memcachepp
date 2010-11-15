@@ -89,9 +89,9 @@ namespace memcache {
             hash_policy() 
             { };
         
-        void connect() { 
+        void connect(boost::uint64_t timeout = MEMCACHE_TIMEOUT) { 
             typename threading_policy::lock scoped_lock(*this);
-            for_each(servers.begin(), servers.end(), connect_impl(service_));
+            for_each(servers.begin(), servers.end(), connect_impl(service_, timeout));
         };
 
         template <typename T> // T must be serializable
@@ -984,10 +984,13 @@ namespace memcache {
         };
         
         struct connect_impl {
-            explicit connect_impl(boost::asio::io_service & service) :
-                service_(service) { };
+
+            explicit connect_impl(boost::asio::io_service & service, boost::int64_t timeout) :
+                service_(service),
+                timeout_(timeout) { };
             
             boost::asio::io_service & service_;
+            boost::int64_t timeout_;
 
             template <class IoService, class Element>
                 pair<connection_ptr,error_code> 
@@ -1026,7 +1029,7 @@ namespace memcache {
                                     )
                                 );
                         _timer.expires_from_now(
-                                milliseconds(MEMCACHE_TIMEOUT)
+                                milliseconds(timeout_)
                                 );
                         _timer.async_wait(
                                 bind(
@@ -1091,7 +1094,7 @@ namespace memcache {
         directive(_handle);
         return _handle;
     }
-
+    
     template <typename threading_policy, class data_interchange_policy, class hash_policy>
     inline basic_handle<threading_policy, data_interchange_policy, hash_policy> & operator<< (basic_handle<threading_policy, data_interchange_policy, hash_policy> & _handle, connect_directive_t) {
         _handle.connect();
