@@ -23,6 +23,8 @@
 
 #include <boost/serialization/vector.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 BOOST_AUTO_TEST_CASE ( initializer_test ) {
     memcache::handle mc;
     mc << memcache::server("localhost", 11211) << memcache::connect ;
@@ -36,6 +38,20 @@ BOOST_AUTO_TEST_CASE ( initializer_test ) {
     // deprecated: servers is now private
     // BOOST_CHECK ( mc.servers.find("localhost:11299") != mc.servers.end() );
     BOOST_CHECK ( mc.is_connected("localhost:11299") == false );
+};
+
+BOOST_AUTO_TEST_CASE ( connect_timeout_test ) {
+    memcache::handle mc;
+
+    using namespace boost::posix_time;
+    
+    ptime start = microsec_clock::local_time();
+    mc << memcache::server("localhost", 11299) << memcache::connect(50) ;
+    ptime finish = microsec_clock::local_time();
+    time_duration elapsed = finish - start;
+    
+    BOOST_CHECK ( mc.is_connected("localhost:11299") == false );
+    BOOST_CHECK ( elapsed < milliseconds( 100 ) );
 };
 
 BOOST_AUTO_TEST_CASE ( set_test ) {

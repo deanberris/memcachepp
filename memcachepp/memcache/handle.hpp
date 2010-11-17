@@ -985,12 +985,12 @@ namespace memcache {
         
         struct connect_impl {
 
-            explicit connect_impl(boost::asio::io_service & service, boost::int64_t timeout) :
+            explicit connect_impl(boost::asio::io_service & service, boost::uint64_t timeout) :
                 service_(service),
                 timeout_(timeout) { };
             
             boost::asio::io_service & service_;
-            boost::int64_t timeout_;
+            boost::uint64_t timeout_;
 
             template <class IoService, class Element>
                 pair<connection_ptr,error_code> 
