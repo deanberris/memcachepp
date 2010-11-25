@@ -73,8 +73,8 @@ namespace memcache { namespace detail {
 
     template <>
         struct pool_directive<server_pool> {
-            server_pool & _pool;
-            explicit pool_directive(server_pool & pool)
+            const server_pool & _pool;
+            explicit pool_directive(const server_pool & pool)
                 : _pool(pool)
                 { };
             
@@ -103,7 +103,7 @@ namespace memcache { namespace detail {
         return detail::pool_directive<_T>(std::string(_name), status, servers);
     }
 
-    inline detail::pool_directive<server_pool> pool(server_pool & pool_) {
+    inline detail::pool_directive<server_pool> pool(const server_pool & pool_) {
         return detail::pool_directive<server_pool>(pool_);
     }
 
