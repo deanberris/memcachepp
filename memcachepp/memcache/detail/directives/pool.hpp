@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
-#define __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
+#ifndef MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
+#define MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
 
 #include <list>
 #include <set>
@@ -114,5 +114,5 @@ namespace memcache { namespace detail {
 
 } // namespace memcache
 
-#endif // __MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
+#endif // MEMCACHE_DETAIL_DIRECTIVES_POOL_HPP__
 

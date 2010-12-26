@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_SERVER_POOL_HPP__
-#define __MEMCACHE_SERVER_POOL_HPP__
+#ifndef MEMCACHE_SERVER_POOL_HPP__
+#define MEMCACHE_SERVER_POOL_HPP__
 
 #include <memcachepp/memcache/tags.hpp>
 #include <list>
@@ -38,5 +38,5 @@ namespace memcache {
     typedef server_pool_impl<> server_pool;
 }
 
-#endif // __MEMCACHE_SERVER_POOL_HPP__
+#endif // MEMCACHE_SERVER_POOL_HPP__
 

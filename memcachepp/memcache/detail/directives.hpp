@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_DETAIL_DIRECTIVES_HPP__
-#define __MEMCACHE_DETAIL_DIRECTIVES_HPP__
+#ifndef MEMCACHE_DETAIL_DIRECTIVES_HPP__
+#define MEMCACHE_DETAIL_DIRECTIVES_HPP__
 
 #include <memcachepp/memcache/detail/tags.hpp>
 #include <memcachepp/memcache/detail/directives/server.hpp>
@@ -29,5 +29,5 @@
 #include <memcachepp/memcache/detail/directives/cas.hpp>
 #include <memcachepp/memcache/detail/directives/gets.hpp>
 
-#endif // __MEMCACHE_DETAIL_DIRECTIVES_HPP__
+#endif // MEMCACHE_DETAIL_DIRECTIVES_HPP__
 

@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_TAGS_HPP__
-#define __MEMCACHE_TAGS_HPP__
+#ifndef MEMCACHE_TAGS_HPP__
+#define MEMCACHE_TAGS_HPP__
 
 namespace memcache {
 
@@ -20,5 +20,5 @@ namespace memcache {
 
 } // namespace memcache
 
-#endif // __MEMCACHE_TAGS_HPP__
+#endif // MEMCACHE_TAGS_HPP__
 

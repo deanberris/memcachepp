@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_POLICIES_BOOST_THREADING_HPP__
-#define __MEMCACHE_POLICIES_BOOST_THREADING_HPP__
+#ifndef MEMCACHE_POLICIES_BOOST_THREADING_HPP__
+#define MEMCACHE_POLICIES_BOOST_THREADING_HPP__
 
 #include <memcachepp/memcache/policies/tags.hpp>
 
@@ -45,5 +45,5 @@ namespace memcache { namespace policies {
 
 } // namespace memcache
 
-#endif // __MEMCACHE_POLICIES_BOOST_THREADING_HPP__
+#endif // MEMCACHE_POLICIES_BOOST_THREADING_HPP__
 

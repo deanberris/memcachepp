@@ -13,8 +13,8 @@
  * @author Dean Michael Berris <dmberris@friendster.com>
  */
 
-#ifndef __MEMCACHEPP_PARSER_HPP__
-#define __MEMCACHEPP_PARSER_HPP__
+#ifndef MEMCACHEPP_PARSER_HPP__
+#define MEMCACHEPP_PARSER_HPP__
 
 #include <boost/spirit/include/qi_core.hpp>
 #include <boost/spirit/include/qi_char_.hpp>

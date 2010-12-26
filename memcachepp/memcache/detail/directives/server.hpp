@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
-#define __MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
+#ifndef MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
+#define MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
 
 #include <memcachepp/memcache/detail/tags.hpp>
 #include <string>
@@ -43,5 +43,5 @@ namespace memcache { namespace detail {
 
 } // namespace memcache
 
-#endif // __MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
+#endif // MEMCACHE_DETAIL_DIRECTIVES_SERVER_HPP__
 
