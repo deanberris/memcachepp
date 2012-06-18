@@ -68,7 +68,7 @@ namespace memcache { namespace detail {
 
         boost::spirit::qi::rule<std::string::const_iterator, std::list<parsed_command>()> start;
 
-        // qi::locals cause a problem with Phoenix v3 + decltype for result of
+        // qi::locals causes a problem with Phoenix v3 + decltype for result of
         size_t data_size;
     };
 
