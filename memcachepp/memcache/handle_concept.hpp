@@ -27,7 +27,7 @@ namespace memcache {
                 time_t delay = 0;
                 h.delete_(offset, "key", delay);
                 int d;
-                h.get<int>(offset, "key", d);
+                h.template get<int>(offset, "key", d);
                 std::string c;
                 h.get_raw(offset, "key", c);
                 h.is_connected("server");
@@ -38,7 +38,7 @@ namespace memcache {
                 time_t expiration = 0;
                 time_t failover_expiration = 0;
                 uint16_t flag = 0;
-                h.set<int>(offset, "key", d, expiration, failover_expiration, flag);
+                h.template set<int>(offset, "key", d, expiration, failover_expiration, flag);
                 std::string raw = "";
                 h.set_raw(offset, "kye", raw, expiration, failover_expiration, flag);
             }

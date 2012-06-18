@@ -462,7 +462,7 @@ namespace memcache {
             bool rehash;
             boost::fusion::tie(connections, rehash) = get_connections(offset);
 
-            return make_tuple(connections, rehash);
+            return boost::fusion::make_tuple(connections, rehash);
         }
 
         template <class Action, class ConnectionContainer>
@@ -550,7 +550,7 @@ namespace memcache {
                 };
             };
             
-            return make_tuple(connections, rehash);
+            return boost::fusion::make_tuple(connections, rehash);
         };
 
         boost::asio::io_service service_;
@@ -768,7 +768,7 @@ namespace memcache {
                                     (first_token == "SERVER_ERROR"))
                                     throw invalid_response_found(data_string);
                             };
-                        } catch (typename data_interchange_policy::archive_exception & e) {
+                        } catch (typename data_interchange_policy::archive_exception &) {
                             ostringstream malformed_data_stream;
                             malformed_data_stream << command
                                 << data_string;
@@ -1016,7 +1016,7 @@ namespace memcache {
                         optional<error_code> timer_result;
                         optional<error_code> connect_result;
                         deadline_timer _timer(
-                            new_connection->io_service()
+                            new_connection->get_io_service()
                         );
                         
                         new_connection->close();
@@ -1025,7 +1025,7 @@ namespace memcache {
                                 bind(
                                     &optional<error_code>::reset,
                                     &connect_result,
-                                    _1
+                                    ::_1
                                     )
                                 );
                         _timer.expires_from_now(
@@ -1035,12 +1035,12 @@ namespace memcache {
                                 bind(
                                     &optional<error_code>::reset,
                                     &timer_result, 
-                                    _1)
+                                    ::_1)
                                 );
                         
-                        new_connection->io_service().reset();
+                        new_connection->get_io_service().reset();
 
-                        while (new_connection->io_service().run_one()) {
+                        while (new_connection->get_io_service().run_one()) {
                             if (connect_result) {
                                 _timer.cancel();
                                 error = *connect_result;
