@@ -16,109 +16,62 @@
 #ifndef MEMCACHEPP_PARSER_HPP__
 #define MEMCACHEPP_PARSER_HPP__
 
-#include <boost/spirit/include/qi_core.hpp>
-#include <boost/spirit/include/qi_char_.hpp>
-#include <boost/spirit/include/qi_char.hpp>
-#include <boost/spirit/include/qi_lit.hpp>
-#include <boost/spirit/include/qi_repeat.hpp>
-#include <boost/spirit/include/qi_parse_attr.hpp>
-#include <boost/spirit/include/qi_sequence.hpp>
-#include <boost/spirit/include/qi_grammar.hpp>
-#include <boost/spirit/include/qi_kleene.hpp>
-#include <boost/spirit/include/qi_uint.hpp>
-#include <boost/spirit/include/qi_plus.hpp>
-#include <boost/spirit/include/qi_alternative.hpp>
-#include <boost/spirit/include/qi_rule.hpp>
-#include <boost/spirit/include/qi_operator.hpp>
-#include <boost/spirit/include/qi_domain.hpp>
-#include <boost/spirit/include/support_argument.hpp>
-#include <boost/spirit/include/phoenix_core.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
+#include <list>
+
+#include <boost/cstdint.hpp>
+
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix.hpp>
+
+#include <boost/fusion/adapted/struct/define_struct.hpp>
+#include <boost/fusion/include/define_struct.hpp>
+
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/tuple.hpp>
-#include <boost/cstdint.hpp>
-#include <list>
+
+BOOST_FUSION_DEFINE_STRUCT((memcache)(detail), parsed_command,
+    (std::string, key_name)
+    (boost::uint16_t, flags)
+    (size_t, size)
+    (boost::uint64_t, cas)
+    (std::string, data));
 
 namespace memcache { namespace detail {
 
-    using namespace boost::spirit::qi;
-    using namespace boost::phoenix;
     namespace fusion = boost::fusion;
     
-    struct value_response_grammar : 
-        grammar<std::string::const_iterator, 
-            std::list<
-                fusion::vector<
-                    std::string // the key name
-                    , boost::uint16_t // the flags
-                    , size_t // the size
-                    , boost::optional<boost::uint64_t> // the cas value
-                    , std::string // the data
-                >
-            >(),
-            locals<size_t>
-        >
+    struct value_response_grammar : boost::spirit::qi::grammar<std::string::const_iterator, 
+        std::list<parsed_command>()>
     {
-        value_response_grammar() : base_type(start) {
-            using namespace boost::spirit::qi::labels;
-            using namespace boost::phoenix::arg_names;
-            key %= 
-                +(alnum|punct)
-            ;
+        value_response_grammar() : base_type(start), data_size(0) {
 
-            flags %=
-                uint_
-            ;
-
-            data %=
-                repeat(_r1)[char_]
-            ;
-
-            cas %=
-                ulong_long
-            ;
-
-            size %=
-                uint_
-            ;
+            using boost::spirit::qi::alnum;
+            using boost::spirit::qi::punct;
+            using boost::spirit::qi::uint_;
+            using boost::spirit::qi::ulong_long;
+            using boost::spirit::qi::lit;
+            using boost::spirit::qi::char_;
+            using boost::spirit::qi::attr;
+            using boost::spirit::qi::repeat;
 
             start %= 
                 *(
                     lit("VALUE ")
-                    >> key 
-                    >> ' '
-                    >> flags
-                    >> ' '
-                    >> size[_a = boost::spirit::qi::labels::_1]
-                    >> -(lit(' ') >> cas)
-                    >> lit("\r\n")
-                    >> data(_a)
-                    >> lit("\r\n")
+                    >> +(alnum|punct) >> ' '
+                    >> uint_ >> ' '
+                    >> uint_[boost::phoenix::ref(data_size) = boost::spirit::qi::_1]
+                    >> ((' ' >> ulong_long) | attr(0)) // get the cas if any, 0 otherwise
+                    >> lit("\r\n") >> repeat(boost::phoenix::ref(data_size))[char_] >> lit("\r\n")
                 )
-                >> lit("END\r\n")
-            ;
+                >> lit("END\r\n");
         }
 
-        rule<std::string::const_iterator, std::string()> key;
-        rule<std::string::const_iterator, boost::uint16_t()> flags;
-        rule<std::string::const_iterator, size_t()> size;
-        rule<std::string::const_iterator, std::string(size_t)> data;
-        rule<std::string::const_iterator, boost::uint64_t()> cas;
-        rule<std::string::const_iterator, 
-            std::list<
-                fusion::vector<
-                    std::string // the key name
-                    , boost::uint16_t // the flags
-                    , size_t // the size of the data
-                    , boost::optional<boost::uint64_t> // the cas value
-                    , std::string // the data
-                >
-            >(),
-            locals<
-                size_t // the size of the data
-            >
-            > start;
+        boost::spirit::qi::rule<std::string::const_iterator, std::list<parsed_command>()> start;
+
+        // qi::locals cause a problem with Phoenix v3 + decltype for result of
+        size_t data_size;
     };
+
 
     template <class callback_container_type>
     struct execute_callbacks {
@@ -126,14 +79,10 @@ namespace memcache { namespace detail {
         : callbacks(callbacks_), cas_value(cas_value_) {}
         execute_callbacks(execute_callbacks const & other)
         : callbacks(other.callbacks), cas_value(other.cas_value) {}
-        template <class Tuple>
-        void operator()(Tuple const & result) const {
-            if (fusion::get<0>(result) == "") return;
-
-            callbacks[fusion::get<0>(result)](fusion::get<4>(result));
-            if (fusion::get<3>(result)) {
-                cas_value = *fusion::get<3>(result);
-            }
+        void operator()(parsed_command const & result) const {
+            if (result.key_name.empty()) return;
+            callbacks[result.key_name](result.data);
+            cas_value = result.cas;
         }
         callback_container_type & callbacks;
         boost::uint64_t & cas_value;
@@ -142,27 +91,24 @@ namespace memcache { namespace detail {
     template <class callback_container_type>
     bool parse_response(std::string const & buffer, callback_container_type & callbacks, boost::uint64_t & cas_value) {
         // FIXME pass out the flags too?
-        static value_response_grammar value_response;
-        std::list<
-            fusion::vector<
-                std::string
-                , boost::uint16_t
-                , size_t
-                , boost::optional<boost::uint64_t>
-                , std::string
-            >
-        > result;
+
+        value_response_grammar value_response;
+
+        std::list<parsed_command> result;
         std::string::const_iterator begin = buffer.begin()
                                     , end = buffer.end();
-        parse(
+        if (!boost::spirit::qi::parse(
             begin, end              // the input range
             , value_response        // the context
             , result                // the synthesized attribute
-            );
+            ))
+        {
+            return false;
+        }
 
         if (boost::empty(result))
             return false;
-
+        
         std::for_each(
             result.begin(),
             result.end(),
