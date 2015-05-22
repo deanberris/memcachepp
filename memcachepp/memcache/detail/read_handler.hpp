@@ -45,20 +45,29 @@ namespace memcache { namespace detail {
         void operator() () {
             boost::optional<boost::system::error_code> timer_result;
             boost::optional<boost::system::error_code> read_result;
-            boost::asio::async_read_until(_socket, _buffer, _pattern, boost::bind(&read_handler_impl<tag>::set_result, & read_result, _1));
-            boost::asio::deadline_timer _timer(_socket.io_service());
+            boost::asio::async_read_until(_socket, _buffer, _pattern, boost::bind(&read_handler_impl<tag>::set_result, & read_result, ::_1));
+            boost::asio::deadline_timer _timer(_socket.get_io_service());
             _timer.expires_from_now(boost::posix_time::milliseconds(_timeout));
-            _timer.async_wait(boost::bind(&read_handler_impl<tag>::set_result, & timer_result , _1));
-            _socket.io_service().reset();
+            _timer.async_wait(boost::bind(&read_handler_impl<tag>::set_result, & timer_result , ::_1));
+            _socket.get_io_service().reset();
 
-            while (_socket.io_service().run_one()) {
+            while (_socket.get_io_service().run_one() > 0) {
                 if (read_result)
+                {
                     _timer.cancel();
-                else if (timer_result)
-                    _socket.cancel();
+                    break;
+                }
+
+                if (timer_result)
+                {
+                    _socket.close();
+                    break;
+                }                    
             }
 
-            if (*read_result)
+            _socket.get_io_service().poll();
+
+            if (read_result && *read_result)
                 throw boost::system::system_error(*read_result);
         };
 
